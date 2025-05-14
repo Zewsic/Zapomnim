@@ -1,0 +1,112 @@
+# English translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-05-14 10:09+0300\n"
+"PO-Revision-Date: 2025-05-14 06:12+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: handlers/business/test.py:27 handlers/main_menu.py:25
+#: handlers/main_menu.py:44 handlers/main_menu.py:97
+msgid "START_IMAGE"
+msgstr "resources/start_image_en.png"
+
+#: handlers/main_menu.py:26
+msgid "START_TEXT"
+msgstr ""
+"<b>👋 ZAPOMNIM is an advanced Telegram extension</b> operating seamlessly "
+"alongside your account, <b>without accessing it directly</b>.\n"
+"\n"
+"🔒 We enhance your capabilities and safeguard your conversations, ensuring"
+" <b>privacy and complete control</b> remain exclusively yours.\n"
+"\n"
+"🔍 <b>ZAPOMNIM Features</b>:\n"
+"- Capturing deleted messages.\n"
+"- Message edit history.\n"
+"- Saving disappearing media.\n"
+"- Scam-checking of unknowns.\n"
+"- AI-driven anti-fraud protection.\n"
+"- Customizable bot experience.\n"
+"- …and many more features coming soon!\n"
+"\n"
+"⚡️ <b>Secure. Smart. Convenient. That's ZAPOMNIM.</b>"
+
+#: handlers/main_menu.py:35
+msgid "ONLY_FOR_TELEGRAM_PREMIUM"
+msgstr ""
+"😢 Unfortunately, this bot is available only to Telegram Premium "
+"subscribers."
+
+#: handlers/main_menu.py:45 handlers/main_menu.py:57
+#, fuzzy
+msgid "CONNECT_BOT_INSTRUCTION"
+msgstr ""
+"<b>🛠️ Getting Ready to Launch!</b>\n"
+"<i>First, let's create your Telegram bot.</i>\n"
+"\n"
+"🔹 <b>Just follow these simple steps:</b>\n"
+"1. Open <a href=\"https://t.me/BotFather?text=%2Fnewbot\">@BotFather</a> "
+"and enter the command <code>/newbot</code>.\n"
+"2. Choose any name and username for your bot.\n"
+"3. Copy the provided token and send it here.\n"
+"\n"
+"<b>🧐 Token example:</b>\n"
+"<blockquote>5995761349:AAGmBOCDXTBNW4ST...</blockquote>\n"
+"\n"
+
+#: handlers/main_menu.py:62 handlers/main_menu.py:70
+msgid "INVALID_TOKEN"
+msgstr "<b>⛔️ You sent an invalid token.</b>"
+
+#: handlers/main_menu.py:65 handlers/main_menu.py:73
+msgid "CHECKING_BOT"
+msgstr "<i>✅ Connecting to %s ...</i>"
+
+#: handlers/main_menu.py:84 handlers/main_menu.py:120
+msgid "BOT_SETUP_COMPLETE"
+msgstr ""
+"💥 <b>Bot @%s is now connected!</b>\n"
+"To complete the setup, continue in the bot you just created."
+
+#: handlers/main_menu.py:98
+msgid "BOT_SETUP_BUSINESS_INSTRUCTION"
+msgstr ""
+"<b>🚦 Success! Let's move to the next step.</b>\n"
+"<i>Now we'll activate 'Business Mode' for your bot.</i>\n"
+"\n"
+"✅ <b>Follow these steps:</b>\n"
+"1. Open <a href=\"https://t.me/BotFather?text=%2Fmybots\">@BotFather</a> "
+"and send the command <code>/mybots</code>.\n"
+"2. Select your newly created bot from the list.\n"
+"3. Click <b>Bot Settings</b>, then find and enable <b>Business Mode</b>.\n"
+"\n"
+"✨ <i>Once done, click the button below to confirm.</i>"
+
+#: handlers/main_menu.py:113
+msgid "BUSINESS_MODE_IS_NOT_ENABLED"
+msgstr "⛔️ Business Mode has not been enabled. Please try again."
+
+#: keyboards/main_menu.py:9
+msgid "START_BUTTON"
+msgstr "🚀 Let's Go!"
+
+#: keyboards/main_menu.py:16
+msgid "CHECK_BUSINESS_BUTTON"
+msgstr "✅ I'm done!"
+
+#: keyboards/main_menu.py:23
+msgid "GO_TO_BOT_BUTTON"
+msgstr "🚪 Go to Bot"
+
