@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-19 00:58+0300\n"
+"POT-Creation-Date: 2025-05-19 22:42+0300\n"
 "PO-Revision-Date: 2025-05-14 06:12+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -19,11 +19,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
+# ## ------------------------------------------------- ###
+# ## --------------------- OTHER --------------------- ###
 msgid "NONE"
 msgstr "(нет)"
 
-msgid "START_IMAGE"
-msgstr "resources/start_image_ru.png"
+# ## ------------------------------------------------- ###
+# ## ------------------- MAIN MENU ------------------- ###
+msgid "MAIN_MENU_IMAGE"
+msgstr "resources/menu_image_ru.png"
 
 msgid "START_TEXT"
 msgstr ""
@@ -47,6 +51,41 @@ msgstr ""
 "\n"
 "⚡️ <b>Умно. Удобно. Безопасно. Мы — Запомним.</b>"
 
+msgid "START_IMAGE"
+msgstr "resources/start_image_ru.png"
+
+msgid "MAIN_MENU_TEXT"
+msgstr ""
+"<b>Добрый день, {name}!</b>\n"
+"\n"
+"Ваша подписка заканчивается {subscription_date} (еще {days} дней).\n"
+"Режим работы: {bot_mode}"
+
+msgid "SETTINGS_BUTTON"
+msgstr "⚙️ Настройки"
+
+msgid "PROFILE_BUTTON"
+msgstr "🧑‍💻 Профиль"
+
+msgid "PROFILE_TEXT"
+msgstr ""
+"<b>🧑‍💻 Профиль {name}</b> (ID: <code>{user_id}</code>)\n"
+"\n"
+"📅 Регистрация в боте: {reg_date} ({reg_days} дней).\n"
+"💸 Подписка до {subscription_date} (еще {subscription_days} дней)."
+
+msgid "BUY_SUBSCRIPTION_BUTTON"
+msgstr "💸 Оформить подписку"
+
+msgid "DATA_SETTINGS_BUTTON"
+msgstr "📊 Управление данными"
+
+msgid "SUPPORT_BUTTON"
+msgstr "🆘 Помощь"
+
+msgid "SUPPORT_LINK"
+msgstr "https://t.me/zewsic"
+
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
 msgstr ""
 "😢 К сожалению, данный бот доступен только для пользователей Telegram "
@@ -60,10 +99,12 @@ msgstr ""
 "<b>Как подключить бота Запомним:</b>\n"
 "\n"
 "1. Перейдите в <b>Настройки</b> → <b>Telegram для бизнеса</b>.\n"
-"2. В разделе <b>Чат-боты</b> добавьте нашего бота — <code>@zapomnim_bot</code>.\n"
-"3. Убедитесь, что боту предоставлен полный доступ к сообщениям — это необходимо для корректной работы всех функций.\n"
+"2. В разделе <b>Чат-боты</b> добавьте нашего бота — "
+"<code>@zapomnim_bot</code>.\n"
+"3. Убедитесь, что боту предоставлен полный доступ к сообщениям — это "
+"необходимо для корректной работы всех функций.\n"
 "\n"
-"Готово! Теперь ваш бизнес-чат под надежной защитой и контролем."
+"Готово! Теперь ваши чаты под надежной защитой и контролем."
 
 msgid "CONNECT_BUSINESS_BOT_SUCCESS_TEXT"
 msgstr ""
@@ -109,13 +150,16 @@ msgid "OPEN_HISTORY_BUTTON"
 msgstr "📗 История редактирования"
 
 msgid "CONTINUE_BUTTON"
-msgstr "✌️ Продолжить"
+msgstr "👌 Продолжить"
 
-msgid "SECURITY_MODE_STANDARD"
+msgid "BACK_BUTTON"
+msgstr "👈 Назад"
+
+msgid "BOT_MODE_STANDARD"
 msgstr "🧑‍💻 Стандартный"
 
-msgid "SECURITY_MODE_SECURITY"
-msgstr "🔒 Режим приватности"
+msgid "BOT_MODE_PRIVACY"
+msgstr "🔒 Приватный"
 
 msgid "DELETED_MESSAGE_TEMPLATE"
 msgstr ""
@@ -267,4 +311,89 @@ msgstr "Удаленная игра"
 
 msgid "EDITED_CONTENT_TYPE_GAME"
 msgstr "Измененная игра"
+
+# Settings
+msgid "SETTINGS_TEXT"
+msgstr ""
+"<b>⚙️ Настройки</b>\n"
+"\n"
+"Выберите нужный раздел для управления функциями бота."
+
+msgid "ENABLE_BUTTON"
+msgstr "Включить"
+
+msgid "ENABLE_FOR_OUTGOING"
+msgstr "Включить для исходящих"
+
+# # Bot Mode Settings
+msgid "BOT_MODE_SETTINGS_BUTTON"
+msgstr "🥷 Режим работы бота"
+
+# # Messages Settings
+msgid "MESSAGES_SETTINGS_BUTTON"
+msgstr "💬 Настройки сообщений"
+
+msgid "MESSAGES_SETTINGS_TEXT"
+msgstr "<b>💬 Настройки сообщений</b>\n"
+
+# ## Deleted
+msgid "DELETED_MESSAGES_SETTINGS_BUTTON"
+msgstr "🗑️ Сохранение удаленных"
+
+msgid "DELETED_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr ""
+"Отправляет вам уведомление когда кто-либо удаляет сообщение в чате, "
+"сохраняя его наполнение."
+
+msgid "DELETED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr "Включает уведомления об удалении для входящих."
+
+msgid "DELETED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"
+msgstr "Включает уведомления об удалении для исходящих."
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_TEXT"
+msgstr "Текстовые сообщения"
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_TEXT_DESCRIPTION"
+msgstr "Сохраняет удаленные текстовые сообщения."
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_MEDIA"
+msgstr "Медиа-сообщения"
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_MEDIA_DESCRIPTION"
+msgstr "фото, видео, аудио, стикеры, анимации, голосовые и видео сообщения"
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_OTHER"
+msgstr "Прочие сообщения"
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_OTHER_DESCRIPTION"
+msgstr "Контакты, локации, опросы, истории, подарки и пр."
+
+# ## Edited
+msgid "EDITED_MESSAGES_SETTINGS_BUTTON"
+msgstr "📝 Сохранение отредактированных"
+
+msgid "EDITED_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr ""
+"Отправляет вам уведомление, когда кто-либо редактирует сообщение в чате, "
+"сохраняя его изначальное и новое содержание."
+
+msgid "EDITED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr "Включает уведомления о редактировании для входящих."
+
+msgid "EDITED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"
+msgstr "Включает уведомления о редактировании для исходящих."
+
+msgid "EDITED_MESSAGES_SETTINGS_SAVE_TEXT_DESCRIPTION"
+msgstr "Сохраняет отредактированные текстовые сообщения."
+
+# Protected
+msgid "PROTECTED_MESSAGES_SETTINGS_BUTTON"
+msgstr "🔞 Сохранение временных"
+
+msgid "PROTECTED_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr "Позволяет сохранять временные (исчезающие) сообщения, отвечая на них."
+
+msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr "Включает сохранение временных сообщений."
 

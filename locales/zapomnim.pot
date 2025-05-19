@@ -7,26 +7,60 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-19 00:58+0300\n"
+"POT-Creation-Date: 2025-05-19 22:42+0300\n"
 "PO-Revision-Date: 2025-05-14 06:12+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: en\n"
 "Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.17.0\n"
+"X-Generator: Poedit 3.6\n"
+"X-Poedit-Basepath: ru/LC_MESSAGES\n"
+"X-Poedit-SearchPath-0: zapomnim.po\n"
 
 msgid "NONE"
 msgstr ""
 
-msgid "START_IMAGE"
+# ## ------------------------------------------------- ###
+# ## ------------------- MAIN MENU ------------------- ###
+msgid "MAIN_MENU_IMAGE"
 msgstr ""
 
 msgid "START_TEXT"
 msgstr ""
 
+msgid "START_IMAGE"
+msgstr ""
+
+msgid "MAIN_MENU_TEXT"
+msgstr ""
+
+msgid "SETTINGS_BUTTON"
+msgstr ""
+
+msgid "PROFILE_BUTTON"
+msgstr ""
+
+msgid "PROFILE_TEXT"
+msgstr ""
+
+msgid "BUY_SUBSCRIPTION_BUTTON"
+msgstr ""
+
+msgid "DATA_SETTINGS_BUTTON"
+msgstr ""
+
+msgid "SUPPORT_BUTTON"
+msgstr ""
+
+msgid "SUPPORT_LINK"
+msgstr ""
+
+# ## ------------------------------------------------- ###
+# ## --------------------- OTHER --------------------- ###
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
 msgstr ""
 
@@ -54,10 +88,13 @@ msgstr ""
 msgid "CONTINUE_BUTTON"
 msgstr ""
 
-msgid "SECURITY_MODE_STANDARD"
+msgid "BACK_BUTTON"
 msgstr ""
 
-msgid "SECURITY_MODE_SECURITY"
+msgid "BOT_MODE_STANDARD"
+msgstr ""
+
+msgid "BOT_MODE_PRIVACY"
 msgstr ""
 
 msgid "DELETED_MESSAGE_TEMPLATE"
@@ -75,11 +112,8 @@ msgstr ""
 msgid "PROTECTED_MESSAGE_SAVED_TEMPLATE"
 msgstr ""
 
-### ------------------------------------------------- ###
-### ----------------- CONTENT TYPES ----------------- ###
-### ------------------------------------------------- ###
-
-
+# ## ------------------------------------------------- ###
+# ## ----------------- CONTENT TYPES ----------------- ###
 msgid "REMOVED_CONTENT_TYPE_TEXT"
 msgstr ""
 
@@ -194,3 +228,82 @@ msgstr ""
 msgid "EDITED_CONTENT_TYPE_GAME"
 msgstr ""
 
+
+# Settings
+msgid "SETTINGS_TEXT"
+msgstr ""
+
+msgid "ENABLE_BUTTON"
+msgstr ""
+
+msgid "ENABLE_FOR_OUTGOING"
+msgstr ""
+
+# # Bot Mode Settings
+msgid "BOT_MODE_SETTINGS_BUTTON"
+msgstr ""
+
+# # Messages Settings
+msgid "MESSAGES_SETTINGS_BUTTON"
+msgstr ""
+
+msgid "MESSAGES_SETTINGS_TEXT"
+msgstr ""
+
+# ## Deleted
+msgid "DELETED_MESSAGES_SETTINGS_BUTTON"
+msgstr ""
+
+msgid "DELETED_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr ""
+
+msgid "DELETED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr ""
+
+msgid "DELETED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"
+msgstr ""
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_TEXT"
+msgstr ""
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_TEXT_DESCRIPTION"
+msgstr ""
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_MEDIA"
+msgstr ""
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_MEDIA_DESCRIPTION"
+msgstr ""
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_OTHER"
+msgstr ""
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_OTHER_DESCRIPTION"
+msgstr ""
+
+
+# ## Edited
+msgid "EDITED_MESSAGES_SETTINGS_BUTTON"
+msgstr ""
+
+msgid "EDITED_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr ""
+
+msgid "EDITED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr ""
+
+msgid "EDITED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"
+msgstr ""
+
+msgid "EDITED_MESSAGES_SETTINGS_SAVE_TEXT_DESCRIPTION"
+msgstr ""
+
+# Protected
+msgid "PROTECTED_MESSAGES_SETTINGS_BUTTON"
+msgstr ""
+
+msgid "PROTECTED_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr ""
+
+msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr ""

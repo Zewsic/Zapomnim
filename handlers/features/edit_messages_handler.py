@@ -14,7 +14,7 @@ from database import create_session
 from database.models import Persona
 from utils import get_user
 from utils.messages import restore_last_messages, save_message, ContentType, RestoredMessage
-from utils.userdata import get_persona
+from utils.userdata import get_persona, update_persona
 
 router = Router()
 
@@ -40,13 +40,14 @@ DUMPABLE_TYPES = {
     ContentType.GAME,
 }
 
+
 async def send_media(
-    bot: Bot,
-    user_id: int,
-    content_type: ContentType,
-    content: Optional[str],
-    caption: str,
-    keyboard: InlineKeyboardMarkup,
+        bot: Bot,
+        user_id: int,
+        content_type: ContentType,
+        content: Optional[str],
+        caption: str,
+        keyboard: InlineKeyboardMarkup,
 ):
     """
     Универсальная отправка медиа по content_type.
@@ -96,13 +97,14 @@ async def send_media(
         reply_markup=keyboard,
     )
 
+
 async def send_edited_info(
-    bot: Bot,
-    user_id: int,
-    chat: Persona,
-    old_msg: RestoredMessage,
-    new_msg: RestoredMessage,
-    message_id: int
+        bot: Bot,
+        user_id: int,
+        chat: Persona,
+        old_msg: RestoredMessage,
+        new_msg: RestoredMessage,
+        message_id: int
 ) -> None:
     """
     Отправляем в личку пользователю сообщение о том,
@@ -120,8 +122,9 @@ async def send_edited_info(
             "chat": chat.hname,
             "id": message_id,
             "content": (
-                _("EDITED_MESSAGE_TEMPLATE_OLD_TEXT").format(text=old_msg.text, date=_date) if old_msg.text else "" +
-                _("EDITED_MESSAGE_TEMPLATE_NEW_TEXT").format(text=new_msg.text) if new_msg.text else ""
+                    (_("EDITED_MESSAGE_TEMPLATE_OLD_TEXT").format(
+                        text=old_msg.text, date=_date) if old_msg.text else "") +
+                    (_("EDITED_MESSAGE_TEMPLATE_NEW_TEXT").format(text=new_msg.text) if new_msg.text else "")
             )
         }
     )
@@ -134,6 +137,7 @@ async def send_edited_info(
         caption=base_msg,
         keyboard=InlineKeyboardMarkup(inline_keyboard=[])
     )
+
 
 @router.edited_business_message()
 async def on_edit_messages(event: Message):
@@ -157,6 +161,9 @@ async def on_edit_messages(event: Message):
         if not new_result:
             return
 
+        if not user.is_working:
+            return
+
         new_msg = RestoredMessage(
             content_type=new_result[0],
             content=new_result[1],
@@ -165,7 +172,30 @@ async def on_edit_messages(event: Message):
             created_at=old_msg.created_at
         )
 
-        chat = await get_persona(session, event.chat.id)
+        chat = await update_persona(
+            id=event.chat.id,
+            session=session,
+            first_name=event.chat.first_name,
+            last_name=event.chat.last_name,
+            username=event.chat.username
+        )
+
+        if user.id != new_msg.persona.id:
+            if not await user.get_bool('settings.edited_messages.enabled', session, default=True):
+                return
+        else:
+            if not await user.get_bool('settings.edited_messages.enabled_for_outgoing', session, default=True):
+                return
+
+        if new_msg.content_type == ContentType.TEXT:
+            if not await user.get_bool('settings.edited_messages.save_text', session, default=True):
+                return
+        elif new_msg.content_type in list(MEDIA_TYPES.keys()) + [ContentType.VIDEO_NOTE, ContentType.STICKER]:
+            if not await user.get_bool('settings.edited_messages.save_media', session, default=True):
+                return
+        else:
+            if not await user.get_bool('settings.edited_messages.save_other', session, default=False):
+                return
 
         await send_edited_info(
             bot=bot,

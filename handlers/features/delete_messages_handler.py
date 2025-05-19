@@ -9,9 +9,10 @@ from aiogram.types import (
     LinkPreviewOptions
 )
 from aiogram.utils.i18n import gettext as _
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import create_session
-from database.models import Persona
+from database.models import Persona, User
 from utils import get_user
 from utils.messages import restore_last_messages, RestoredMessage, ContentType
 from utils.userdata import get_persona
@@ -40,12 +41,13 @@ DUMPABLE_TYPES = {
     ContentType.GAME,
 }
 
+
 async def send_media(
-    bot: Bot,
-    chat_id: int,
-    content_type: ContentType,
-    content: Optional[str],
-    caption: str
+        bot: Bot,
+        chat_id: int,
+        content_type: ContentType,
+        content: Optional[str],
+        caption: str
 ):
     """
     Универсальная функция отправки контента по content_type (Enum).
@@ -102,16 +104,35 @@ async def send_media(
         link_preview_options=LinkPreviewOptions(is_disabled=True)
     )
 
+
 async def send_deleted_info(
-    bot: Bot,
-    user_id: int,
-    chat: Persona,
-    restored_messages: List[RestoredMessage]
+        bot: Bot,
+        user: User,
+        chat: Persona,
+        restored_messages: List[RestoredMessage],
+        session: AsyncSession,
 ) -> None:
     """
     Рассылает в личку пользователю (user_id) информацию об удалённых сообщениях.
     """
     for msg_data in restored_messages:
+        if user.id != msg_data.persona.id:
+            if not await user.get_bool('settings.deleted_messages.enabled', session, default=True):
+                continue
+        else:
+            if not await user.get_bool('settings.deleted_messages.enabled_for_outgoing', session, default=True):
+                continue
+
+        if msg_data.content_type == ContentType.TEXT:
+            if not await user.get_bool('settings.deleted_messages.save_text', session, default=True):
+                continue
+        elif msg_data.content_type in list(MEDIA_TYPES.keys()) + [ContentType.VIDEO_NOTE, ContentType.STICKER]:
+            if not await user.get_bool('settings.deleted_messages.save_media', session, default=True):
+                continue
+        else:
+            if not await user.get_bool('settings.deleted_messages.save_other', session, default=False):
+                continue
+
         content_type_str = _(f"REMOVED_CONTENT_TYPE_{msg_data.content_type.value.upper()}")
         persona_name = msg_data.persona.hname if msg_data.persona else "Unknown"
         date_str = msg_data.created_at.strftime("%d.%m.%Y %H:%M:%S")
@@ -128,16 +149,14 @@ async def send_deleted_info(
             }
         )
 
-        if msg_data.text in (None, ""):
-            base_text.text = base_text.replace("\n<blockquote expandable></blockquote>\n", '')
-
         await send_media(
             bot=bot,
-            chat_id=user_id,
+            chat_id=user.id,
             content_type=msg_data.content_type,
             content=msg_data.content,
             caption=base_text
         )
+
 
 @router.deleted_business_messages()
 async def on_delete_messages(event: BusinessMessagesDeleted):
@@ -156,11 +175,15 @@ async def on_delete_messages(event: BusinessMessagesDeleted):
         if not restored:
             return
 
+        if not user.is_working:
+            return
+
         chat = await get_persona(session, event.chat.id)
 
         await send_deleted_info(
             bot=bot,
-            user_id=user.id,
+            user=user,
             chat=chat,
-            restored_messages=restored
+            restored_messages=restored,
+            session=session
         )

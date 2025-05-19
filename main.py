@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from typing import Final
 
 import uvicorn
+from aiogram.exceptions import TelegramBadRequest
 from fastapi import FastAPI, Request, HTTPException
 from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
@@ -15,7 +16,7 @@ from config import WEBHOOK_HOST, BOT_TOKEN, TELEGRAM_SERVER
 from database import create_tables
 from handlers import (
     initial_setup_router, settings_router, process_message_router,
-    delete_messages_router, edit_messages_router
+    delete_messages_router, edit_messages_router, menu_router
 )
 from utils import TelegramMirrorUtils, PatchedI18nMiddleware, set_bot_commands
 
@@ -67,7 +68,8 @@ dp.include_routers(
     process_message_router,
     settings_router,
     delete_messages_router,
-    edit_messages_router
+    edit_messages_router,
+    menu_router
 )
 PatchedI18nMiddleware(i18n).setup(dp)
 
@@ -80,7 +82,10 @@ async def telegram_main_webhook(bot_id: str, req: Request):
         payload = await req.json()
         update = types.Update(**payload)
         logger.info("Update received: %s", payload)
-        await dp.feed_update(main_bot, update)
+        try:
+            await dp.feed_update(main_bot, update)
+        except TelegramBadRequest as e:
+            logger.error(e)
         return {"ok": True}
     except Exception as exc:
         logger.exception("Error in webhook handler:")

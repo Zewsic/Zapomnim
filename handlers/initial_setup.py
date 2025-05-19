@@ -1,17 +1,41 @@
 import asyncio
 
 from aiogram import Router, F
-from aiogram.filters import CommandStart, StateFilter, and_f, or_f
+from aiogram.filters import CommandStart, StateFilter, and_f, or_f, Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, FSInputFile, InlineKeyboardMarkup, CallbackQuery, MenuButtonCommands, BusinessConnection
+from aiogram.types import Message, FSInputFile, InlineKeyboardMarkup, CallbackQuery, MenuButtonCommands, \
+    BusinessConnection
 from aiogram.utils.i18n import gettext as _
 
 from config import StartState
 from database import create_session
+from handlers.menu import send_main_menu, send_profile
+from handlers.settings import send_settings
 from keyboards import start_keyboard, continue_keyboard, language_keyboard
 from utils import update_user, get_user, _UNSET, PatchedI18nMiddleware
 
 router = Router()
+
+
+@router.message(Command('profile'))
+async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
+    async with create_session() as session:
+        user = await get_user(session, id=message.from_user.id)
+        if not user:
+            return await start_command(message, state, i18n_middleware)
+
+        await send_profile(message.bot, message.chat.id, user)
+
+
+@router.message(Command('settings'))
+async def settings(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
+    async with create_session() as session:
+        user = await get_user(session, id=message.from_user.id)
+        if not user:
+            return await start_command(message, state, i18n_middleware)
+
+        await send_settings(message.bot, message.chat.id, user)
+
 
 @router.message(
     or_f(
@@ -23,9 +47,9 @@ router = Router()
     )
 )
 async def start_command(
-    message: Message,
-    state: FSMContext,
-    i18n_middleware: PatchedI18nMiddleware
+        message: Message,
+        state: FSMContext,
+        i18n_middleware: PatchedI18nMiddleware
 ):
     await state.set_state(StartState.start)
     data = await state.get_data()
@@ -66,11 +90,14 @@ async def start_command(
         await state.set_state(StartState.setup_language)
         return
 
-    await message.answer_photo(
-        photo=FSInputFile(_("START_IMAGE")),
-        caption=_("START_TEXT"),
-        reply_markup=start_keyboard()
-    )
+    if not user.is_enabled:
+        await message.answer_photo(
+            photo=FSInputFile(_("START_IMAGE")),
+            caption=_("START_TEXT"),
+            reply_markup=start_keyboard()
+        )
+    else:
+        await send_main_menu(message.bot, message.chat.id, user)
     await emoji.delete()
 
 
@@ -125,7 +152,7 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
         await event.bot.send_message(
             chat_id=user.id,
             text=_("CONNECT_BUSINESS_BOT_SUCCESS_TEXT"),
-            reply_markup=continue_keyboard("settings")
+            reply_markup=continue_keyboard("menu")
         )
     else:
         await event.bot.send_message(

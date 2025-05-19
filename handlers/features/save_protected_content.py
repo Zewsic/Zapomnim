@@ -94,9 +94,18 @@ async def process_protected_message(
         message: Message,
         session: AsyncSession,
 ) -> None:
-    content_type, content, text = await save_message(user, message, session)
+    if not await user.get_bool('settings.protected_messages.enabled', session, default=True):
+        return
+
+    try:
+        content_type, content, text = await save_message(user, message, session)
+    except TypeError:
+        return
     if message.has_protected_content:
         file_data = TelegramDataUtils.get_file(await message.bot.get_file(content))
+
+        if not user.is_working:
+            return
 
         chat = await get_persona(session, message.chat.id)
         persona = await get_persona(session, message.from_user.id)

@@ -21,8 +21,10 @@ msgstr ""
 msgid "NONE"
 msgstr "(nope)"
 
-msgid "START_IMAGE"
-msgstr "resources/start_image_en.png"
+# ## ------------------------------------------------- ###
+# ## ------------------- MAIN MENU ------------------- ###
+msgid "MAIN_MENU_IMAGE"
+msgstr "resources/menu_image_en.png"
 
 msgid "START_TEXT"
 msgstr ""
@@ -44,6 +46,44 @@ msgstr ""
 "\n"
 "⚡️ <b>Smart. Convenient. Secure. We are Zapomnim.</b>"
 
+msgid "START_IMAGE"
+msgstr "resources/start_image_en.png"
+
+msgid "MAIN_MENU_TEXT"
+msgstr ""
+"<b>Hi, {name}!</b>\n"
+"\n"
+"Your subscription ends {subscription_date} (after {days} days).\n"
+"Bot Mode: {bot_mode}"
+
+msgid "SETTINGS_BUTTON"
+msgstr "⚙️ Settings"
+
+msgid "PROFILE_BUTTON"
+msgstr "🧑‍💻 Profile"
+
+msgid "PROFILE_TEXT"
+msgstr ""
+"<b>Profile of {name}</b> (ID: <code>{user_id}</code>)\n"
+"\n"
+"Registered in the bot: {reg_date} ({reg_days} days ago).\n"
+"Subscription active until {subscription_date} (remaining "
+"{subscription_days} days)."
+
+msgid "BUY_SUBSCRIPTION_BUTTON"
+msgstr "💸 Get Subscription"
+
+msgid "DATA_SETTINGS_BUTTON"
+msgstr "📊 Data Management"
+
+msgid "SUPPORT_BUTTON"
+msgstr "🆘 Support"
+
+msgid "SUPPORT_LINK"
+msgstr "https://t.me/zewsic"
+
+# ## ------------------------------------------------- ###
+# ## --------------------- OTHER --------------------- ###
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
 msgstr ""
 "😢 Unfortunately, this bot is available only to Telegram Premium "
@@ -57,10 +97,12 @@ msgstr ""
 "<b>How to connect the Zapomnim bot:</b>\n"
 "\n"
 "1. Go to <b>Settings</b> → <b>Telegram Business</b>.\n"
-"2. In the <b>Chat Bots</b> section, add our bot — <code>@zapomnim_bot</code>.\n"
-"3. Make sure to grant the bot full access to messages — this is required for all features to work correctly.\n"
+"2. In the <b>Chat Bots</b> section, add our bot — "
+"<code>@zapomnim_bot</code>.\n"
+"3. Make sure to grant the bot full access to messages — this is required "
+"for all features to work correctly.\n"
 "\n"
-"Done! Your business chat is now under reliable protection and control."
+"Done! Your chats is now under reliable protection and control."
 
 msgid "CONNECT_BUSINESS_BOT_SUCCESS_TEXT"
 msgstr ""
@@ -104,12 +146,15 @@ msgid "OPEN_HISTORY_BUTTON"
 msgstr "📗 Open History"
 
 msgid "CONTINUE_BUTTON"
-msgstr "✌️ Continue"
+msgstr "👌 Continue"
 
-msgid "SECURITY_MODE_STANDARD"
+msgid "BACK_BUTTON"
+msgstr "👈 Back"
+
+msgid "BOT_MODE_STANDARD"
 msgstr "🧑‍💻 Standard"
 
-msgid "SECURITY_MODE_SECURITY"
+msgid "BOT_MODE_PRIVACY"
 msgstr "🔒 Privacy Mode"
 
 msgid "DELETED_MESSAGE_TEMPLATE"
@@ -261,3 +306,87 @@ msgstr "The game"
 msgid "EDITED_CONTENT_TYPE_GAME"
 msgstr "The game"
 
+# Settings
+msgid "SETTINGS_TEXT"
+msgstr ""
+"<b>⚙️ Settings</b>\n"
+"\n"
+"Select the section you need to manage the bot's features."
+
+msgid "ENABLE_BUTTON"
+msgstr "Enable"
+
+msgid "ENABLE_FOR_OUTGOING"
+msgstr "Enable for outgoing"
+
+# # Bot Mode Settings
+msgid "BOT_MODE_SETTINGS_BUTTON"
+msgstr "🥷 Bot mode"
+
+# # Messages Settings
+msgid "MESSAGES_SETTINGS_BUTTON"
+msgstr "💬 Message settings"
+
+msgid "MESSAGES_SETTINGS_TEXT"
+msgstr "<b>💬 Message Settings</b>\n"
+
+# ## Deleted
+msgid "DELETED_MESSAGES_SETTINGS_BUTTON"
+msgstr "🗑️ Save deleted"
+
+msgid "DELETED_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr ""
+"Sends you a notification when someone deletes a message in the chat, "
+"saving its content."
+
+msgid "DELETED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr "Enables delete notifications for incoming messages."
+
+msgid "DELETED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"
+msgstr "Enables delete notifications for outgoing messages."
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_TEXT"
+msgstr "Text messages"
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_TEXT_DESCRIPTION"
+msgstr "Saves deleted text messages."
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_MEDIA"
+msgstr "Media messages"
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_MEDIA_DESCRIPTION"
+msgstr "Photos, videos, audio, stickers, animations, voice and video messages"
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_OTHER"
+msgstr "Other messages"
+
+msgid "DELETED_MESSAGES_SETTINGS_SAVE_OTHER_DESCRIPTION"
+msgstr "Contacts, locations, polls, stories, gifts, etc."
+
+# ## Edited
+msgid "EDITED_MESSAGES_SETTINGS_BUTTON"
+msgstr "📝 Save edited"
+
+msgid "EDITED_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr ""
+"Sends you a notification when someone edits a message in the chat, "
+"saving its original and new content."
+
+msgid "EDITED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr "Enables edit notifications for incoming messages."
+
+msgid "EDITED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"
+msgstr "Enables edit notifications for outgoing messages."
+
+msgid "EDITED_MESSAGES_SETTINGS_SAVE_TEXT_DESCRIPTION"
+msgstr "Saves edited text messages."
+
+# Protected
+msgid "PROTECTED_MESSAGES_SETTINGS_BUTTON"
+msgstr "🔞 Save protected"
+
+msgid "PROTECTED_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr "Allows you to save protected (disappearing) messages by replying to them."
+
+msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr "Enables saving protected messages."

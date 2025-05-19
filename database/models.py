@@ -2,11 +2,18 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from sqlalchemy import func, ForeignKey, BIGINT
+from sqlalchemy.dialects.postgresql import TIMESTAMP
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.testing.suite.test_reflection import users
 
-from database import Base
+from database import Base, RedisSession
 
+
+class UserData(Base):
+    user_id: Mapped[int] = mapped_column(BIGINT, ForeignKey('users.id'))
+    key: Mapped[str]
+    value: Mapped[str]
 
 class User(Base):
     first_name: Mapped[str]
@@ -21,6 +28,59 @@ class User(Base):
     business_connection_id: Mapped[str | None] = mapped_column(default=None)
     subscriber_until: Mapped[datetime] = mapped_column(default=func.now() + timedelta(days=7))
 
+    @property
+    def is_working(self) -> bool:
+        return not self.is_banned and self.is_enabled and (self.subscriber_until + timedelta(days=1)) > datetime.now()
+
+    async def set_int(self, key: str, value: int, db: AsyncSession):
+        await RedisSession.set(f"user_data:{self.id}:{key}", value)
+        await self._set_db_value(key, str(value), db)
+
+    async def set_bool(self, key: str, value: bool, db: AsyncSession):
+        await RedisSession.set(f"user_data:{self.id}:{key}", int(value))
+        await self._set_db_value(key, str(int(value)), db)
+
+    async def set_string(self, key: str, value: str, db: AsyncSession):
+        await RedisSession.set(f"user_data:{self.id}:{key}", value)
+        await self._set_db_value(key, value, db)
+
+    async def get_int(self, key: str, db: AsyncSession, default: int = 0) -> int:
+        v = await RedisSession.get(f"user_data:{self.id}:{key}")
+        if v is not None:
+            return int(v)
+        db_value = await self._get_db_value(key, db)
+        return int(db_value) if db_value is not None else default
+
+    async def get_bool(self, key: str, db: AsyncSession, default: bool = False) -> bool:
+        v = await RedisSession.get(f"user_data:{self.id}:{key}")
+        if v is not None:
+            return bool(int(v))
+        db_value = await self._get_db_value(key, db)
+        return bool(int(db_value)) if db_value is not None else default
+
+    async def get_string(self, key: str, db: AsyncSession, default: str = "") -> str:
+        v = await RedisSession.get(f"user_data:{self.id}:{key}")
+        if v is not None:
+            return v.decode()
+        db_value = await self._get_db_value(key, db)
+        return db_value if db_value is not None else default
+
+    async def _set_db_value(self, key: str, value: str, db: AsyncSession):
+        from sqlalchemy import select
+        stmt = select(UserData).where(UserData.user_id == self.id, UserData.key == key)
+        obj = (await db.execute(stmt)).scalar_one_or_none()
+        if obj:
+            obj.value = value
+        else:
+            obj = UserData(user_id=self.id, key=key, value=value)
+            db.add(obj)
+        await db.commit()
+
+    async def _get_db_value(self, key: str, db: AsyncSession):
+        from sqlalchemy import select
+        stmt = select(UserData.value).where(UserData.user_id == self.id, UserData.key == key)
+        res = (await db.execute(stmt)).scalar_one_or_none()
+        return res
 
 class Persona(Base):
     first_name: Mapped[str]

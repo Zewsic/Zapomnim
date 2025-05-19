@@ -5,8 +5,12 @@ from aiogram.types import BotCommand
 async def set_bot_commands(bot: Bot):
     await bot.set_my_commands(commands=[
         BotCommand(command='start', description='Open bot main menu'),
+        BotCommand(command='profile', description='Open user profile'),
+        BotCommand(command='settings', description='Open bot settings'),
     ], language_code='en')
 
     await bot.set_my_commands(commands=[
         BotCommand(command='start', description='Открыть главное меню'),
+        BotCommand(command='profile', description='Открыть профиль пользователя'),
+        BotCommand(command='settings', description='Открыть настройки'),
     ], language_code='ru')

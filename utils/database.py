@@ -67,4 +67,12 @@ async def load_from_redis(model: Type[T], key_value: str, key_prefix: str = "def
         return None
 
     data = json.loads(json_data)
+    for column in inspect(model).columns:
+        if str(column.type) in ('DATETIME', 'TIMESTAMP'):
+            name = column.name
+            if name in data and isinstance(data[name], str):
+                try:
+                    data[name] = datetime.fromisoformat(data[name])
+                except Exception:
+                    pass  # можно обработать другие форматы, если нужно
     return model(**data)
