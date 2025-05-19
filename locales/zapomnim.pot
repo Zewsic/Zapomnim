@@ -1,68 +1,173 @@
-# Translations template for PROJECT.
+# English translations for PROJECT.
 # Copyright (C) 2025 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-14 10:09+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2025-05-19 00:58+0300\n"
+"PO-Revision-Date: 2025-05-14 06:12+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: handlers/business/test.py:27 handlers/main_menu.py:25
-#: handlers/main_menu.py:44 handlers/main_menu.py:97
 msgid "START_IMAGE"
 msgstr ""
 
-#: handlers/main_menu.py:26
 msgid "START_TEXT"
 msgstr ""
 
-#: handlers/main_menu.py:35
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
 msgstr ""
 
-#: handlers/main_menu.py:45 handlers/main_menu.py:57
-msgid "CONNECT_BOT_INSTRUCTION"
+msgid "CONNECT_BUSINESS_BOT_IMAGE"
 msgstr ""
 
-#: handlers/main_menu.py:62 handlers/main_menu.py:70
-msgid "INVALID_TOKEN"
+msgid "CONNECT_BUSINESS_BOT_TEXT"
 msgstr ""
 
-#: handlers/main_menu.py:65 handlers/main_menu.py:73
-msgid "CHECKING_BOT"
+msgid "CONNECT_BUSINESS_BOT_SUCCESS_TEXT"
 msgstr ""
 
-#: handlers/main_menu.py:84 handlers/main_menu.py:120
-msgid "BOT_SETUP_COMPLETE"
+msgid "SETUP SECURITY_TEXT"
 msgstr ""
 
-#: handlers/main_menu.py:98
-msgid "BOT_SETUP_BUSINESS_INSTRUCTION"
-msgstr ""
-
-#: handlers/main_menu.py:113
-msgid "BUSINESS_MODE_IS_NOT_ENABLED"
-msgstr ""
-
-#: keyboards/main_menu.py:9
 msgid "START_BUTTON"
 msgstr ""
 
-#: keyboards/main_menu.py:16
-msgid "CHECK_BUSINESS_BUTTON"
+msgid "CONTINUE_BUTTON"
 msgstr ""
 
-#: keyboards/main_menu.py:23
-msgid "GO_TO_BOT_BUTTON"
+msgid "SECURITY_MODE_STANDARD"
+msgstr ""
+
+msgid "SECURITY_MODE_SECURITY"
+msgstr ""
+
+msgid "DELETED_MESSAGE_TEMPLATE"
+msgstr ""
+
+msgid "EDITED_MESSAGE_TEMPLATE"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_TEXT"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_TEXT"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_PHOTO"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_PHOTO"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_DOCUMENT"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_DOCUMENT"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_VIDEO"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_VIDEO"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_STICKER"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_STICKER"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_AUDIO"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_AUDIO"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_VOICE"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_VOICE"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_VIDEO_NOTE"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_VIDEO_NOTE"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_ANIMATION"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_ANIMATION"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_CONTACT"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_CONTACT"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_LOCATION"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_LOCATION"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_VENUE"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_VENUE"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_POLL"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_POLL"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_PAID_MEDIA"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_PAID_MEDIA"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_STORY"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_STORY"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_GIFT"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_GIFT"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_UNIQUE_GIFT"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_UNIQUE_GIFT"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_DICE"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_DICE"
+msgstr ""
+
+msgid "REMOVED_CONTENT_TYPE_GAME"
+msgstr ""
+
+msgid "EDITED_CONTENT_TYPE_GAME"
 msgstr ""
 

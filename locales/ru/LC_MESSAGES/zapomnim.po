@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-14 10:09+0300\n"
+"POT-Creation-Date: 2025-05-19 00:58+0300\n"
 "PO-Revision-Date: 2025-05-14 06:12+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -19,12 +19,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: handlers/business/test.py:27 handlers/main_menu.py:25
-#: handlers/main_menu.py:44 handlers/main_menu.py:97
 msgid "START_IMAGE"
 msgstr "resources/start_image_ru.png"
 
-#: handlers/main_menu.py:26
 msgid "START_TEXT"
 msgstr ""
 "<b>👋 ZAPOMNIM — это продвинутое расширение для Telegram</b>, которое "
@@ -39,75 +36,205 @@ msgstr ""
 "- Сохранение исчезающих медиафайлов.\n"
 "- Проверка незнакомцев на скам.\n"
 "- Интеллектуальная защита от мошенников.\n"
+"- Умные уведомления\n"
 "- Персонализация бота под ваши задачи.\n"
 "- …и ещё больше новых функций скоро!\n"
 "\n"
 "⚡️ <b>Безопасно. Умно. Удобно. Это — ZAPOMNIM.</b>"
 
-#: handlers/main_menu.py:35
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
-msgstr "😢 К сожалению, бот доступен только подписчикам Telegram Premium"
-
-#: handlers/main_menu.py:45 handlers/main_menu.py:57
-msgid "CONNECT_BOT_INSTRUCTION"
 msgstr ""
-"<b>🛠️ Готовимся к запуску!</b>\n"
-"<i>Для начала создадим вашего Telegram-бота</i>\n"
-"\n"
-"🔹 <b>Сделайте всего несколько шагов:</b>\n"
-"1. Откройте <a "
-"href=\"https://t.me/BotFather?text=%2Fnewbot\">@BotFather</a> и введите "
-"команду <code>/newbot</code>.\n"
-"2. Придумайте любое имя и username для вашего бота.\n"
-"3. Скопируйте токен и отправьте его сюда.\n"
-"\n"
-"<b>🧐 Пример токена:</b>\n"
-"<blockquote>5995761349:AAGmBOCDXTBNW4S...</blockquote>\n"
-"\n"
+"😢 К сожалению, данный бот доступен только для пользователей Telegram "
+"Premium."
 
-#: handlers/main_menu.py:62 handlers/main_menu.py:70
-msgid "INVALID_TOKEN"
-msgstr "<b>⛔️ Вы прислали неверный токен.</b>"
+msgid "CONNECT_BUSINESS_BOT_IMAGE"
+msgstr "resources/connect_business_bot_image_ru.png"
 
-#: handlers/main_menu.py:65 handlers/main_menu.py:73
-msgid "CHECKING_BOT"
-msgstr "<i>✅ Подключение к %s ...</i>"
-
-#: handlers/main_menu.py:84 handlers/main_menu.py:120
-msgid "BOT_SETUP_COMPLETE"
+msgid "CONNECT_BUSINESS_BOT_TEXT"
 msgstr ""
-"💥 <b>Бот @%s подключен!</b>\n"
-"Для завершения настройки, продолжите в созданном вами боте."
+"<b>Инструкция по подключению бота:</b>\n"
+"\n"
+"1. Откройте <b>Настройки</b> → <b>Telegram для бизнеса</b>.\n"
+"2. В разделе <b>Чат-боты</b> укажите ссылку на нашего бота ( "
+"<code>@zapomnim_bot</code> ).\n"
+"3. Предоставьте боту полный доступ к сообщениям (обязательно для "
+"корректной работы)."
 
-#: handlers/main_menu.py:98
-msgid "BOT_SETUP_BUSINESS_INSTRUCTION"
+msgid "CONNECT_BUSINESS_BOT_SUCCESS_TEXT"
 msgstr ""
-"<b>🚦 Успех! Переходим к следующему шагу.\n"
-"</b><i>Теперь активируем «Business Mode» у вашего бота.</i>\n"
+"✅ <b>Бот был успешно подключен и работает!</b>\n"
 "\n"
-"✅ <b>Сделайте следующее:</b>\n"
-"1. Войдите в <a "
-"href=\"https://t.me/BotFather?text=%2Fmybots\">@BotFather</a> и отправьте"
-" команду <code>/mybots</code>.\n"
-"2. Выберите из списка своего созданного бота.\n"
-"3. Нажмите <b>Bot Settings</b>, затем найдите и активируйте режим "
-"<b>Business Mode</b>.\n"
+"Теперь вы можете перейти к настройкам."
+
+msgid "SETUP SECURITY_TEXT"
+msgstr ""
+"<b>🔐 Настройки безопасности</b>\n"
 "\n"
-"✨ <i>Нажмите на кнопку ниже, как только выполните это действие.</i>"
+"Бот поддерживает два режима работы: <b>стандартный</b> и <b>повышенной "
+"безопасности</b>. Вне зависимости от выбранного режима, <b>ваши данные "
+"защищены</b> с использованием современных методов шифрования и изоляции."
+"\n"
+"\n"
+"1. <b>Стандартный режим</b> предоставляет доступ ко всем функциям бота.\n"
+"\n"
+"2. <b>Режим повышенной безопасности</b> предназначен для тех, кто требует"
+" максимальной конфиденциальности. Используя данный режим <b>никто не "
+"может получить доступ к вашим данным</b>, но функционал бота будет "
+"ограничен.\n"
+"\n"
+"<b>Какие функции не будут доступны</b>:\n"
+"- История редактирования сообщений\n"
+"- ИИ-Анализ чатов\n"
+"- Умные уведомления\n"
+"- Статистика чата\n"
+"- Экспорт истории чата\n"
+"\n"
+"<b>Вы в любой момент можете переключиться между режимами в настройках.</b>"
 
-#: handlers/main_menu.py:113
-msgid "BUSINESS_MODE_IS_NOT_ENABLED"
-msgstr "⛔️ Business Mode не был включен. Попробуйте еще раз."
-
-#: keyboards/main_menu.py:9
 msgid "START_BUTTON"
 msgstr "🚀 Поехали!"
 
-#: keyboards/main_menu.py:16
-msgid "CHECK_BUSINESS_BUTTON"
-msgstr "✅ Подтвердить"
+msgid "CONTINUE_BUTTON"
+msgstr "✌️ Продолжить"
 
-#: keyboards/main_menu.py:23
-msgid "GO_TO_BOT_BUTTON"
-msgstr "🚪 Перейти в бота"
+msgid "SECURITY_MODE_STANDARD"
+msgstr "🧑‍💻 Стандартный"
+
+msgid "SECURITY_MODE_SECURITY"
+msgstr "🔒 Режим приватности"
+
+msgid "DELETED_MESSAGE_TEMPLATE"
+msgstr ""
+"<b>🗑️ {content_type} от {from}:</b>\n"
+"\n"
+"<blockquote expandable>{text}</blockquote>\n"
+"\n"
+"<i>Было отправлено {date}. \n"
+"Чат: {chat}</i>"
+
+msgid "EDITED_MESSAGE_TEMPLATE"
+msgstr ""
+"<b>🗑️ {content_type} от {from}:</b>\n"
+"\n"
+"<b>Старый текст (от {date})</b>:\n"
+"<blockquote expandable>{old_text}</blockquote>\n"
+"\n"
+"<b>Новый текст</b>:\n"
+"<blockquote expandable>{new_text}</blockquote>\n"
+"\n"
+"<i>Чат: {chat}, Сообщение #{id}</i> "
+
+msgid "REMOVED_CONTENT_TYPE_TEXT"
+msgstr "Удаленное сообщение"
+
+msgid "EDITED_CONTENT_TYPE_TEXT"
+msgstr "Измененное сообщение"
+
+msgid "REMOVED_CONTENT_TYPE_PHOTO"
+msgstr "Удаленная фотография"
+
+msgid "EDITED_CONTENT_TYPE_PHOTO"
+msgstr "Измененная фотография"
+
+msgid "REMOVED_CONTENT_TYPE_DOCUMENT"
+msgstr "Удаленный файл"
+
+msgid "EDITED_CONTENT_TYPE_DOCUMENT"
+msgstr "Измененный файл"
+
+msgid "REMOVED_CONTENT_TYPE_VIDEO"
+msgstr "Удаленное видео"
+
+msgid "EDITED_CONTENT_TYPE_VIDEO"
+msgstr "Измененное видео"
+
+msgid "REMOVED_CONTENT_TYPE_STICKER"
+msgstr "Удаленный стикер"
+
+msgid "EDITED_CONTENT_TYPE_STICKER"
+msgstr "Измененный стикер"
+
+msgid "REMOVED_CONTENT_TYPE_AUDIO"
+msgstr "Удаленное аудио"
+
+msgid "EDITED_CONTENT_TYPE_AUDIO"
+msgstr "Измененное аудио"
+
+msgid "REMOVED_CONTENT_TYPE_VOICE"
+msgstr "Удаленное голосовое сообщение"
+
+msgid "EDITED_CONTENT_TYPE_VOICE"
+msgstr "Измененное голосовое сообщение"
+
+msgid "REMOVED_CONTENT_TYPE_VIDEO_NOTE"
+msgstr "Удаленное видео-сообщение"
+
+msgid "EDITED_CONTENT_TYPE_VIDEO_NOTE"
+msgstr "Измененное видео-сообщение"
+
+msgid "REMOVED_CONTENT_TYPE_ANIMATION"
+msgstr "Удаленная gif-анимация"
+
+msgid "EDITED_CONTENT_TYPE_ANIMATION"
+msgstr "Измененная gif-анимация"
+
+msgid "REMOVED_CONTENT_TYPE_CONTACT"
+msgstr "Удаленный контакт"
+
+msgid "EDITED_CONTENT_TYPE_CONTACT"
+msgstr "Измененный контакт"
+
+msgid "REMOVED_CONTENT_TYPE_LOCATION"
+msgstr "Удаленная локация"
+
+msgid "EDITED_CONTENT_TYPE_LOCATION"
+msgstr "Измененная локация"
+
+msgid "REMOVED_CONTENT_TYPE_VENUE"
+msgstr "Удаленное место"
+
+msgid "EDITED_CONTENT_TYPE_VENUE"
+msgstr "Измененное место"
+
+msgid "REMOVED_CONTENT_TYPE_POLL"
+msgstr "Удаленный опрос"
+
+msgid "EDITED_CONTENT_TYPE_POLL"
+msgstr "Измененный опрос"
+
+msgid "REMOVED_CONTENT_TYPE_PAID_MEDIA"
+msgstr "Удаленный платный контент"
+
+msgid "EDITED_CONTENT_TYPE_PAID_MEDIA"
+msgstr "Измененный платный контент"
+
+msgid "REMOVED_CONTENT_TYPE_STORY"
+msgstr "Удаленная история"
+
+msgid "EDITED_CONTENT_TYPE_STORY"
+msgstr "Измененная история"
+
+msgid "REMOVED_CONTENT_TYPE_GIFT"
+msgstr "Удаленный подарок"
+
+msgid "EDITED_CONTENT_TYPE_GIFT"
+msgstr "Измененный подарок"
+
+msgid "REMOVED_CONTENT_TYPE_UNIQUE_GIFT"
+msgstr "Удаленный NFT"
+
+msgid "EDITED_CONTENT_TYPE_UNIQUE_GIFT"
+msgstr "Измененный NFT"
+
+msgid "REMOVED_CONTENT_TYPE_DICE"
+msgstr "Удаленная активность"
+
+msgid "EDITED_CONTENT_TYPE_DICE"
+msgstr "Измененная активность"
+
+msgid "REMOVED_CONTENT_TYPE_GAME"
+msgstr "Удаленная игра"
+
+msgid "EDITED_CONTENT_TYPE_GAME"
+msgstr "Измененная игра"
 

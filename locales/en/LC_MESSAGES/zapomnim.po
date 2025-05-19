@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-14 10:09+0300\n"
+"POT-Creation-Date: 2025-05-19 00:58+0300\n"
 "PO-Revision-Date: 2025-05-14 06:12+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,12 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: handlers/business/test.py:27 handlers/main_menu.py:25
-#: handlers/main_menu.py:44 handlers/main_menu.py:97
 msgid "START_IMAGE"
 msgstr "resources/start_image_en.png"
 
-#: handlers/main_menu.py:26
 msgid "START_TEXT"
 msgstr ""
 "<b>👋 ZAPOMNIM is an advanced Telegram extension</b> operating seamlessly "
@@ -38,75 +35,202 @@ msgstr ""
 "- Saving disappearing media.\n"
 "- Scam-checking of unknowns.\n"
 "- AI-driven anti-fraud protection.\n"
+"- Smart Notifications\n"
 "- Customizable bot experience.\n"
 "- …and many more features coming soon!\n"
 "\n"
 "⚡️ <b>Secure. Smart. Convenient. That's ZAPOMNIM.</b>"
 
-#: handlers/main_menu.py:35
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
 msgstr ""
 "😢 Unfortunately, this bot is available only to Telegram Premium "
 "subscribers."
 
-#: handlers/main_menu.py:45 handlers/main_menu.py:57
-#, fuzzy
-msgid "CONNECT_BOT_INSTRUCTION"
+msgid "CONNECT_BUSINESS_BOT_IMAGE"
+msgstr "resources/connect_business_bot_image_en.png"
+
+msgid "CONNECT_BUSINESS_BOT_TEXT"
 msgstr ""
-"<b>🛠️ Getting Ready to Launch!</b>\n"
-"<i>First, let's create your Telegram bot.</i>\n"
+"<b>Bot Connection Instructions:</b>\n"
 "\n"
-"🔹 <b>Just follow these simple steps:</b>\n"
-"1. Open <a href=\"https://t.me/BotFather?text=%2Fnewbot\">@BotFather</a> "
-"and enter the command <code>/newbot</code>.\n"
-"2. Choose any name and username for your bot.\n"
-"3. Copy the provided token and send it here.\n"
-"\n"
-"<b>🧐 Token example:</b>\n"
-"<blockquote>5995761349:AAGmBOCDXTBNW4ST...</blockquote>\n"
-"\n"
+"1. Go to <b>Settings</b> → <b>Telegram for Business</b>.\n"
+"2. Under <b>Chat Bots</b>, insert the link to our bot "
+"(<code>@zapomnim_bot</code>).\n"
+"3. Grant the bot full message access (required for proper functionality)."
 
-#: handlers/main_menu.py:62 handlers/main_menu.py:70
-msgid "INVALID_TOKEN"
-msgstr "<b>⛔️ You sent an invalid token.</b>"
-
-#: handlers/main_menu.py:65 handlers/main_menu.py:73
-msgid "CHECKING_BOT"
-msgstr "<i>✅ Connecting to %s ...</i>"
-
-#: handlers/main_menu.py:84 handlers/main_menu.py:120
-msgid "BOT_SETUP_COMPLETE"
+msgid "CONNECT_BUSINESS_BOT_SUCCESS_TEXT"
 msgstr ""
-"💥 <b>Bot @%s is now connected!</b>\n"
-"To complete the setup, continue in the bot you just created."
+"✅ <b>The bot has been successfully connected!</b>\n"
+"\n"
+"Now, you can setup bot as you need."
 
-#: handlers/main_menu.py:98
-msgid "BOT_SETUP_BUSINESS_INSTRUCTION"
+msgid "SETUP SECURITY_TEXT"
 msgstr ""
-"<b>🚦 Success! Let's move to the next step.</b>\n"
-"<i>Now we'll activate 'Business Mode' for your bot.</i>\n"
+"<b>🔐 Security Settings</b>\n"
 "\n"
-"✅ <b>Follow these steps:</b>\n"
-"1. Open <a href=\"https://t.me/BotFather?text=%2Fmybots\">@BotFather</a> "
-"and send the command <code>/mybots</code>.\n"
-"2. Select your newly created bot from the list.\n"
-"3. Click <b>Bot Settings</b>, then find and enable <b>Business Mode</b>.\n"
+"The bot supports two operating modes: <b>Standard</b> and <b>Enhanced "
+"Security</b>. Regardless of the selected mode, <b>your data is "
+"protected</b> using advanced encryption and isolation methods.\n"
 "\n"
-"✨ <i>Once done, click the button below to confirm.</i>"
+"1. <b>Standard Mode</b> provides access to all bot features.\n"
+"\n"
+"2. <b>Enhanced Security Mode</b> is designed for those requiring maximum "
+"privacy. In this mode, <b>no one can access your data</b>, but the bot's "
+"functionality will be limited.\n"
+"\n"
+"<b>Unavailable features in Enhanced Security Mode</b>:\n"
+"- Message edit history\n"
+"- AI chat analysis\n"
+"- Smart notifications\n"
+"- Chat statistics\n"
+"- Chat history export\n"
+"\n"
+"<b>You can switch between modes at any time in the settings.</b>"
 
-#: handlers/main_menu.py:113
-msgid "BUSINESS_MODE_IS_NOT_ENABLED"
-msgstr "⛔️ Business Mode has not been enabled. Please try again."
-
-#: keyboards/main_menu.py:9
 msgid "START_BUTTON"
-msgstr "🚀 Let's Go!"
+msgstr "🚀 Get Started!"
 
-#: keyboards/main_menu.py:16
-msgid "CHECK_BUSINESS_BUTTON"
-msgstr "✅ I'm done!"
+msgid "CONTINUE_BUTTON"
+msgstr "✌️ Continue"
 
-#: keyboards/main_menu.py:23
-msgid "GO_TO_BOT_BUTTON"
-msgstr "🚪 Go to Bot"
+msgid "SECURITY_MODE_STANDARD"
+msgstr "🧑‍💻 Standard"
+
+msgid "SECURITY_MODE_SECURITY"
+msgstr "🔒 Privacy Mode"
+
+msgid "DELETED_MESSAGE_TEMPLATE"
+msgstr ""
+"<b>🗑️ {content_type} by {from} was removed:</b>\n"
+"\n"
+"<blockquote expandable>{text}</blockquote>\n"
+"\n"
+"<i>Message was sent {date}. \n"
+"Chat {chat}</i>"
+
+msgid "EDITED_MESSAGE_TEMPLATE"
+msgstr ""
+"<b>🗑️ {content_type} by {from} was edited:</b>\n"
+"\n"
+"<b>Old Text (from {date})</b>:\n"
+"<blockquote expandable>{old_text}</blockquote>\n"
+"\n"
+"<b>New Text</b>:\n"
+"<blockquote expandable>{new_text}</blockquote>\n"
+"\n"
+"<i>Chat: {chat}, Message #{id}</i>"
+
+msgid "REMOVED_CONTENT_TYPE_TEXT"
+msgstr "The message"
+
+msgid "EDITED_CONTENT_TYPE_TEXT"
+msgstr "The message"
+
+msgid "REMOVED_CONTENT_TYPE_PHOTO"
+msgstr "The photo"
+
+msgid "EDITED_CONTENT_TYPE_PHOTO"
+msgstr "The photo"
+
+msgid "REMOVED_CONTENT_TYPE_DOCUMENT"
+msgstr "The file"
+
+msgid "EDITED_CONTENT_TYPE_DOCUMENT"
+msgstr "The file"
+
+msgid "REMOVED_CONTENT_TYPE_VIDEO"
+msgstr "The video"
+
+msgid "EDITED_CONTENT_TYPE_VIDEO"
+msgstr "The video"
+
+msgid "REMOVED_CONTENT_TYPE_STICKER"
+msgstr "The sticker"
+
+msgid "EDITED_CONTENT_TYPE_STICKER"
+msgstr "The sticker"
+
+msgid "REMOVED_CONTENT_TYPE_AUDIO"
+msgstr "The audio"
+
+msgid "EDITED_CONTENT_TYPE_AUDIO"
+msgstr "The audio"
+
+msgid "REMOVED_CONTENT_TYPE_VOICE"
+msgstr "The voice message"
+
+msgid "EDITED_CONTENT_TYPE_VOICE"
+msgstr "The voice message"
+
+msgid "REMOVED_CONTENT_TYPE_VIDEO_NOTE"
+msgstr " The video note"
+
+msgid "EDITED_CONTENT_TYPE_VIDEO_NOTE"
+msgstr "The video note"
+
+msgid "REMOVED_CONTENT_TYPE_ANIMATION"
+msgstr "The gif-animation"
+
+msgid "EDITED_CONTENT_TYPE_ANIMATION"
+msgstr "The gif-animation"
+
+msgid "REMOVED_CONTENT_TYPE_CONTACT"
+msgstr "The contact"
+
+msgid "EDITED_CONTENT_TYPE_CONTACT"
+msgstr "The contact"
+
+msgid "REMOVED_CONTENT_TYPE_LOCATION"
+msgstr "The location"
+
+msgid "EDITED_CONTENT_TYPE_LOCATION"
+msgstr "The location"
+
+msgid "REMOVED_CONTENT_TYPE_VENUE"
+msgstr "The venue"
+
+msgid "EDITED_CONTENT_TYPE_VENUE"
+msgstr "The venue"
+
+msgid "REMOVED_CONTENT_TYPE_POLL"
+msgstr "The poll"
+
+msgid "EDITED_CONTENT_TYPE_POLL"
+msgstr "The poll"
+
+msgid "REMOVED_CONTENT_TYPE_PAID_MEDIA"
+msgstr "The paid media"
+
+msgid "EDITED_CONTENT_TYPE_PAID_MEDIA"
+msgstr "The paid media"
+
+msgid "REMOVED_CONTENT_TYPE_STORY"
+msgstr "The story"
+
+msgid "EDITED_CONTENT_TYPE_STORY"
+msgstr "The story"
+
+msgid "REMOVED_CONTENT_TYPE_GIFT"
+msgstr "The gift"
+
+msgid "EDITED_CONTENT_TYPE_GIFT"
+msgstr "The gift"
+
+msgid "REMOVED_CONTENT_TYPE_UNIQUE_GIFT"
+msgstr "The NFT"
+
+msgid "EDITED_CONTENT_TYPE_UNIQUE_GIFT"
+msgstr "The NFT"
+
+msgid "REMOVED_CONTENT_TYPE_DICE"
+msgstr "The dice"
+
+msgid "EDITED_CONTENT_TYPE_DICE"
+msgstr "The dice"
+
+msgid "REMOVED_CONTENT_TYPE_GAME"
+msgstr "The game"
+
+msgid "EDITED_CONTENT_TYPE_GAME"
+msgstr "The game"
 

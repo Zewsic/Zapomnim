@@ -3,3 +3,9 @@ fastapi
 uvicorn
 python-dotenv
 babel
+redis
+pydantic
+sqlalchemy
+greenlet
+asyncpg
+cryptography

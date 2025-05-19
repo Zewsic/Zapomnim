@@ -8,9 +8,8 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.types import User
 
 from config import TELEGRAM_SERVER, WEBHOOK_HOST
-from handlers.business import business_test_router
 
-WEBHOOK_URL: Final[str] = f"http://{WEBHOOK_HOST}/mirror/%s"
+WEBHOOK_URL: Final[str] = f"http://{WEBHOOK_HOST}/webhook/%s"
 
 
 class TelegramMirrorUtils:
