@@ -6,9 +6,7 @@ from aiogram import Router, Bot
 from aiogram.types import (
     BusinessMessagesDeleted,
     BufferedInputFile,
-    LinkPreviewOptions,
-    InlineKeyboardMarkup,
-    InlineKeyboardButton
+    LinkPreviewOptions
 )
 from aiogram.utils.i18n import gettext as _
 
@@ -47,8 +45,7 @@ async def send_media(
     chat_id: int,
     content_type: ContentType,
     content: Optional[str],
-    caption: str,
-    reply_markup: Optional[InlineKeyboardMarkup] = None
+    caption: str
 ):
     """
     Универсальная функция отправки контента по content_type (Enum).
@@ -57,23 +54,21 @@ async def send_media(
         await bot.send_message(
             chat_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True),
-            reply_markup=reply_markup,
+            link_preview_options=LinkPreviewOptions(is_disabled=True)
         )
         return
 
     if content_type in MEDIA_TYPES:
         method_name = MEDIA_TYPES[content_type]
         send_method = getattr(bot, method_name)
-        await send_method(**{content_type.value: content}, chat_id=chat_id, caption=caption, reply_markup=reply_markup)
+        await send_method(**{content_type.value: content}, chat_id=chat_id, caption=caption)
         return
 
     if content_type == ContentType.STICKER:
         sent_msg = await bot.send_message(
             chat_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True),
-            reply_markup=reply_markup
+            link_preview_options=LinkPreviewOptions(is_disabled=True)
         )
         await bot.send_sticker(chat_id, sticker=content, reply_to_message_id=sent_msg.message_id)
         return
@@ -82,8 +77,7 @@ async def send_media(
         sent_msg = await bot.send_message(
             chat_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True),
-            reply_markup=reply_markup
+            link_preview_options=LinkPreviewOptions(is_disabled=True)
         )
         await bot.send_video_note(chat_id, video_note=content, reply_to_message_id=sent_msg.message_id)
         return
@@ -98,29 +92,26 @@ async def send_media(
         await bot.send_document(
             chat_id,
             BufferedInputFile(dump_bytes, filename="dump.json"),
-            caption=caption,
-            reply_markup=reply_markup
+            caption=caption
         )
         return
 
     await bot.send_message(
         chat_id,
         text=caption,
-        link_preview_options=LinkPreviewOptions(is_disabled=True),
-        reply_markup=reply_markup
+        link_preview_options=LinkPreviewOptions(is_disabled=True)
     )
 
 async def send_deleted_info(
     bot: Bot,
     user_id: int,
     chat: Persona,
-    restored_messages: List[RestoredMessage],
-    message_ids: List[int]
+    restored_messages: List[RestoredMessage]
 ) -> None:
     """
     Рассылает в личку пользователю (user_id) информацию об удалённых сообщениях.
     """
-    for msg_data, mid in zip(restored_messages, message_ids):
+    for msg_data in restored_messages:
         content_type_str = _(f"REMOVED_CONTENT_TYPE_{msg_data.content_type.value.upper()}")
         persona_name = msg_data.persona.hname if msg_data.persona else "Unknown"
         date_str = msg_data.created_at.strftime("%d.%m.%Y %H:%M:%S")
@@ -137,22 +128,12 @@ async def send_deleted_info(
             }
         )
 
-        history_button = InlineKeyboardMarkup(
-            inline_keyboard=[[
-                InlineKeyboardButton(
-                    text="Посмотреть историю",
-                    callback_data=f"history:{chat.id}:{mid}:0"
-                )
-            ]]
-        )
-
         await send_media(
             bot=bot,
             chat_id=user_id,
             content_type=msg_data.content_type,
             content=msg_data.content,
-            caption=base_text,
-            reply_markup=history_button
+            caption=base_text
         )
 
 @router.deleted_business_messages()
@@ -178,6 +159,5 @@ async def on_delete_messages(event: BusinessMessagesDeleted):
             bot=bot,
             user_id=user.id,
             chat=chat,
-            restored_messages=restored,
-            message_ids=sorted(event.message_ids)
+            restored_messages=restored
         )
