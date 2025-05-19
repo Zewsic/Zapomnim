@@ -19,6 +19,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
+msgid "NONE"
+msgstr "(нет)"
+
 msgid "START_IMAGE"
 msgstr "resources/start_image_ru.png"
 
@@ -114,7 +117,7 @@ msgstr ""
 
 msgid "EDITED_MESSAGE_TEMPLATE"
 msgstr ""
-"<b>🗑️ {content_type} от {from}:</b>\n"
+"<b>📝 {content_type} от {from}:</b>\n"
 "\n"
 "<b>Старый текст (от {date})</b>:\n"
 "<blockquote expandable>{old_text}</blockquote>\n"
@@ -123,6 +126,14 @@ msgstr ""
 "<blockquote expandable>{new_text}</blockquote>\n"
 "\n"
 "<i>Чат: {chat}, Сообщение #{id}</i> "
+
+msgid "PROTECTED_MESSAGE_SAVED_TEMPLATE"
+msgstr ""
+"<b>🔞 Защищённое сообщение от {from} сохранено:</b>\n"
+"\n"
+"<blockquote expandable>{text}</blockquote>\n"
+"\n"
+"<i>Было отправлено {date}. Чат: {chat}.</i>"
 
 msgid "REMOVED_CONTENT_TYPE_TEXT"
 msgstr "Удаленное сообщение"

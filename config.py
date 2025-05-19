@@ -7,6 +7,7 @@ BOT_TOKEN = environ.get("BOT_TOKEN")
 WEBHOOK_HOST = environ.get('WEBHOOK_HOST')
 
 TELEGRAM_SERVER = TelegramAPIServer.from_base(environ.get('TELEGRAM_SERVER'), is_local=True)
+TELEGRAM_SERVER_DATA = environ.get('TELEGRAM_SERVER_DATA')
 
 class StartState(StatesGroup):
     setup_language = State()

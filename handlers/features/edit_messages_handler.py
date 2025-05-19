@@ -115,8 +115,8 @@ async def send_edited_info(
             "chat": chat.hname,
             "date": old_msg.created_at.strftime("%d.%m.%Y %H:%M"),
             "id": message_id,
-            "old_text": old_msg.text or _("(нет)"),
-            "new_text": new_msg.text or _("(нет)")
+            "old_text": old_msg.text or _("NONE"),
+            "new_text": new_msg.text or _("NONE")
         }
     )
 

@@ -124,7 +124,7 @@ async def send_deleted_info(
                 "from": persona_name,
                 "chat": chat.hname,
                 "date": date_str,
-                "text": msg_data.text or _("(нет текста)"),
+                "text": msg_data.text or _("NONE")
             }
         )
 

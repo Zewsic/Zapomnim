@@ -18,6 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
+msgid "NONE"
+msgstr "(nope)"
+
 msgid "START_IMAGE"
 msgstr "resources/start_image_en.png"
 
@@ -110,7 +113,7 @@ msgstr ""
 
 msgid "EDITED_MESSAGE_TEMPLATE"
 msgstr ""
-"<b>🗑️ {content_type} by {from} was edited:</b>\n"
+"<b>📝 {content_type} by {from} was edited:</b>\n"
 "\n"
 "<b>Old Text (from {date})</b>:\n"
 "<blockquote expandable>{old_text}</blockquote>\n"
@@ -119,6 +122,14 @@ msgstr ""
 "<blockquote expandable>{new_text}</blockquote>\n"
 "\n"
 "<i>Chat: {chat}, Message #{id}</i>"
+
+msgid "PROTECTED_MESSAGE_SAVED_TEMPLATE"
+msgstr ""
+"<b>🔞 Protected Message from {from} was saved:</b>\n"
+"\n"
+"<blockquote expandable>{text}</blockquote>\n"
+"\n"
+"<i>Message was sent {date}. Chat: {chat}.</i>"
 
 msgid "REMOVED_CONTENT_TYPE_TEXT"
 msgstr "The message"

@@ -1,7 +1,7 @@
 from utils.database import save_to_redis, load_from_redis
 from utils.models import _UNSET
 from utils.userdata import update_user, get_user
-from utils.mirror import TelegramMirrorUtils
+from utils.botapi import TelegramMirrorUtils
 from utils.i18n import PatchedI18nMiddleware
 from utils.commands import set_bot_commands
 

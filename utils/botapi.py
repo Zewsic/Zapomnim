@@ -5,9 +5,9 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
-from aiogram.types import User
+from aiogram.types import User, File
 
-from config import TELEGRAM_SERVER, WEBHOOK_HOST
+from config import TELEGRAM_SERVER, WEBHOOK_HOST, TELEGRAM_SERVER_DATA
 
 WEBHOOK_URL: Final[str] = f"http://{WEBHOOK_HOST}/webhook/%s"
 
@@ -50,3 +50,17 @@ class TelegramMirrorUtils:
         await bot.close()
 
         del TelegramMirrorUtils.CONNECTED_BOTS[bot_id]
+
+
+class TelegramDataUtils():
+    BASE_TG_DATA = '/var/lib/telegram-bot-api/'
+
+    @staticmethod
+    def get_normal_file_path(file: File) -> str:
+        path = file.file_path.replace(TelegramDataUtils.BASE_TG_DATA, TELEGRAM_SERVER_DATA)
+        return path
+
+    @staticmethod
+    def get_file(file: File) -> bytes:
+        with open(TelegramDataUtils.get_normal_file_path(file), 'rb') as f:
+            return f.read()
