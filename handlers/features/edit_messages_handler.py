@@ -5,9 +5,7 @@ from aiogram import Router, Bot
 from aiogram.types import (
     BufferedInputFile,
     LinkPreviewOptions,
-    Message,
-    InlineKeyboardMarkup,
-    InlineKeyboardButton
+    Message
 )
 from aiogram.utils.i18n import gettext as _
 
@@ -46,8 +44,7 @@ async def send_media(
     user_id: int,
     content_type: ContentType,
     content: Optional[str],
-    caption: str,
-    reply_markup: Optional[InlineKeyboardMarkup] = None
+    caption: str
 ):
     """
     Универсальная отправка медиа по content_type.
@@ -55,15 +52,14 @@ async def send_media(
     if content_type in MEDIA_TYPES and content:
         send_method_name = MEDIA_TYPES[content_type]
         send_method = getattr(bot, send_method_name)
-        await send_method(chat_id=user_id, **{content_type.value: content}, caption=caption, reply_markup=reply_markup)
+        await send_method(chat_id=user_id, **{content_type.value: content}, caption=caption)
         return
 
     if content_type == ContentType.STICKER and content:
         sent_msg = await bot.send_message(
             user_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True),
-            reply_markup=reply_markup
+            link_preview_options=LinkPreviewOptions(is_disabled=True)
         )
         await bot.send_sticker(user_id, sticker=content, reply_to_message_id=sent_msg.message_id)
         return
@@ -72,8 +68,7 @@ async def send_media(
         sent_msg = await bot.send_message(
             user_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True),
-            reply_markup=reply_markup
+            link_preview_options=LinkPreviewOptions(is_disabled=True)
         )
         await bot.send_video_note(user_id, video_note=content, reply_to_message_id=sent_msg.message_id)
         return
@@ -87,16 +82,14 @@ async def send_media(
         await bot.send_document(
             chat_id=user_id,
             document=BufferedInputFile(dump_bytes, filename="dump.json"),
-            caption=caption,
-            reply_markup=reply_markup
+            caption=caption
         )
         return
 
     await bot.send_message(
         user_id,
         text=caption,
-        link_preview_options=LinkPreviewOptions(is_disabled=True),
-        reply_markup=reply_markup
+        link_preview_options=LinkPreviewOptions(is_disabled=True)
     )
 
 async def send_edited_info(
@@ -127,21 +120,12 @@ async def send_edited_info(
         }
     )
 
-    history_button = InlineKeyboardMarkup(
-        inline_keyboard=[[
-            InlineKeyboardButton(
-                text="Посмотреть историю",
-                callback_data=f"history:{chat.id}:{message_id}:0"
-            )
-        ]]
-    )
     await send_media(
         bot=bot,
         user_id=user_id,
         content_type=old_msg.content_type,
         content=new_msg.content or "",
-        caption=base_msg,
-        reply_markup=history_button
+        caption=base_msg
     )
 
 @router.edited_business_message()
