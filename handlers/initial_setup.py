@@ -72,7 +72,6 @@ async def start_command(
             first_name=message.from_user.first_name,
             last_name=message.from_user.last_name,
             username=message.from_user.username,
-            is_enabled=True,
             language=selected_language
         )
         await session.commit()
