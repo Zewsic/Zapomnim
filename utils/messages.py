@@ -171,6 +171,16 @@ async def restore_last_messages(
     return result
 
 
+async def load_message_history(
+        connected_user_id: int,
+        chat_id: int,
+        message_id: int,
+        session: AsyncSession,
+) -> List[RestoredMessage]:
+    """Возвращает полную историю сообщений по message_id."""
+    return await _load_messages(connected_user_id, chat_id, message_id, session)
+
+
 async def _load_messages(
         connected_user_id: int,
         chat_id: int,
