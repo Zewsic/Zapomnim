@@ -5,19 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f68afd11-622a-4ab0-bbbe-41fae5f95094" name="Changes" comment="Added:&#10;- Saving Messages&#10;- Notifications about message removing&#10;- Notifications about message editing">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handlers/features/save_protected_content.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/keyboards/history.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/features/delete_messages_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/features/delete_messages_handler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/features/edit_messages_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/features/edit_messages_handler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/features/process_message.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/features/process_message.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/initial_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/initial_setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.mo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/locales/zapomnim.pot" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zapomnim.pot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/mirror.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/botapi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/connect_business_bot_image_en.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/connect_business_bot_image_en.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/connect_business_bot_image_ru.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/connect_business_bot_image_ru.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/start_image_en.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/start_image_en.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/start_image_ru.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/start_image_ru.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/messages.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/messages.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +38,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -55,35 +61,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Run Main.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.mirror.executor": "Run",
-    "Python.patcher.executor": "Run",
-    "Python.webhook.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Shell Script.Update Locals.executor": "Run",
-    "database.data.extractors.current.export.id": "JSON-Groovy.json.groovy",
-    "database.data.extractors.current.id": "JSON-Groovy.json.groovy",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/Users/zewsic/projects/Zapomnim/base/handlers/features",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Run Main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mirror.executor&quot;: &quot;Run&quot;,
+    &quot;Python.patcher.executor&quot;: &quot;Run&quot;,
+    &quot;Python.webhook.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Shell Script.Update Locals.executor&quot;: &quot;Run&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
+    &quot;database.data.extractors.current.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/zewsic/projects/Zapomnim/base/handlers/features&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/handlers/features" />
@@ -163,6 +169,7 @@
       <workItem from="1747330766200" duration="1206000" />
       <workItem from="1747339050706" duration="19145000" />
       <workItem from="1747411904308" duration="56200000" />
+      <workItem from="1747668538764" duration="269000" />
     </task>
     <task id="LOCAL-00001" summary="Added:&#10;- Saving Messages&#10;- Notifications about message removing&#10;- Notifications about message editing">
       <option name="closed" value="true" />
@@ -178,12 +185,23 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added:&#10;- Saving Messages&#10;- Notifications about message removing&#10;- Notifications about message editing" />
     <option name="LAST_COMMIT_MESSAGE" value="Added:&#10;- Saving Messages&#10;- Notifications about message removing&#10;- Notifications about message editing" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/base$Run_Main.coverage" NAME="Run Main Coverage Results" MODIFIED="1747619927604" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/base$Run_Main.coverage" NAME="Run Main Coverage Results" MODIFIED="1747648207539" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/base$mirror.coverage" NAME="mirror Coverage Results" MODIFIED="1747186150065" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/base$patcher.coverage" NAME="patcher Coverage Results" MODIFIED="1747190356681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/base$webhook.coverage" NAME="webhook Coverage Results" MODIFIED="1747177276548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />

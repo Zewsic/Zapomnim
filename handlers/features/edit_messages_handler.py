@@ -1,11 +1,12 @@
 import json
+import re
 from typing import Optional
 
 from aiogram import Router, Bot
 from aiogram.types import (
     BufferedInputFile,
     LinkPreviewOptions,
-    Message
+    Message, InlineKeyboardMarkup
 )
 from aiogram.utils.i18n import gettext as _
 
@@ -44,7 +45,8 @@ async def send_media(
     user_id: int,
     content_type: ContentType,
     content: Optional[str],
-    caption: str
+    caption: str,
+    keyboard: InlineKeyboardMarkup,
 ):
     """
     Универсальная отправка медиа по content_type.
@@ -52,7 +54,7 @@ async def send_media(
     if content_type in MEDIA_TYPES and content:
         send_method_name = MEDIA_TYPES[content_type]
         send_method = getattr(bot, send_method_name)
-        await send_method(chat_id=user_id, **{content_type.value: content}, caption=caption)
+        await send_method(chat_id=user_id, **{content_type.value: content}, caption=caption, reply_markup=keyboard)
         return
 
     if content_type == ContentType.STICKER and content:
@@ -68,7 +70,7 @@ async def send_media(
         sent_msg = await bot.send_message(
             user_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True)
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
         await bot.send_video_note(user_id, video_note=content, reply_to_message_id=sent_msg.message_id)
         return
@@ -82,14 +84,16 @@ async def send_media(
         await bot.send_document(
             chat_id=user_id,
             document=BufferedInputFile(dump_bytes, filename="dump.json"),
-            caption=caption
+            caption=caption,
+            reply_markup=keyboard,
         )
         return
 
     await bot.send_message(
         user_id,
         text=caption,
-        link_preview_options=LinkPreviewOptions(is_disabled=True)
+        link_preview_options=LinkPreviewOptions(is_disabled=True),
+        reply_markup=keyboard,
     )
 
 async def send_edited_info(
@@ -105,6 +109,7 @@ async def send_edited_info(
     что он отредактировал в бизнес-чате.
     """
     content_type_str = _(f"EDITED_CONTENT_TYPE_{old_msg.content_type.value.upper()}")
+    _date = old_msg.created_at.strftime("%d.%m.%Y %H:%M")
 
     base_msg = _(
         "EDITED_MESSAGE_TEMPLATE"
@@ -113,10 +118,11 @@ async def send_edited_info(
         **{
             "from": old_msg.persona.hname if old_msg.persona else "Unknown",
             "chat": chat.hname,
-            "date": old_msg.created_at.strftime("%d.%m.%Y %H:%M"),
             "id": message_id,
-            "old_text": old_msg.text or _("NONE"),
-            "new_text": new_msg.text or _("NONE")
+            "content": (
+                _("EDITED_MESSAGE_TEMPLATE_OLD_TEXT").format(text=old_msg.text, date=_date) if old_msg.text else "" +
+                _("EDITED_MESSAGE_TEMPLATE_NEW_TEXT").format(text=new_msg.text) if new_msg.text else ""
+            )
         }
     )
 
@@ -124,8 +130,9 @@ async def send_edited_info(
         bot=bot,
         user_id=user_id,
         content_type=old_msg.content_type,
-        content=new_msg.content or "",
-        caption=base_msg
+        content=old_msg.content or "",
+        caption=base_msg,
+        keyboard=InlineKeyboardMarkup(inline_keyboard=[])
     )
 
 @router.edited_business_message()
@@ -150,14 +157,12 @@ async def on_edit_messages(event: Message):
         if not new_result:
             return
 
-        # save_message возвращает tuple (content_type, content, text)
-        # Собираем новый RestoredMessage с новой инфой, остальное временно повторяем с old_msg
         new_msg = RestoredMessage(
             content_type=new_result[0],
             content=new_result[1],
             text=new_result[2],
             persona=old_msg.persona,
-            created_at=old_msg.created_at  # или datetime.now() — если надо
+            created_at=old_msg.created_at
         )
 
         chat = await get_persona(session, event.chat.id)

@@ -15,3 +15,8 @@ from keyboards import security_select_keyboard
 from utils import TelegramMirrorUtils, update_user, get_user, _UNSET, PatchedI18nMiddleware
 
 router = Router()
+
+
+@router.callback_query(F.data == 'settings')
+async def settings(callback_query: CallbackQuery, state: FSMContext):
+    ...

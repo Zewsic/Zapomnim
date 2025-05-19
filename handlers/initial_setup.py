@@ -127,3 +127,9 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
             text=_("CONNECT_BUSINESS_BOT_SUCCESS_TEXT"),
             reply_markup=continue_keyboard("settings")
         )
+    else:
+        await event.bot.send_message(
+            chat_id=user.id,
+            text=_("BUSINESS_BOT_DISCONNECTED_TEXT"),
+            reply_markup=continue_keyboard("start")
+        )

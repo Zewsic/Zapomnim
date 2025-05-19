@@ -124,9 +124,12 @@ async def send_deleted_info(
                 "from": persona_name,
                 "chat": chat.hname,
                 "date": date_str,
-                "text": msg_data.text or _("NONE")
+                "text": f'<blockquote expandable>{msg_data.text}</blockquote>\n' if msg_data.text else "",
             }
         )
+
+        if msg_data.text in (None, ""):
+            base_text.text = base_text.replace("\n<blockquote expandable></blockquote>\n", '')
 
         await send_media(
             bot=bot,

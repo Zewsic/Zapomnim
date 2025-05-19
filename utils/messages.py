@@ -68,6 +68,7 @@ class RestoredMessage:
     text: Optional[str]
     persona: Optional[Persona]
     created_at: datetime
+    privacy_key: str = None
 
 
 async def save_message(
@@ -156,6 +157,20 @@ async def _save_message(
     await session.commit()
 
 
+async def load_message_history(
+        connected_user_id: int,
+        chat_id: int,
+        message_ids: Iterable[int],
+        session: AsyncSession,
+) -> List[RestoredMessage]:
+    """Восстанавливает последние версии сообщений по id."""
+    result: List[RestoredMessage] = []
+    for message_id in sorted(message_ids):
+        messages = await _load_messages(connected_user_id, chat_id, message_id, session)
+        if messages:
+            result.append(messages[-1])
+    return result
+
 async def restore_last_messages(
         connected_user_id: int,
         chat_id: int,
@@ -175,7 +190,7 @@ async def _load_messages(
         connected_user_id: int,
         chat_id: int,
         message_id: int,
-        session: AsyncSession
+        session: AsyncSession,
 ) -> List[RestoredMessage]:
     """Загружает и расшифровывает сообщения с привязкой к ключу приватности."""
     privacy_key = generate_privacy_key(connected_user_id, chat_id, message_id)
@@ -201,7 +216,8 @@ async def _load_messages(
                 content=content,
                 text=text,
                 persona=persona,
-                created_at=_message.created_at
+                created_at=_message.created_at,
+                privacy_key=privacy_key,
             )
         )
     return result

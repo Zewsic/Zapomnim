@@ -39,10 +39,16 @@ msgstr ""
 msgid "CONNECT_BUSINESS_BOT_SUCCESS_TEXT"
 msgstr ""
 
+msgid "BUSINESS_BOT_DISCONNECTED_TEXT"
+msgstr ""
+
 msgid "SETUP SECURITY_TEXT"
 msgstr ""
 
 msgid "START_BUTTON"
+msgstr ""
+
+msgid "OPEN_HISTORY_BUTTON"
 msgstr ""
 
 msgid "CONTINUE_BUTTON"
@@ -57,11 +63,22 @@ msgstr ""
 msgid "DELETED_MESSAGE_TEMPLATE"
 msgstr ""
 
+msgid "EDITED_MESSAGE_TEMPLATE_OLD_TEXT"
+msgstr ""
+
+msgid "EDITED_MESSAGE_TEMPLATE_NEW_TEXT"
+msgstr ""
+
 msgid "EDITED_MESSAGE_TEMPLATE"
 msgstr ""
 
 msgid "PROTECTED_MESSAGE_SAVED_TEMPLATE"
 msgstr ""
+
+### ------------------------------------------------- ###
+### ----------------- CONTENT TYPES ----------------- ###
+### ------------------------------------------------- ###
+
 
 msgid "REMOVED_CONTENT_TYPE_TEXT"
 msgstr ""
