@@ -90,7 +90,7 @@ class Persona(Base):
 
     @property
     def full_name(self) -> str:
-        return f"{self.first_name}" + (f" {self.last_name}" if self.last_name else "")
+        return (f"{self.first_name}" + (f" {self.last_name}" if self.last_name else "")).replace('<', '').replace('>', '')
 
     @property
     def hname(self):

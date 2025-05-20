@@ -14,9 +14,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import StartState, SettingsState
 from database import create_session
 from database.models import User
-from keyboards import security_select_keyboard
-from keyboards.settings import settings_keyboard, messages_settings_keyboard
+from keyboards.settings import settings_keyboard, messages_settings_keyboard, bot_mode_keyboard, confirm_mode_keyboard
 from utils import TelegramMirrorUtils, update_user, get_user, _UNSET, PatchedI18nMiddleware
+from utils.messages import make_all_messages_private
 from utils.widgets import settings_widget, SettingsOption
 
 router = Router()
@@ -45,6 +45,46 @@ async def messages_settings(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.message.edit_text(
         text=_("MESSAGES_SETTINGS_TEXT"),
         reply_markup=messages_settings_keyboard())
+
+@router.callback_query(lambda c: c.data.startswith('bot_mode_settings'))
+async def bot_mode_settings(callback_query: CallbackQuery, state: FSMContext):
+    async with create_session() as session:
+        user = await get_user(session, id=callback_query.from_user.id)
+
+        parts = callback_query.data.split(":")
+        action = parts[1] if len(parts) > 1 else None
+
+        if action == 'standard':
+            if not user.privacy_mode:
+                await callback_query.answer('👍')
+                return
+            await callback_query.message.edit_text(
+                text=_("CONFIRM_STANDARD_BOT_TYPE"),
+                reply_markup=confirm_mode_keyboard('standard')
+            )
+        elif action == 'standard-confirm':
+            await update_user(id=user.id, session=session, privacy_mode=False)
+            await callback_query.answer(_("BOT_CHANGE_OK"), show_alert=True)
+            await settings(callback_query, state)
+        elif action == 'privacy':
+            if user.privacy_mode:
+                await callback_query.answer('👍')
+                return
+            await callback_query.message.edit_text(
+                text=_("CONFIRM_PRIVACY_BOT_TYPE"),
+                reply_markup=confirm_mode_keyboard('privacy')
+            )
+        elif action == 'privacy-confirm':
+            await update_user(id=user.id, session=session, privacy_mode=True)
+            await make_all_messages_private(user.id, session)
+            await callback_query.answer(_("BOT_CHANGE_OK"), show_alert=True)
+            await settings(callback_query, state)
+        else:
+            await callback_query.message.edit_text(
+                text=_("SELECT_BOT_TYPE").format(
+                    selected_mode=_("BOT_MODE_PRIVACY" if user.privacy_mode else "BOT_MODE_STANDARD")
+                ),
+                reply_markup=bot_mode_keyboard())
 
 
 @router.callback_query(lambda c: c.data.startswith("deleted_messages_settings"))
@@ -179,13 +219,13 @@ async def protected_messages_settings(callback: CallbackQuery):
             SettingsOption(
                 option_id="enabled",
                 name=_("ENABLE_BUTTON"),
-                description=_("EDITED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"),
+                description=_("PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"),
                 default=True
             ),
         ]
 
         title = _("PROTECTED_MESSAGES_SETTINGS_BUTTON")
-        description = _("EDITED_MESSAGES_SETTINGS_DESCRIPTION")
+        description = _("PROTECTED_MESSAGES_SETTINGS_DESCRIPTION")
 
         text, reply_markup = await settings_widget(
             user=user,

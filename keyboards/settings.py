@@ -38,13 +38,25 @@ def settings_keyboard():
     ])
 
 
-def security_select_keyboard() -> InlineKeyboardMarkup:
+def bot_mode_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text=_("SECURITY_MODE_STANDARD"), callback_data='select_security:standard'),
+            InlineKeyboardButton(text=_("BOT_MODE_STANDARD"), callback_data='bot_mode_settings:standard'),
         ],
         [
-            InlineKeyboardButton(text=_("SECURITY_MODE_SECURITY"), callback_data='select_security:security'),
+            InlineKeyboardButton(text=_("BOT_MODE_PRIVACY"), callback_data='bot_mode_settings:privacy'),
         ],
+        [
+            InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data="settings"),
+        ]
+    ])
 
+def confirm_mode_keyboard(mode: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=_("CONTINUE_BUTTON"), callback_data=f'bot_mode_settings:{mode}-confirm'),
+        ],
+        [
+            InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data='bot_mode_settings'),
+        ],
     ])

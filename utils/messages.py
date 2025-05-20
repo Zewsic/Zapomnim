@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Iterable, Optional, List
 
 from aiogram.types import Message
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.models import User, SavedMessage, Persona
@@ -185,7 +185,6 @@ async def restore_last_messages(
             result.append(messages[-1])
     return result
 
-
 async def _load_messages(
         connected_user_id: int,
         chat_id: int,
@@ -221,3 +220,15 @@ async def _load_messages(
             )
         )
     return result
+
+async def make_all_messages_private(
+        connected_user_id: int,
+        session: AsyncSession,
+):
+    r = await session.execute(
+        update(SavedMessage)
+        .where(SavedMessage.connected_user_id == connected_user_id)
+        .values(connected_user_id=None, chat_id=None, message_id=None)
+    )
+
+    await session.commit()

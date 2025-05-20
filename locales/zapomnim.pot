@@ -76,7 +76,16 @@ msgstr ""
 msgid "BUSINESS_BOT_DISCONNECTED_TEXT"
 msgstr ""
 
-msgid "SETUP SECURITY_TEXT"
+msgid "SELECT_BOT_TYPE"
+msgstr ""
+
+msgid "CONFIRM_STANDARD_BOT_TYPE"
+msgstr ""
+
+msgid "CONFIRM_PRIVACY_BOT_TYPE"
+msgstr "<b>🥷 You are about to switch to Private Mode.</b>\n\n"
+
+msgid "BOT_CHANGE_OK"
 msgstr ""
 
 msgid "START_BUTTON"

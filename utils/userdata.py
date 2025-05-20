@@ -21,6 +21,7 @@ async def update_user(
         subscription_until: datetime = _UNSET,
         is_enabled: bool = _UNSET,
         language: str = _UNSET,
+        privacy_mode: bool = _UNSET,
 ) -> User:
     user = User(id=id)
     if first_name is not _UNSET:
@@ -40,6 +41,8 @@ async def update_user(
         user.subscription_until = subscription_until
     if language is not _UNSET:
         user.language_code = language
+    if privacy_mode is not _UNSET:
+        user.privacy_mode = privacy_mode
 
     user = await session.merge(user)
     await save_to_redis(user)
