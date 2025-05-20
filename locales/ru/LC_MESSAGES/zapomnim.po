@@ -418,6 +418,25 @@ msgstr "Позволяет сохранять временные (исчезаю
 msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
 msgstr "Включает сохранение временных сообщений."
 
+
+msgid "SUBSCRIPTION_TEXT"
+msgstr "У вас нет активной подписки. Выберите тариф:"
+
+msgid "SUBSCRIPTION_PLAN_BUTTON"
+msgstr "{days} дней — {price} XTR"
+
+msgid "SUBSCRIPTION_LABEL"
+msgstr "Подписка"
+
+msgid "SUBSCRIPTION_TITLE"
+msgstr "Подписка на {days} дней"
+
+msgid "SUBSCRIPTION_DESC"
+msgstr "Доступ ко всем функциям на {days} дней"
+
+msgid "SUBSCRIPTION_SUCCESS"
+msgstr "✅ Подписка активна до {date}"
+
 # Statistics
 msgid "STATISTICS_BUTTON"
 msgstr "\ud83d\udcca \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430"
@@ -478,5 +497,6 @@ msgstr "\u0410\u0443\u0434\u0438\u043e"
 
 msgid "STATISTICS_MEDIA_VOICE"
 msgstr "\u0413\u043e\u043b\u043e\u0441\u043e\u0432\u044b\u0435"
+
 
 

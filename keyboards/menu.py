@@ -27,7 +27,7 @@ def profile_keyboard(user: User) -> InlineKeyboardMarkup:
         ]
     ])
 
-    if not user.is_working:
+    if not user.has_subscription:
         kb.inline_keyboard.insert(0, [
             InlineKeyboardButton(text=_("BUY_SUBSCRIPTION_BUTTON"), callback_data='buy_subscription')
         ])

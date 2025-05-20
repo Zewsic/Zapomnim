@@ -404,6 +404,25 @@ msgstr "Allows you to save protected (disappearing) messages by replying to them
 msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
 msgstr "Enables saving protected messages."
 
+
+msgid "SUBSCRIPTION_TEXT"
+msgstr "You don't have an active subscription. Choose a plan:"
+
+msgid "SUBSCRIPTION_PLAN_BUTTON"
+msgstr "{days} days — {price} XTR"
+
+msgid "SUBSCRIPTION_LABEL"
+msgstr "Subscription"
+
+msgid "SUBSCRIPTION_TITLE"
+msgstr "Subscription for {days} days"
+
+msgid "SUBSCRIPTION_DESC"
+msgstr "Access to all features for {days} days"
+
+msgid "SUBSCRIPTION_SUCCESS"
+msgstr "✅ Subscription active until {date}"
+
 # Statistics
 msgid "STATISTICS_BUTTON"
 msgstr "\ud83d\udcca Statistics"
@@ -464,3 +483,4 @@ msgstr "Audio"
 
 msgid "STATISTICS_MEDIA_VOICE"
 msgstr "Voice messages"
+
