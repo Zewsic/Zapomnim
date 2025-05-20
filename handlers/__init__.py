@@ -4,6 +4,7 @@ from handlers.menu import router as menu_router
 from handlers.features.process_message import router as process_message_router
 from handlers.features.delete_messages_handler import router as delete_messages_router
 from handlers.features.edit_messages_handler import router as edit_messages_router
+from statistics import router as statistics_router
 
 __all__ = [
     "initial_setup_router",
@@ -12,4 +13,5 @@ __all__ = [
     "process_message_router",
     "delete_messages_router",
     "edit_messages_router",
+    "statistics_router",
 ]
