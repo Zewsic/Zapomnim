@@ -29,6 +29,11 @@ class User(Base):
     subscriber_until: Mapped[datetime] = mapped_column(default=func.now() + timedelta(days=7))
 
     @property
+    def has_subscription(self) -> bool:
+        """Return True if the subscription is still active."""
+        return self.subscriber_until > datetime.now()
+
+    @property
     def is_working(self) -> bool:
         return not self.is_banned and self.is_enabled and (self.subscriber_until + timedelta(days=1)) > datetime.now()
 
