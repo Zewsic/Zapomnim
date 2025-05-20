@@ -419,6 +419,7 @@ msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
 msgstr "Включает сохранение временных сообщений."
 
 
+
 # Data Management
 msgid "DATA_MANAGEMENT_TEXT"
 msgstr "<b>📊 Управление данными</b>
@@ -436,3 +437,83 @@ msgstr "Это действие нельзя отменить. Всё удали
 
 msgid "DATA_CLEARED_OK"
 msgstr "✅ Данные очищены"
+
+msgid "SUBSCRIPTION_TEXT"
+msgstr "У вас нет активной подписки. Выберите тариф:"
+
+msgid "SUBSCRIPTION_PLAN_BUTTON"
+msgstr "{days} дней — {price} XTR"
+
+msgid "SUBSCRIPTION_LABEL"
+msgstr "Подписка"
+
+msgid "SUBSCRIPTION_TITLE"
+msgstr "Подписка на {days} дней"
+
+msgid "SUBSCRIPTION_DESC"
+msgstr "Доступ ко всем функциям на {days} дней"
+
+msgid "SUBSCRIPTION_SUCCESS"
+msgstr "✅ Подписка активна до {date}"
+
+# Statistics
+msgid "STATISTICS_BUTTON"
+msgstr "\ud83d\udcca \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430"
+
+msgid "STATISTICS_TITLE"
+msgstr "<b>\ud83d\udcca \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430</b>"
+
+msgid "STATISTICS_PRIVATE_ERROR"
+msgstr "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u0430 \u0432 \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u043c \u0440\u0435\u0436\u0438\u043c\u0435."
+
+msgid "STATISTICS_TOTAL_MESSAGES"
+msgstr "\u0412\u0441\u0435\u0433\u043e \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439: {count}"
+
+msgid "STATISTICS_INCOMING"
+msgstr "\u0412\u0445\u043e\u0434\u044f\u0449\u0438\u0435"
+
+msgid "STATISTICS_OUTGOING"
+msgstr "\u0418\u0441\u0445\u043e\u0434\u044f\u0449\u0438\u0435"
+
+msgid "STATISTICS_SHOW_BUTTON"
+msgstr "\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c"
+
+msgid "STATISTICS_PERIOD_DAY"
+msgstr "\u0414\u0435\u043d\u044c"
+
+msgid "STATISTICS_PERIOD_WEEK"
+msgstr "\u041d\u0435\u0434\u0435\u043b\u044f"
+
+msgid "STATISTICS_PERIOD_MONTH"
+msgstr "\u041c\u0435\u0441\u044f\u0446"
+
+msgid "STATISTICS_PERIOD_ALL"
+msgstr "\u0412\u0441\u0435 \u0432\u0440\u0435\u043c\u044f"
+
+msgid "STATISTICS_FORMAT_TEXT"
+msgstr "\u0422\u0435\u043a\u0441\u0442"
+
+msgid "STATISTICS_FORMAT_GRAPH"
+msgstr "\u0413\u0440\u0430\u0444\u0438\u043a\u0430"
+
+msgid "STATISTICS_MOST_ACTIVE_DAY"
+msgstr "\u0421\u0430\u043c\u044b\u0439 \u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0439 \u0434\u0435\u043d\u044c: {date} ({count} \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439)"
+
+msgid "STATISTICS_MEDIA_HEADER"
+msgstr "\u041c\u0435\u0434\u0438\u0430-\u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u044f:"
+
+msgid "STATISTICS_MEDIA_PHOTO"
+msgstr "\u0424\u043e\u0442\u043e"
+
+msgid "STATISTICS_MEDIA_VIDEO"
+msgstr "\u0412\u0438\u0434\u0435\u043e"
+
+msgid "STATISTICS_MEDIA_DOCUMENT"
+msgstr "\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b"
+
+msgid "STATISTICS_MEDIA_AUDIO"
+msgstr "\u0410\u0443\u0434\u0438\u043e"
+
+msgid "STATISTICS_MEDIA_VOICE"
+msgstr "\u0413\u043e\u043b\u043e\u0441\u043e\u0432\u044b\u0435"
+

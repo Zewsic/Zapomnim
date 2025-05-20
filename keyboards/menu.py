@@ -8,9 +8,8 @@ from database.models import User
 
 def main_menu_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(text=_("SETTINGS_BUTTON"), callback_data='settings')
-        ],
+        [InlineKeyboardButton(text=_("STATISTICS_BUTTON"), callback_data='statistics')],
+        [InlineKeyboardButton(text=_("SETTINGS_BUTTON"), callback_data='settings')],
         [
             InlineKeyboardButton(text=_("PROFILE_BUTTON"), callback_data='profile'),
             InlineKeyboardButton(text=_("SUPPORT_BUTTON"), url=_("SUPPORT_LINK")),
@@ -28,7 +27,7 @@ def profile_keyboard(user: User) -> InlineKeyboardMarkup:
         ]
     ])
 
-    if not user.is_working:
+    if not user.has_subscription:
         kb.inline_keyboard.insert(0, [
             InlineKeyboardButton(text=_("BUY_SUBSCRIPTION_BUTTON"), callback_data='buy_subscription')
         ])
