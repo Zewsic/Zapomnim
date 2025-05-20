@@ -16,7 +16,8 @@ from config import WEBHOOK_HOST, BOT_TOKEN, TELEGRAM_SERVER
 from database import create_tables
 from handlers import (
     initial_setup_router, settings_router, process_message_router,
-    delete_messages_router, edit_messages_router, menu_router
+    delete_messages_router, edit_messages_router, data_management_router,
+    menu_router
 )
 from utils import TelegramMirrorUtils, PatchedI18nMiddleware, set_bot_commands
 
@@ -69,6 +70,7 @@ dp.include_routers(
     settings_router,
     delete_messages_router,
     edit_messages_router,
+    data_management_router,
     menu_router
 )
 PatchedI18nMiddleware(i18n).setup(dp)

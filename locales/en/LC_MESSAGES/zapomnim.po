@@ -403,3 +403,20 @@ msgstr "Allows you to save protected (disappearing) messages by replying to them
 
 msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
 msgstr "Enables saving protected messages."
+# Data Management
+msgid "DATA_MANAGEMENT_TEXT"
+msgstr "<b>📊 Data Management</b>
+
+You have {count} saved messages."
+
+msgid "CLEAR_DATA_BUTTON"
+msgstr "🗑️ Clear Data"
+
+msgid "CLEAR_DATA_CONFIRM1"
+msgstr "Are you sure you want to delete all saved messages?"
+
+msgid "CLEAR_DATA_CONFIRM2"
+msgstr "This action cannot be undone. All data will be deleted FOREVER. Are you absolutely sure?"
+
+msgid "DATA_CLEARED_OK"
+msgstr "✅ Data cleared"

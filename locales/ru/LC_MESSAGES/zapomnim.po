@@ -418,3 +418,21 @@ msgstr "Позволяет сохранять временные (исчезаю
 msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
 msgstr "Включает сохранение временных сообщений."
 
+
+# Data Management
+msgid "DATA_MANAGEMENT_TEXT"
+msgstr "<b>📊 Управление данными</b>
+
+У вас сохранено сообщений: {count}."
+
+msgid "CLEAR_DATA_BUTTON"
+msgstr "🗑️ Очистить данные"
+
+msgid "CLEAR_DATA_CONFIRM1"
+msgstr "Вы уверены, что хотите удалить все сохранённые сообщения?"
+
+msgid "CLEAR_DATA_CONFIRM2"
+msgstr "Это действие нельзя отменить. Всё удалится НАВСЕГДА. Вы точно уверены?"
+
+msgid "DATA_CLEARED_OK"
+msgstr "✅ Данные очищены"

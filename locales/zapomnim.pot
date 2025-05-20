@@ -316,3 +316,19 @@ msgstr ""
 
 msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
 msgstr ""
+
+# Data Management
+msgid "DATA_MANAGEMENT_TEXT"
+msgstr ""
+
+msgid "CLEAR_DATA_BUTTON"
+msgstr ""
+
+msgid "CLEAR_DATA_CONFIRM1"
+msgstr ""
+
+msgid "CLEAR_DATA_CONFIRM2"
+msgstr ""
+
+msgid "DATA_CLEARED_OK"
+msgstr ""
