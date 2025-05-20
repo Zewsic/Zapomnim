@@ -8,7 +8,7 @@ from handlers.features.edit_messages_handler import router as edit_messages_rout
 
 from handlers.data_management import router as data_management_router
 
-from statistics import router as statistics_router
+from handlers.features.statistics import router as statistics_router
 
 
 __all__ = [

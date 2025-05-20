@@ -33,7 +33,6 @@ async def send_invoice(callback: CallbackQuery):
         payload=f"sub_{callback.from_user.id}_{days}",
         currency="XTR",
         prices=[LabeledPrice(label=_('SUBSCRIPTION_LABEL'), amount=int(plan['price'] * 100))],
-        start_parameter=f"sub_{days}"
     )
     await callback.message.answer(invoice_link)
     await callback.answer()

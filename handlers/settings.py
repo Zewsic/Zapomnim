@@ -86,6 +86,8 @@ async def bot_mode_settings(callback_query: CallbackQuery, state: FSMContext):
                 ),
                 reply_markup=bot_mode_keyboard())
 
+        await session.commit()
+
 
 @router.callback_query(lambda c: c.data.startswith("deleted_messages_settings"))
 async def deleted_messages_settings(callback: CallbackQuery):

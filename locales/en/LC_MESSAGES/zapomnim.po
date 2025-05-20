@@ -406,9 +406,8 @@ msgstr "Enables saving protected messages."
 
 # Data Management
 msgid "DATA_MANAGEMENT_TEXT"
-msgstr "<b>📊 Data Management</b>
-
-You have {count} saved messages."
+msgstr "<b>📊 Data Management</b>\n\n"
+"You have {count} saved messages."
 
 msgid "CLEAR_DATA_BUTTON"
 msgstr "🗑️ Clear Data"
@@ -444,25 +443,7 @@ msgstr "✅ Subscription active until {date}"
 
 # Statistics
 msgid "STATISTICS_BUTTON"
-msgstr "\ud83d\udcca Statistics"
-
-msgid "STATISTICS_TITLE"
-msgstr "<b>\ud83d\udcca Statistics</b>"
-
-msgid "STATISTICS_PRIVATE_ERROR"
-msgstr "Statistics are not available in private mode."
-
-msgid "STATISTICS_TOTAL_MESSAGES"
-msgstr "Total messages: {count}"
-
-msgid "STATISTICS_INCOMING"
-msgstr "Incoming"
-
-msgid "STATISTICS_OUTGOING"
-msgstr "Outgoing"
-
-msgid "STATISTICS_SHOW_BUTTON"
-msgstr "Show"
+msgstr "📊 Statistics"
 
 msgid "STATISTICS_PERIOD_DAY"
 msgstr "Day"
@@ -476,31 +457,104 @@ msgstr "Month"
 msgid "STATISTICS_PERIOD_ALL"
 msgstr "All time"
 
+msgid "STATISTICS_FILTER_ALL"
+msgstr "All"
+
+msgid "STATISTICS_FILTER_INCOMING"
+msgstr "Incoming"
+
+msgid "STATISTICS_FILTER_OUTGOING"
+msgstr "Outgoing"
+
 msgid "STATISTICS_FORMAT_TEXT"
 msgstr "Text"
 
 msgid "STATISTICS_FORMAT_GRAPH"
 msgstr "Graph"
 
-msgid "STATISTICS_MOST_ACTIVE_DAY"
-msgstr "Most active day: {date} ({count} messages)"
+msgid "STATISTICS_TITLE"
+msgstr "Statistics"
 
-msgid "STATISTICS_MEDIA_HEADER"
-msgstr "Media messages:"
+msgid "STATISTICS_PRIVATE_ERROR"
+msgstr "Statistics are not available in Privacy Mode."
 
-msgid "STATISTICS_MEDIA_PHOTO"
-msgstr "Photos"
+msgid "STATISTICS_SHOW_BUTTON"
+msgstr "Show"
 
-msgid "STATISTICS_MEDIA_VIDEO"
-msgstr "Videos"
+msgid "BACK_BUTTON"
+msgstr "Back"
 
-msgid "STATISTICS_MEDIA_DOCUMENT"
-msgstr "Documents"
+msgid "STATISTICS_NEXT_STEP"
+msgstr "Next"
 
-msgid "STATISTICS_MEDIA_AUDIO"
-msgstr "Audio"
+msgid "STATISTICS_GRAPH_MENU_TITLE"
+msgstr "Choose a graph type:"
 
-msgid "STATISTICS_MEDIA_VOICE"
-msgstr "Voice messages"
+msgid "STATISTICS_GRAPH_ACTIVITY"
+msgstr "Activity"
 
+msgid "STATISTICS_GRAPH_IN_OUT"
+msgstr "In/Out Pie"
 
+msgid "STATISTICS_GRAPH_TOP_INTERLOCUTORS"
+msgstr "Top Interlocutors"
+
+msgid "STATISTICS_GRAPH_HEATMAP"
+msgstr "Heatmap"
+
+msgid "STATISTICS_CHOOSE_INTERLOCUTOR"
+msgstr "Choose interlocutor"
+
+msgid "STATISTICS_CHOOSE_CUSTOM_PERIOD"
+msgstr "Custom period"
+
+msgid "STATISTICS_CHOOSE_INTERLOCUTOR_PROMPT"
+msgstr "Please select an interlocutor:"
+
+msgid "STATISTICS_ALL_INTERLOCUTORS"
+msgstr "All interlocutors"
+
+msgid "STATISTICS_CUSTOM_PERIOD_INSTRUCTION"
+msgstr "Please enter custom period in format YYYY-MM-DD => YYYY-MM-DD"
+
+msgid "STATISTICS_CUSTOM_PERIOD_SAVED"
+msgstr "Custom period saved."
+
+msgid "STATISTICS_CUSTOM_PERIOD_ERROR"
+msgstr "Error parsing custom period. Example: 2023-01-01 => 2023-01-15"
+
+msgid "STATISTICS_NO_USERS"
+msgstr "No interlocutors found."
+
+msgid "STATISTICS_NO_DATA"
+msgstr "No data available for this period."
+
+msgid "STATISTICS_TOTAL_MESSAGES"
+msgstr "Total messages: {count}"
+
+msgid "STATISTICS_INCOMING"
+msgstr "Incoming"
+
+msgid "STATISTICS_OUTGOING"
+msgstr "Outgoing"
+
+msgid "STATISTICS_AVG_LENGTH"
+msgstr "Average message length: {length}"
+
+msgid "STATISTICS_TOP_INTERLOCUTORS"
+msgstr "Top-5 interlocutors:"
+
+msgid "STATISTICS_HIGHEST_ACTIVITY"
+msgstr "Highest activity at hour: {hour}"
+
+msgid "STATISTICS_LOWEST_ACTIVITY"
+msgstr "Lowest activity at hour: {hour}"
+
+msgid "STATISTICS_AVG_RESPONSE_TIME"
+msgstr "Average response time: {minutes} min. {seconds} sec."
+
+msgid "STATISTICS_GRAPH_GENERATED"
+msgstr "Here's your requested chart."
+
+msgid "STATISTICS_UNKNOWN_GRAPH_TYPE"
+msgstr "Unknown graph type."

@@ -71,8 +71,9 @@ msgid "PROFILE_TEXT"
 msgstr ""
 "<b>🧑‍💻 Профиль {name}</b> (ID: <code>{user_id}</code>)\n"
 "\n"
-"📅 Регистрация в боте: {reg_date} ({reg_days} дней).\n"
-"💸 Подписка до {subscription_date} (еще {subscription_days} дней)."
+"📅 Дата регистрации: {reg_date} (уже {reg_days} дней в системе).\n"
+"💸 Подписка активна до: {subscription_date} (осталось {subscription_days} "
+"дней)."
 
 msgid "BUY_SUBSCRIPTION_BUTTON"
 msgstr "💸 Оформить подписку"
@@ -88,8 +89,8 @@ msgstr "https://t.me/zewsic"
 
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
 msgstr ""
-"😢 К сожалению, данный бот доступен только для пользователей Telegram "
-"Premium."
+"😢 К сожалению, данный бот доступен только пользователям с подпиской "
+"Telegram Premium."
 
 msgid "CONNECT_BUSINESS_BOT_IMAGE"
 msgstr "resources/connect_business_bot_image_ru.png"
@@ -108,58 +109,58 @@ msgstr ""
 
 msgid "CONNECT_BUSINESS_BOT_SUCCESS_TEXT"
 msgstr ""
-"✅ <b>Бот был успешно подключен и работает!</b>\n"
+"✅ <b>Бот успешно подключён и находится в рабочем состоянии.</b>\n"
 "\n"
-"Теперь вы можете перейти к настройкам."
+"Вы можете перейти к настройке параметров."
 
 msgid "BUSINESS_BOT_DISCONNECTED_TEXT"
 msgstr ""
-"⛔️ <b>Бизнес-бот был отключен.</b>\n"
+"⛔️ <b>Бизнес-бот был отключён.</b>\n"
 "\n"
-"Для продолжения работы его необходимо снова подключить."
+"Для дальнейшей работы требуется повторное подключение."
 
 msgid "SELECT_BOT_TYPE"
 msgstr ""
 "<b>🥷 Режим работы бота</b>\n"
 "\n"
-"Бот поддерживает два режима работы: <b>обычный</b> и <b>приватный</b>.\n"
+"Доступны два режима работы: <b>обычный</b> и <b>приватный</b>.\n"
 "\n"
-"1. <b>Обычный режим</b> — все функции бота доступны без ограничений.\n"
+"1. <b>Обычный режим</b> — полный доступ ко всем функциям бота без "
+"ограничений.\n"
 "\n"
-"2. <b>Приватный режим</b> предназначен для максимальной "
+"2. <b>Приватный режим</b> предназначен для обеспечения максимальной "
 "конфиденциальности. В этом режиме ваши сообщения <b>не обрабатываются "
-"сервером</b>, не отправляются в сторонние сервисы и не анализируются "
-"нейросетями..\n"
+"сервером</b>, не передаются сторонним сервисам и не анализируются "
+"нейросетями.\n"
 "\n"
-"<b>В приватном режиме недоступны:</b>\n"
+"<b>В приватном режиме недоступны следующие функции:</b>\n"
 "- ИИ-анализ чатов\n"
 "- Умные уведомления\n"
-"- Статистика чата\n"
+"- Статистика чатов\n"
 "- Экспорт истории чата\n"
 "\n"
-"Сообщения, отправленные в приватном режиме, можно только удалить — "
-"экспорт невозможен.\n"
+"Сообщения, отправленные в приватном режиме, невозможно экспортировать.\n"
 "\n"
-"<b>Вы можете в любой момент переключаться между режимами в "
-"настройках.</b>\n"
-"Выбранный режим: {selected_mode}"
+"<b>Вы можете в любой момент изменить режим работы в настройках.</b>\n"
+"Текущий режим: {selected_mode}"
 
 msgid "CONFIRM_STANDARD_BOT_TYPE"
 msgstr ""
-"<b>🧑‍💻 Вы хотите переключиться в обычный режим.</b>\n"
+"<b>🧑‍💻 Вы собираетесь переключиться в обычный режим.</b>\n"
 "\n"
-"После перехода в этот режим вы сможете полноценно пользоваться ботом."
+"После перехода в данный режим вам будет доступен полный функционал бота."
 
 msgid "CONFIRM_PRIVACY_BOT_TYPE"
 msgstr ""
-"<b>🥷 Вы хотите переключиться в приватный режим.</b>\n"
+"<b>🥷 Вы собираетесь переключиться в приватный режим.</b>\n"
 "\n"
-"<b>Обратите внимание на то что:</b>\n"
-"- Все ваши прошлые сообщения также <b>перейдут в приватный режим</b>.\n"
-"- Они более <b>никогда не будут обрабатываться</b> нами или нейросетями.\n"
-"- Их <b>невозможно будет восстановить</b> или экспортировать.\n"
-"\n"
-"Вы уверены что хотите перейти в приватный режим?"
+"<b>Обратите внимание:</b>\n"
+"- Все ваши предыдущие сообщения <b>будут переведены в приватный "
+"режим</b>.\n"
+"- Их <b>невозможно будет восстановить, откатить или экспортировать</b>.\n"
+"- Эти сообщения полностью исключаются из системы, статистики и анализа "
+"нейросетями.\n"
+"❓ Вы уверены, что хотите активировать приватный режим?"
 
 msgid "BOT_CHANGE_OK"
 msgstr "✅ Успешно."
@@ -338,10 +339,10 @@ msgid "SETTINGS_TEXT"
 msgstr ""
 "<b>⚙️ Настройки</b>\n"
 "\n"
-"Выберите нужный раздел для управления функциями бота."
+"Выберите необходимый раздел для управления возможностями бота."
 
 msgid "ENABLE_BUTTON"
-msgstr "Включить"
+msgstr "Включить для входящих"
 
 msgid "ENABLE_FOR_OUTGOING"
 msgstr "Включить для исходящих"
@@ -359,36 +360,38 @@ msgstr "<b>💬 Настройки сообщений</b>\n"
 
 # ## Deleted
 msgid "DELETED_MESSAGES_SETTINGS_BUTTON"
-msgstr "🗑️ Сохранение удаленных"
+msgstr "🗑️ Сохранение удалённых"
 
 msgid "DELETED_MESSAGES_SETTINGS_DESCRIPTION"
-msgstr ""
-"Отправляет вам уведомление когда кто-либо удаляет сообщение в чате, "
-"сохраняя его наполнение."
+msgstr "Уведомляет вас при удалении сообщения в чате и сохраняет его содержимое."
 
 msgid "DELETED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
-msgstr "Включает уведомления об удалении для входящих."
+msgstr "Включить уведомления об удалении входящих сообщений."
 
 msgid "DELETED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"
-msgstr "Включает уведомления об удалении для исходящих."
+msgstr "Включить уведомления об удалении исходящих сообщений."
 
 msgid "DELETED_MESSAGES_SETTINGS_SAVE_TEXT"
 msgstr "Текстовые сообщения"
 
 msgid "DELETED_MESSAGES_SETTINGS_SAVE_TEXT_DESCRIPTION"
-msgstr "Сохраняет удаленные текстовые сообщения."
+msgstr "Сохранять удалённые текстовые сообщения."
 
 msgid "DELETED_MESSAGES_SETTINGS_SAVE_MEDIA"
 msgstr "Медиа-сообщения"
 
 msgid "DELETED_MESSAGES_SETTINGS_SAVE_MEDIA_DESCRIPTION"
-msgstr "фото, видео, аудио, стикеры, анимации, голосовые и видео сообщения"
+msgstr ""
+"Сохранять фото, видео, аудио, стикеры, анимации, голосовые и "
+"видеосообщения."
 
 msgid "DELETED_MESSAGES_SETTINGS_SAVE_OTHER"
 msgstr "Прочие сообщения"
 
 msgid "DELETED_MESSAGES_SETTINGS_SAVE_OTHER_DESCRIPTION"
-msgstr "Контакты, локации, опросы, истории, подарки и пр."
+msgstr ""
+"Сохранять контакты, локации, опросы, истории, подарки и другие типы "
+"сообщений."
 
 # ## Edited
 msgid "EDITED_MESSAGES_SETTINGS_BUTTON"
@@ -396,124 +399,184 @@ msgstr "📝 Сохранение отредактированных"
 
 msgid "EDITED_MESSAGES_SETTINGS_DESCRIPTION"
 msgstr ""
-"Отправляет вам уведомление, когда кто-либо редактирует сообщение в чате, "
-"сохраняя его изначальное и новое содержание."
+"Уведомляет вас при редактировании сообщения в чате, сохраняя его исходное"
+" и новое содержимое."
 
 msgid "EDITED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
-msgstr "Включает уведомления о редактировании для входящих."
+msgstr "Включить уведомления о редактировании входящих сообщений."
 
 msgid "EDITED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"
-msgstr "Включает уведомления о редактировании для исходящих."
+msgstr "Включить уведомления о редактировании исходящих сообщений."
 
 msgid "EDITED_MESSAGES_SETTINGS_SAVE_TEXT_DESCRIPTION"
-msgstr "Сохраняет отредактированные текстовые сообщения."
+msgstr "Сохранять отредактированные текстовые сообщения."
 
 # Protected
 msgid "PROTECTED_MESSAGES_SETTINGS_BUTTON"
 msgstr "🔞 Сохранение временных"
 
 msgid "PROTECTED_MESSAGES_SETTINGS_DESCRIPTION"
-msgstr "Позволяет сохранять временные (исчезающие) сообщения, отвечая на них."
+msgstr "Позволяет сохранять временные (исчезающие) сообщения путем ответа на них."
 
 msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
-msgstr "Включает сохранение временных сообщений."
-
-
+msgstr "Включить сохранение временных сообщений."
 
 # Data Management
 msgid "DATA_MANAGEMENT_TEXT"
-msgstr "<b>📊 Управление данными</b>
-
-У вас сохранено сообщений: {count}."
+msgstr ""
+"<b>📊 Управление данными</b>\n"
+"\n"
+"Количество сохранённых сообщений: {count}."
 
 msgid "CLEAR_DATA_BUTTON"
 msgstr "🗑️ Очистить данные"
 
 msgid "CLEAR_DATA_CONFIRM1"
-msgstr "Вы уверены, что хотите удалить все сохранённые сообщения?"
+msgstr ""
+"Вы уверены, что хотите удалить все данные?  Все данные будут удалены "
+"<b>без возможности восстановления</b>."
 
 msgid "CLEAR_DATA_CONFIRM2"
-msgstr "Это действие нельзя отменить. Всё удалится НАВСЕГДА. Вы точно уверены?"
+msgstr ""
+"Это действие необратимо.После удаления бот <b>не сможет восстановить</b> "
+"ранее отправленные сообщения или их версии в случае удаления или "
+"редактирования. \n"
+"\n"
+"Вы подтверждаете удаление?"
 
 msgid "DATA_CLEARED_OK"
-msgstr "✅ Данные очищены"
-
-msgid "SUBSCRIPTION_TEXT"
-msgstr "У вас нет активной подписки. Выберите тариф:"
-
-msgid "SUBSCRIPTION_PLAN_BUTTON"
-msgstr "{days} дней — {price} XTR"
-
-msgid "SUBSCRIPTION_LABEL"
-msgstr "Подписка"
-
-msgid "SUBSCRIPTION_TITLE"
-msgstr "Подписка на {days} дней"
-
-msgid "SUBSCRIPTION_DESC"
-msgstr "Доступ ко всем функциям на {days} дней"
-
-msgid "SUBSCRIPTION_SUCCESS"
-msgstr "✅ Подписка активна до {date}"
+msgstr "✅ Данные успешно очищены."
 
 # Statistics
 msgid "STATISTICS_BUTTON"
-msgstr "\ud83d\udcca \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430"
-
-msgid "STATISTICS_TITLE"
-msgstr "<b>\ud83d\udcca \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430</b>"
-
-msgid "STATISTICS_PRIVATE_ERROR"
-msgstr "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u0430 \u0432 \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u043c \u0440\u0435\u0436\u0438\u043c\u0435."
-
-msgid "STATISTICS_TOTAL_MESSAGES"
-msgstr "\u0412\u0441\u0435\u0433\u043e \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439: {count}"
-
-msgid "STATISTICS_INCOMING"
-msgstr "\u0412\u0445\u043e\u0434\u044f\u0449\u0438\u0435"
-
-msgid "STATISTICS_OUTGOING"
-msgstr "\u0418\u0441\u0445\u043e\u0434\u044f\u0449\u0438\u0435"
-
-msgid "STATISTICS_SHOW_BUTTON"
-msgstr "\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c"
+msgstr "📊 Статистика"
 
 msgid "STATISTICS_PERIOD_DAY"
-msgstr "\u0414\u0435\u043d\u044c"
+msgstr "День"
 
 msgid "STATISTICS_PERIOD_WEEK"
-msgstr "\u041d\u0435\u0434\u0435\u043b\u044f"
+msgstr "Неделя"
 
 msgid "STATISTICS_PERIOD_MONTH"
-msgstr "\u041c\u0435\u0441\u044f\u0446"
+msgstr "Месяц"
 
 msgid "STATISTICS_PERIOD_ALL"
-msgstr "\u0412\u0441\u0435 \u0432\u0440\u0435\u043c\u044f"
+msgstr "За всё время"
+
+msgid "STATISTICS_FILTER_ALL"
+msgstr "Все"
+
+msgid "STATISTICS_FILTER_INCOMING"
+msgstr "Входящие"
+
+msgid "STATISTICS_FILTER_OUTGOING"
+msgstr "Исходящие"
 
 msgid "STATISTICS_FORMAT_TEXT"
-msgstr "\u0422\u0435\u043a\u0441\u0442"
+msgstr "Текст"
 
 msgid "STATISTICS_FORMAT_GRAPH"
-msgstr "\u0413\u0440\u0430\u0444\u0438\u043a\u0430"
+msgstr "График"
 
-msgid "STATISTICS_MOST_ACTIVE_DAY"
-msgstr "\u0421\u0430\u043c\u044b\u0439 \u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0439 \u0434\u0435\u043d\u044c: {date} ({count} \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439)"
+msgid "STATISTICS_TITLE"
+msgstr "Статистика"
 
-msgid "STATISTICS_MEDIA_HEADER"
-msgstr "\u041c\u0435\u0434\u0438\u0430-\u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u044f:"
+msgid "STATISTICS_PRIVATE_ERROR"
+msgstr "Статистика недоступна в режиме конфиденциальности."
 
-msgid "STATISTICS_MEDIA_PHOTO"
-msgstr "\u0424\u043e\u0442\u043e"
+msgid "STATISTICS_SHOW_BUTTON"
+msgstr "Показать"
 
-msgid "STATISTICS_MEDIA_VIDEO"
-msgstr "\u0412\u0438\u0434\u0435\u043e"
+msgid "STATISTICS_NEXT_STEP"
+msgstr "Далее"
 
-msgid "STATISTICS_MEDIA_DOCUMENT"
-msgstr "\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b"
+msgid "STATISTICS_GRAPH_MENU_TITLE"
+msgstr "Выберите тип графика:"
 
-msgid "STATISTICS_MEDIA_AUDIO"
-msgstr "\u0410\u0443\u0434\u0438\u043e"
+msgid "STATISTICS_GRAPH_ACTIVITY"
+msgstr "Активность"
 
-msgid "STATISTICS_MEDIA_VOICE"
-msgstr "\u0413\u043e\u043b\u043e\u0441\u043e\u0432\u044b\u0435"
+msgid "STATISTICS_GRAPH_IN_OUT"
+msgstr "Круговая (Вх/Исх)"
+
+msgid "STATISTICS_GRAPH_TOP_INTERLOCUTORS"
+msgstr "Топ собеседников"
+
+msgid "STATISTICS_GRAPH_HEATMAP"
+msgstr "Теплокарта"
+
+msgid "STATISTICS_CHOOSE_INTERLOCUTOR"
+msgstr "Выбрать собеседника"
+
+msgid "STATISTICS_CHOOSE_CUSTOM_PERIOD"
+msgstr "Свой период"
+
+msgid "STATISTICS_CHOOSE_INTERLOCUTOR_PROMPT"
+msgstr "Выберите собеседника:"
+
+msgid "STATISTICS_ALL_INTERLOCUTORS"
+msgstr "Все собеседники"
+
+msgid "STATISTICS_CUSTOM_PERIOD_INSTRUCTION"
+msgstr "Введите период в формате YYYY-MM-DD => YYYY-MM-DD"
+
+msgid "STATISTICS_CUSTOM_PERIOD_SAVED"
+msgstr "Свой период сохранён."
+
+msgid "STATISTICS_CUSTOM_PERIOD_ERROR"
+msgstr "Ошибка при разборе периода. Пример: 2023-01-01 => 2023-01-15"
+
+msgid "STATISTICS_NO_USERS"
+msgstr "Нет собеседников."
+
+msgid "STATISTICS_NO_DATA"
+msgstr "Нет данных за выбранный период."
+
+msgid "STATISTICS_TOTAL_MESSAGES"
+msgstr "Всего сообщений: {count}"
+
+msgid "STATISTICS_INCOMING"
+msgstr "Входящие"
+
+msgid "STATISTICS_OUTGOING"
+msgstr "Исходящие"
+
+msgid "STATISTICS_AVG_LENGTH"
+msgstr "Средняя длина сообщения: {length}"
+
+msgid "STATISTICS_TOP_INTERLOCUTORS"
+msgstr "Топ-5 собеседников:"
+
+msgid "STATISTICS_HIGHEST_ACTIVITY"
+msgstr "Наибольшая активность в час: {hour}"
+
+msgid "STATISTICS_LOWEST_ACTIVITY"
+msgstr "Наименьшая активность в час: {hour}"
+
+msgid "STATISTICS_AVG_RESPONSE_TIME"
+msgstr "Среднее время ответа: {minutes} мин. {seconds} сек."
+
+msgid "STATISTICS_GRAPH_GENERATED"
+msgstr "Вот ваш запрошенный график."
+
+msgid "STATISTICS_UNKNOWN_GRAPH_TYPE"
+msgstr "Неизвестный тип графика."
+
+#~ msgid "SUBSCRIPTION_TEXT"
+#~ msgstr "У вас нет активной подписки. Выберите тариф:"
+
+#~ msgid "SUBSCRIPTION_PLAN_BUTTON"
+#~ msgstr "{days} дней — {price} XTR"
+
+#~ msgid "SUBSCRIPTION_LABEL"
+#~ msgstr "Подписка"
+
+#~ msgid "SUBSCRIPTION_TITLE"
+#~ msgstr "Подписка на {days} дней"
+
+#~ msgid "SUBSCRIPTION_DESC"
+#~ msgstr "Доступ ко всем функциям на {days} дней"
+
+#~ msgid "SUBSCRIPTION_SUCCESS"
+#~ msgstr "✅ Подписка активна до {date}"
 

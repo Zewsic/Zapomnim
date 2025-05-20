@@ -17,7 +17,7 @@ from database import create_tables
 from handlers import (
     initial_setup_router, settings_router, process_message_router,
     delete_messages_router, edit_messages_router, data_management_router, subscription_router,
-    menu_router
+    menu_router, statistics_router
 )
 from utils import TelegramMirrorUtils, PatchedI18nMiddleware, set_bot_commands
 
@@ -72,6 +72,7 @@ dp.include_routers(
     edit_messages_router,
     data_management_router,
     subscription_router,
+    statistics_router,
     menu_router
 )
 PatchedI18nMiddleware(i18n).setup(dp)

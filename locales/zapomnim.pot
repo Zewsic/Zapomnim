@@ -332,3 +332,123 @@ msgstr ""
 
 msgid "DATA_CLEARED_OK"
 msgstr ""
+
+
+
+# Statistics
+msgid "STATISTICS_BUTTON"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_DAY"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_WEEK"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_MONTH"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_ALL"
+msgstr ""
+
+msgid "STATISTICS_FILTER_ALL"
+msgstr ""
+
+msgid "STATISTICS_FILTER_INCOMING"
+msgstr ""
+
+msgid "STATISTICS_FILTER_OUTGOING"
+msgstr ""
+
+msgid "STATISTICS_FORMAT_TEXT"
+msgstr ""
+
+msgid "STATISTICS_FORMAT_GRAPH"
+msgstr ""
+
+msgid "STATISTICS_TITLE"
+msgstr ""
+
+msgid "STATISTICS_PRIVATE_ERROR"
+msgstr ""
+
+msgid "STATISTICS_SHOW_BUTTON"
+msgstr ""
+
+msgid "BACK_BUTTON"
+msgstr ""
+
+msgid "STATISTICS_NEXT_STEP"
+msgstr ""
+
+msgid "STATISTICS_GRAPH_MENU_TITLE"
+msgstr ""
+
+msgid "STATISTICS_GRAPH_ACTIVITY"
+msgstr ""
+
+msgid "STATISTICS_GRAPH_IN_OUT"
+msgstr ""
+
+msgid "STATISTICS_GRAPH_TOP_INTERLOCUTORS"
+msgstr ""
+
+msgid "STATISTICS_GRAPH_HEATMAP"
+msgstr ""
+
+msgid "STATISTICS_CHOOSE_INTERLOCUTOR"
+msgstr ""
+
+msgid "STATISTICS_CHOOSE_CUSTOM_PERIOD"
+msgstr ""
+
+msgid "STATISTICS_CHOOSE_INTERLOCUTOR_PROMPT"
+msgstr ""
+
+msgid "STATISTICS_ALL_INTERLOCUTORS"
+msgstr ""
+
+msgid "STATISTICS_CUSTOM_PERIOD_INSTRUCTION"
+msgstr ""
+
+msgid "STATISTICS_CUSTOM_PERIOD_SAVED"
+msgstr ""
+
+msgid "STATISTICS_CUSTOM_PERIOD_ERROR"
+msgstr ""
+
+msgid "STATISTICS_NO_USERS"
+msgstr ""
+
+msgid "STATISTICS_NO_DATA"
+msgstr ""
+
+msgid "STATISTICS_TOTAL_MESSAGES"
+msgstr ""
+
+msgid "STATISTICS_INCOMING"
+msgstr ""
+
+msgid "STATISTICS_OUTGOING"
+msgstr ""
+
+msgid "STATISTICS_AVG_LENGTH"
+msgstr ""
+
+msgid "STATISTICS_TOP_INTERLOCUTORS"
+msgstr ""
+
+msgid "STATISTICS_HIGHEST_ACTIVITY"
+msgstr ""
+
+msgid "STATISTICS_LOWEST_ACTIVITY"
+msgstr ""
+
+msgid "STATISTICS_AVG_RESPONSE_TIME"
+msgstr ""
+
+msgid "STATISTICS_GRAPH_GENERATED"
+msgstr ""
+
+msgid "STATISTICS_UNKNOWN_GRAPH_TYPE"
+msgstr ""
