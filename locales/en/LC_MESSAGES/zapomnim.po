@@ -403,3 +403,64 @@ msgstr "Allows you to save protected (disappearing) messages by replying to them
 
 msgid "PROTECTED_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
 msgstr "Enables saving protected messages."
+
+# Statistics
+msgid "STATISTICS_BUTTON"
+msgstr "\ud83d\udcca Statistics"
+
+msgid "STATISTICS_TITLE"
+msgstr "<b>\ud83d\udcca Statistics</b>"
+
+msgid "STATISTICS_PRIVATE_ERROR"
+msgstr "Statistics are not available in private mode."
+
+msgid "STATISTICS_TOTAL_MESSAGES"
+msgstr "Total messages: {count}"
+
+msgid "STATISTICS_INCOMING"
+msgstr "Incoming"
+
+msgid "STATISTICS_OUTGOING"
+msgstr "Outgoing"
+
+msgid "STATISTICS_SHOW_BUTTON"
+msgstr "Show"
+
+msgid "STATISTICS_PERIOD_DAY"
+msgstr "Day"
+
+msgid "STATISTICS_PERIOD_WEEK"
+msgstr "Week"
+
+msgid "STATISTICS_PERIOD_MONTH"
+msgstr "Month"
+
+msgid "STATISTICS_PERIOD_ALL"
+msgstr "All time"
+
+msgid "STATISTICS_FORMAT_TEXT"
+msgstr "Text"
+
+msgid "STATISTICS_FORMAT_GRAPH"
+msgstr "Graph"
+
+msgid "STATISTICS_MOST_ACTIVE_DAY"
+msgstr "Most active day: {date} ({count} messages)"
+
+msgid "STATISTICS_MEDIA_HEADER"
+msgstr "Media messages:"
+
+msgid "STATISTICS_MEDIA_PHOTO"
+msgstr "Photos"
+
+msgid "STATISTICS_MEDIA_VIDEO"
+msgstr "Videos"
+
+msgid "STATISTICS_MEDIA_DOCUMENT"
+msgstr "Documents"
+
+msgid "STATISTICS_MEDIA_AUDIO"
+msgstr "Audio"
+
+msgid "STATISTICS_MEDIA_VOICE"
+msgstr "Voice messages"
