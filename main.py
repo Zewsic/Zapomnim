@@ -1,4 +1,5 @@
 import logging
+import traceback
 from contextlib import asynccontextmanager
 from typing import Final
 
@@ -90,9 +91,11 @@ async def telegram_main_webhook(bot_id: str, req: Request):
             await dp.feed_update(main_bot, update)
         except TelegramBadRequest as e:
             logger.error(e)
+            logger.exception(traceback.format_exc())
         return {"ok": True}
     except Exception as exc:
         logger.exception("Error in webhook handler:")
+        logger.exception(traceback.format_exc())
         raise HTTPException(status_code=500, detail="Internal error")
 
 

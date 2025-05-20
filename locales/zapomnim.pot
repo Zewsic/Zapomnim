@@ -452,3 +452,9 @@ msgstr ""
 
 msgid "STATISTICS_UNKNOWN_GRAPH_TYPE"
 msgstr ""
+
+msgid "SUBSCRIPTION_TITLE"
+msgstr ""
+
+msgid "SUBSCRIPTION_DESC"
+msgstr ""

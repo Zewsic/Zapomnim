@@ -43,7 +43,7 @@ async def send_profile(bot: Bot, chat_id: int, user: User):
             reg_date=user.created_at.strftime("%d.%m.%Y"),
             reg_days=max((datetime.now() - user.created_at).days, 0),
         ),
-        reply_markup=profile_keyboard(user)
+        reply_markup=await profile_keyboard(bot, user)
     )
 
 

@@ -4,24 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f68afd11-622a-4ab0-bbbe-41fae5f95094" name="Changes" comment="Added:&#10;- Change bot mode">
-      <change afterPath="$PROJECT_DIR$/handlers/features/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/statistics.py" afterDir="false" />
+    <list default="true" id="f68afd11-622a-4ab0-bbbe-41fae5f95094" name="Changes" comment="Added:&#10;- Statistics fixed&#10;- New localizations">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/menu.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/subscription.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/subscription.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keyboards/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/keyboards/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/keyboards/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/keyboards/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keyboards/subscription.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/locales/zapomnim.pot" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zapomnim.pot" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/statistics.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/features/statistics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uv.lock" beforeDir="false" afterPath="$PROJECT_DIR$/uv.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +204,8 @@
       <workItem from="1747411904308" duration="56200000" />
       <workItem from="1747668538764" duration="3416000" />
       <workItem from="1747672122065" duration="20014000" />
-      <workItem from="1747701253285" duration="9475000" />
+      <workItem from="1747701253285" duration="13686000" />
+      <workItem from="1747754748015" duration="1693000" />
     </task>
     <task id="LOCAL-00001" summary="Added:&#10;- Saving Messages&#10;- Notifications about message removing&#10;- Notifications about message editing">
       <option name="closed" value="true" />
@@ -244,7 +239,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747701975950</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added:&#10;- Statistics fixed&#10;- New localizations">
+      <option name="closed" value="true" />
+      <created>1747744484017</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1747744484017</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -266,10 +269,11 @@
     <MESSAGE value="Added:&#10;- Notifications of disconnection&#10;- New images&#10;- Professional style" />
     <MESSAGE value="Fixed:&#10;- Account Activating and start" />
     <MESSAGE value="Added:&#10;- Change bot mode" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added:&#10;- Change bot mode" />
+    <MESSAGE value="Added:&#10;- Statistics fixed&#10;- New localizations" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added:&#10;- Statistics fixed&#10;- New localizations" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/base$Run_Main.coverage" NAME="Run Main Coverage Results" MODIFIED="1747739549746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/base$Run_Main.coverage" NAME="Run Main Coverage Results" MODIFIED="1747761693345" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/base$mirror.coverage" NAME="mirror Coverage Results" MODIFIED="1747186150065" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/base$patcher.coverage" NAME="patcher Coverage Results" MODIFIED="1747190356681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/base$webhook.coverage" NAME="webhook Coverage Results" MODIFIED="1747177276548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />

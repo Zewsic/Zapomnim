@@ -56,10 +56,10 @@ msgstr "resources/start_image_ru.png"
 
 msgid "MAIN_MENU_TEXT"
 msgstr ""
-"<b>Добрый день, {name}!</b>\n"
+"<b>👋 Добрый день, {name}!</b>\n"
 "\n"
-"Ваша подписка заканчивается {subscription_date} (еще {days} дней).\n"
-"Режим работы: {bot_mode}"
+"💸 Ваша подписка заканчивается {subscription_date} (еще {days} дней).\n"
+"🤖 Режим работы: {bot_mode}"
 
 msgid "SETTINGS_BUTTON"
 msgstr "⚙️ Настройки"
@@ -72,7 +72,7 @@ msgstr ""
 "<b>🧑‍💻 Профиль {name}</b> (ID: <code>{user_id}</code>)\n"
 "\n"
 "📅 Дата регистрации: {reg_date} (уже {reg_days} дней в системе).\n"
-"💸 Подписка активна до: {subscription_date} (осталось {subscription_days} "
+"💸 Подписка активна до {subscription_date} (осталось {subscription_days} "
 "дней)."
 
 msgid "BUY_SUBSCRIPTION_BUTTON"
@@ -562,20 +562,11 @@ msgstr "Вот ваш запрошенный график."
 msgid "STATISTICS_UNKNOWN_GRAPH_TYPE"
 msgstr "Неизвестный тип графика."
 
-#~ msgid "SUBSCRIPTION_TEXT"
-#~ msgstr "У вас нет активной подписки. Выберите тариф:"
+msgid "SUBSCRIPTION_TITLE"
+msgstr "Доступ"
 
-#~ msgid "SUBSCRIPTION_PLAN_BUTTON"
-#~ msgstr "{days} дней — {price} XTR"
-
-#~ msgid "SUBSCRIPTION_LABEL"
-#~ msgstr "Подписка"
-
-#~ msgid "SUBSCRIPTION_TITLE"
-#~ msgstr "Подписка на {days} дней"
-
-#~ msgid "SUBSCRIPTION_DESC"
-#~ msgstr "Доступ ко всем функциям на {days} дней"
+msgid "SUBSCRIPTION_DESC"
+msgstr "Доступ ко всем функциям бота"
 
 #~ msgid "SUBSCRIPTION_SUCCESS"
 #~ msgstr "✅ Подписка активна до {date}"
