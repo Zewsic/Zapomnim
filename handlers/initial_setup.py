@@ -134,6 +134,8 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
         if not user:
             return
 
+        _had_been_enabled = user.is_enabled
+
         user = await update_user(
             id=user.id, session=session,
             first_name=event.user.first_name,
@@ -148,11 +150,12 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
         if instruction_message:
             await instruction_message.delete()
 
-        await event.bot.send_message(
-            chat_id=user.id,
-            text=_("CONNECT_BUSINESS_BOT_SUCCESS_TEXT"),
-            reply_markup=continue_keyboard("menu")
-        )
+        if not _had_been_enabled:
+            await event.bot.send_message(
+                chat_id=user.id,
+                text=_("CONNECT_BUSINESS_BOT_SUCCESS_TEXT"),
+                reply_markup=continue_keyboard("menu")
+            )
     else:
         await event.bot.send_message(
             chat_id=user.id,
