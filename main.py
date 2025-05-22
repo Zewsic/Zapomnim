@@ -28,7 +28,7 @@ WEBHOOK_URL: Final[str] = f"http://{WEBHOOK_HOST}/webhook/main"
 main_bot = Bot(
     token=BOT_TOKEN,
     default=DefaultBotProperties(parse_mode=ParseMode.HTML),
-    # session=AiohttpSession(api=TELEGRAM_SERVER)
+    session=AiohttpSession(api=TELEGRAM_SERVER)
 )
 
 i18n = I18n(
