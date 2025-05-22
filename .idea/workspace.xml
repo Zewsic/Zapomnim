@@ -4,17 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f68afd11-622a-4ab0-bbbe-41fae5f95094" name="Changes" comment="fix dublicated connected message">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/build-image.yml" afterDir="false" />
+    <list default="true" id="f68afd11-622a-4ab0-bbbe-41fae5f95094" name="Changes" comment="docker">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/features/delete_messages_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/features/delete_messages_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/features/edit_messages_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/features/edit_messages_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/features/save_protected_content.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/features/save_protected_content.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/zapomnim.pot" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zapomnim.pot" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,7 +197,7 @@
       <workItem from="1747672122065" duration="20014000" />
       <workItem from="1747701253285" duration="13686000" />
       <workItem from="1747754748015" duration="4159000" />
-      <workItem from="1747910317403" duration="1517000" />
+      <workItem from="1747910317403" duration="3333000" />
     </task>
     <task id="LOCAL-00001" summary="Added:&#10;- Saving Messages&#10;- Notifications about message removing&#10;- Notifications about message editing">
       <option name="closed" value="true" />
@@ -264,7 +255,23 @@
       <option name="project" value="LOCAL" />
       <updated>1747761924138</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="- for deploy">
+      <option name="closed" value="true" />
+      <created>1747943893968</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1747943893968</updated>
+    </task>
+    <task id="LOCAL-00009" summary="docker">
+      <option name="closed" value="true" />
+      <created>1747944070298</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1747944070298</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -289,7 +296,9 @@
     <MESSAGE value="Added:&#10;- Statistics fixed&#10;- New localizations" />
     <MESSAGE value="tests" />
     <MESSAGE value="fix dublicated connected message" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix dublicated connected message" />
+    <MESSAGE value="- for deploy" />
+    <MESSAGE value="docker" />
+    <option name="LAST_COMMIT_MESSAGE" value="docker" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/base$Run_Main.coverage" NAME="Run Main Coverage Results" MODIFIED="1747764387565" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
