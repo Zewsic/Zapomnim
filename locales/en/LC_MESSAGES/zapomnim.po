@@ -558,3 +558,6 @@ msgstr "Here's your requested chart."
 
 msgid "STATISTICS_UNKNOWN_GRAPH_TYPE"
 msgstr "Unknown graph type."
+
+msgid "VOICE_MESSAGES_FORBIDDEN"
+msgstr ""

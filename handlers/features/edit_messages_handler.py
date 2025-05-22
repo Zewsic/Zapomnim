@@ -3,6 +3,7 @@ import re
 from typing import Optional
 
 from aiogram import Router, Bot
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import (
     BufferedInputFile,
     LinkPreviewOptions,
@@ -197,11 +198,17 @@ async def on_edit_messages(event: Message):
             if not await user.get_bool('settings.edited_messages.save_other', session, default=False):
                 return
 
-        await send_edited_info(
-            bot=bot,
-            user_id=user.id,
-            chat=chat,
-            old_msg=old_msg,
-            new_msg=new_msg,
-            message_id=event.message_id
-        )
+        try:
+            await send_edited_info(
+                bot=bot,
+                user_id=user.id,
+                chat=chat,
+                old_msg=old_msg,
+                new_msg=new_msg,
+                message_id=event.message_id
+            )
+        except TelegramBadRequest as e:
+            if 'VOICE_MESSAGES_FORBIDDEN' in e.message:
+                await event.bot.send_message(user.id, _("VOICE_MESSAGES_FORBIDDEN"))
+            else:
+                raise e

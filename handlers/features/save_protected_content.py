@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from aiogram import Bot
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import BufferedInputFile, LinkPreviewOptions, Message
 from aiogram.utils.i18n import gettext as _
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -40,12 +41,11 @@ async def send_media(
         return
 
     if content_type == ContentType.VIDEO_NOTE:
-        sent_msg = await bot.send_message(
+        sent_msg = await bot.send_video(
             chat_id,
-            text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True)
+            video=content,
+            caption=caption,
         )
-        await bot.send_video_note(chat_id, video_note=content, reply_to_message_id=sent_msg.message_id)
         return
 
     await bot.send_message(
@@ -76,7 +76,7 @@ async def send_protected_message(
             "from": from_user.hname if from_user else "Unknown",
             "chat": chat.hname,
             "date": datetime.now().strftime("%d.%m.%Y %H:%M:%S"),
-            "text": f'<blockquote expandable>{caption}</blockquote>\n' if caption else "",
+            "text": f'\n<blockquote expandable>{caption}</blockquote>\n' if caption else "",
         }
     )
 
@@ -109,4 +109,10 @@ async def process_protected_message(
 
         chat = await get_persona(session, message.chat.id)
         persona = await get_persona(session, message.from_user.id)
-        await send_protected_message(message.bot, chat, user.id, persona, content_type, file_data, text)
+        try:
+            await send_protected_message(message.bot, chat, user.id, persona, content_type, file_data, text)
+        except TelegramBadRequest as e:
+            if 'VOICE_MESSAGES_FORBIDDEN' in e.message:
+                await message.bot.send_message(user.id, _("VOICE_MESSAGES_FORBIDDEN"))
+            else:
+                raise e

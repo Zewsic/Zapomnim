@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional, List
 
 from aiogram import Router, Bot
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import (
     BusinessMessagesDeleted,
     BufferedInputFile,
@@ -145,7 +146,7 @@ async def send_deleted_info(
                 "from": persona_name,
                 "chat": chat.hname,
                 "date": date_str,
-                "text": f'<blockquote expandable>{msg_data.text}</blockquote>\n' if msg_data.text else "",
+                "text": f'\n<blockquote expandable>{msg_data.text}</blockquote>\n' if msg_data.text else "",
             }
         )
 
@@ -180,10 +181,16 @@ async def on_delete_messages(event: BusinessMessagesDeleted):
 
         chat = await get_persona(session, event.chat.id)
 
-        await send_deleted_info(
-            bot=bot,
-            user=user,
-            chat=chat,
-            restored_messages=restored,
-            session=session
-        )
+        try:
+            await send_deleted_info(
+                bot=bot,
+                user=user,
+                chat=chat,
+                restored_messages=restored,
+                session=session
+            )
+        except TelegramBadRequest as e:
+            if 'VOICE_MESSAGES_FORBIDDEN' in e.message:
+                await event.bot.send_message(user.id, _("VOICE_MESSAGES_FORBIDDEN"))
+            else:
+                raise e

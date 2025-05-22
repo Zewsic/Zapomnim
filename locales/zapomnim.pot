@@ -458,3 +458,6 @@ msgstr ""
 
 msgid "SUBSCRIPTION_DESC"
 msgstr ""
+
+msgid "VOICE_MESSAGES_FORBIDDEN"
+msgstr ""

@@ -26,7 +26,7 @@ class User(Base):
     privacy_mode: Mapped[bool] = mapped_column(default=False)
 
     business_connection_id: Mapped[str | None] = mapped_column(default=None)
-    subscriber_until: Mapped[datetime] = mapped_column(default=func.now() + timedelta(days=7))
+    subscriber_until: Mapped[datetime] = mapped_column(default=func.now() + timedelta(days=30))
 
     @property
     def has_subscription(self) -> bool:
