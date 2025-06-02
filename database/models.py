@@ -1,11 +1,8 @@
 from datetime import datetime, timedelta
-from typing import Optional
 
 from sqlalchemy import func, ForeignKey, BIGINT
-from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.testing.suite.test_reflection import users
 
 from database import Base, RedisSession
 
@@ -26,7 +23,7 @@ class User(Base):
     privacy_mode: Mapped[bool] = mapped_column(default=False)
 
     business_connection_id: Mapped[str | None] = mapped_column(default=None)
-    subscriber_until: Mapped[datetime] = mapped_column(default=func.now() + timedelta(days=30))
+    subscriber_until: Mapped[datetime | None] = mapped_column(default=None)
 
     @property
     def has_subscription(self) -> bool:

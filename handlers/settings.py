@@ -1,21 +1,13 @@
-import asyncio
-import time
-from datetime import datetime
 
 from aiogram import Router, F, Bot
-from aiogram.filters import Command, CommandStart, StateFilter, and_f, or_f
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State
-from aiogram.types import Message, FSInputFile, InlineKeyboardMarkup, CallbackQuery, MenuButtonCommands, \
-    BusinessConnection
-from aiogram.utils.i18n import gettext as _, lazy_gettext as __
-from sqlalchemy.ext.asyncio import AsyncSession
+from aiogram.types import CallbackQuery
+from aiogram.utils.i18n import gettext as _
 
-from config import StartState, SettingsState
 from database import create_session
 from database.models import User
 from keyboards.settings import settings_keyboard, messages_settings_keyboard, bot_mode_keyboard, confirm_mode_keyboard
-from utils import TelegramMirrorUtils, update_user, get_user, _UNSET, PatchedI18nMiddleware
+from utils import update_user, get_user
 from utils.messages import make_all_messages_private
 from utils.widgets import settings_widget, SettingsOption
 
@@ -108,7 +100,7 @@ async def deleted_messages_settings(callback: CallbackQuery):
                 option_id="enabled_for_outgoing",
                 name=_("ENABLE_FOR_OUTGOING"),
                 description=_("DELETED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"),
-                default=True
+                default=False
             ),
             SettingsOption(
                 option_id="save_text",
@@ -168,7 +160,7 @@ async def edited_messages_settings(callback: CallbackQuery):
                 option_id="enabled_for_outgoing",
                 name=_("ENABLE_FOR_OUTGOING"),
                 description=_("EDITED_MESSAGES_SETTINGS_ENABLE_FOR_OUTGOING_DESCRIPTION"),
-                default=True
+                default=False
             ),
             SettingsOption(
                 option_id="save_text",
@@ -210,7 +202,7 @@ async def edited_messages_settings(callback: CallbackQuery):
 
 
 @router.callback_query(lambda c: c.data.startswith("protected_messages_settings"))
-async def protected_messages_settings(callback: CallbackQuery):
+async def protected_messages_settings(callback: CallbackQuery) -> None:  # noqa: D103
     async with create_session() as session:
         user = await get_user(session, id=callback.from_user.id)
 

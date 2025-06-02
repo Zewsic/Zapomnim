@@ -459,5 +459,8 @@ msgstr ""
 msgid "SUBSCRIPTION_DESC"
 msgstr ""
 
+msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
+msgstr ""
+
 msgid "VOICE_MESSAGES_FORBIDDEN"
 msgstr ""

@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
 
 from aiogram import Router, F
-from aiogram.types import CallbackQuery, Message, LabeledPrice
+from aiogram.types import Message
 from aiogram.utils.i18n import gettext as _
 
-from config import SUBSCRIPTION_PLANS
 from database import create_session
 from utils import get_user, update_user
 

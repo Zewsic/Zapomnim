@@ -1,10 +1,10 @@
 import asyncio
+from datetime import datetime, timedelta
 
 from aiogram import Router, F
 from aiogram.filters import CommandStart, StateFilter, and_f, or_f, Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, FSInputFile, InlineKeyboardMarkup, CallbackQuery, MenuButtonCommands, \
-    BusinessConnection
+from aiogram.types import Message, FSInputFile, CallbackQuery, BusinessConnection
 from aiogram.utils.i18n import gettext as _
 
 from config import StartState
@@ -12,6 +12,7 @@ from database import create_session
 from handlers.menu import send_main_menu, send_profile
 from handlers.settings import send_settings
 from keyboards import start_keyboard, continue_keyboard, language_keyboard
+from keyboards.initial_setup import bot_mode_keyboard
 from utils import update_user, get_user, _UNSET, PatchedI18nMiddleware
 
 router = Router()
@@ -151,14 +152,57 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
             await instruction_message.delete()
 
         if not _had_been_enabled:
+            if user.subscriber_until is None:
+                await update_user(
+                    id=user.id,
+                    session=session,
+                    subscription_until=datetime.now() + timedelta(days=7),
+                )
+                await session.commit()
+
+                await event.bot.send_message(
+                    chat_id=user.id,
+                    text=_("FREE_SUBSCRIPTION_ENABLED_TEXT"),
+                    reply_markup=continue_keyboard("initial_setup_select_mode")
+                )
+                return
+
             await event.bot.send_message(
                 chat_id=user.id,
                 text=_("CONNECT_BUSINESS_BOT_SUCCESS_TEXT"),
                 reply_markup=continue_keyboard("menu")
             )
-    else:
-        await event.bot.send_message(
-            chat_id=user.id,
-            text=_("BUSINESS_BOT_DISCONNECTED_TEXT"),
-            reply_markup=continue_keyboard("start")
-        )
+        return
+    await event.bot.send_message(
+        chat_id=user.id,
+        text=_("BUSINESS_BOT_DISCONNECTED_TEXT"),
+        reply_markup=continue_keyboard("start")
+    )
+
+
+@router.callback_query(F.data.startswith('initial_setup_select_mode'))
+async def initial_setup_select_mode_callback(query: CallbackQuery, state: FSMContext):
+    async with create_session() as session:
+        user = await get_user(session, id=query.from_user.id)
+        if not user:
+            return
+
+        parts = query.data.split(":")
+        action = parts[1] if len(parts) > 1 else None
+
+        if action == 'standard':
+            await update_user(id=user.id, session=session, privacy_mode=False)
+            await send_main_menu(query.bot, query.message.chat.id, user)
+            await query.message.delete()
+        elif action == 'privacy':
+            await update_user(id=user.id, session=session, privacy_mode=True)
+            await send_main_menu(query.bot, query.message.chat.id, user)
+            await query.message.delete()
+        else:
+            await query.message.edit_text(
+                text=_("SELECT_BOT_TYPE").format(
+                    selected_mode=_("BOT_MODE_PRIVACY" if user.privacy_mode else "BOT_MODE_STANDARD")
+                ),
+                reply_markup=bot_mode_keyboard())
+
+        await session.commit()

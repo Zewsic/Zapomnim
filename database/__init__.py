@@ -1,13 +1,10 @@
-import json
 import logging
 import os
 import re
 from datetime import datetime
-from typing import Optional
 
 import redis.asyncio as aioredis
 from dotenv import load_dotenv
-from pydantic import BaseModel
 from sqlalchemy import BIGINT, func
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs, AsyncSession
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, declared_attr

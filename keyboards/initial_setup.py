@@ -1,7 +1,5 @@
-from aiogram import Router
-from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
-from aiogram.utils.i18n import gettext as _, lazy_gettext as __
+from aiogram.utils.i18n import gettext as _
 
 def language_keyboard():
     return ReplyKeyboardMarkup(keyboard=[
@@ -23,4 +21,14 @@ def continue_keyboard(callback_data):
         [
             InlineKeyboardButton(text=_("CONTINUE_BUTTON"), callback_data=callback_data)
         ]
+    ])
+
+def bot_mode_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=_("BOT_MODE_STANDARD"), callback_data='initial_setup_select_mode:standard'),
+        ],
+        [
+            InlineKeyboardButton(text=_("BOT_MODE_PRIVACY"), callback_data='initial_setup_select_mode:privacy'),
+        ],
     ])

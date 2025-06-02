@@ -1,22 +1,17 @@
-import io
 import logging
-import math
-from datetime import datetime, timedelta
-from typing import Optional, Tuple, List, Dict
+from datetime import datetime
 
-import matplotlib.pyplot as plt
 from aiogram import Router, F
 from aiogram.types import (
     CallbackQuery,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
     Message,
-    InputMediaPhoto,
-    FSInputFile, BufferedInputFile,
+    BufferedInputFile,
 )
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.i18n import gettext as _
-from sqlalchemy import select, and_, or_
+from sqlalchemy import select, and_
 
 from database import create_session
 from database.models import SavedMessage, Persona
@@ -362,7 +357,7 @@ async def set_interlocutor_handler(callback: CallbackQuery, state: FSMContext):
     else:
         try:
             options["interlocutor_id"] = int(value)
-        except:
+        except ValueError:
             options["interlocutor_id"] = None
 
     await state.update_data(statistics_options=options)

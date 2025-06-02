@@ -559,5 +559,13 @@ msgstr "Here's your requested chart."
 msgid "STATISTICS_UNKNOWN_GRAPH_TYPE"
 msgstr "Unknown graph type."
 
+
 msgid "VOICE_MESSAGES_FORBIDDEN"
 msgstr ""
+"⛔️ <b>Bot can't send voice messages to you!</b>.\n"
+"\n"
+"Enable it in a <a href=\"tg://settings/privacy\">privacy settings.</a>"
+
+
+msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
+msgstr "✅ Your 7-day free trial has been successfully activated!"

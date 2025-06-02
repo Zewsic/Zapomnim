@@ -1,8 +1,7 @@
 # statistics_utils.py
 
 from datetime import datetime, timedelta
-from typing import List, Dict, Tuple, Optional
-import math
+from typing import List, Tuple, Optional
 
 import io
 import matplotlib
@@ -10,7 +9,7 @@ matplotlib.use('Agg')  # Чтобы не требовался X-server
 import matplotlib.pyplot as plt
 import numpy as np
 
-from database.models import SavedMessage, Persona
+from database.models import SavedMessage
 
 
 def filter_messages_by_options(messages: List[SavedMessage], options: dict) -> List[SavedMessage]:
@@ -20,7 +19,6 @@ def filter_messages_by_options(messages: List[SavedMessage], options: dict) -> L
       - Тип (type_filter) = all / incoming / outgoing
       - Собеседник (interlocutor_id)
     """
-    period = options.get("period", "week")
     start_date, end_date = get_period_dates(options)
 
     type_filter = options.get("type_filter", "all")

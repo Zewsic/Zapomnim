@@ -1,5 +1,4 @@
 import json
-import re
 from typing import Optional
 
 from aiogram import Router, Bot
@@ -15,7 +14,7 @@ from database import create_session
 from database.models import Persona
 from utils import get_user
 from utils.messages import restore_last_messages, save_message, ContentType, RestoredMessage
-from utils.userdata import get_persona, update_persona
+from utils.userdata import update_persona
 
 router = Router()
 

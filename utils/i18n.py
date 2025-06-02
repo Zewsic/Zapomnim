@@ -1,19 +1,13 @@
 import logging
-from abc import ABC, abstractmethod
-from typing import Any, Awaitable, Callable, Dict, Optional, Set
+from typing import Any, Dict, Optional
 
 from aiogram.utils.i18n import SimpleI18nMiddleware
-from aiogram import BaseMiddleware, Router
-from aiogram.fsm.context import FSMContext
 from aiogram.types import (
     TelegramObject,
-    User,
     Message,
     CallbackQuery
 )
 from aiogram.utils.i18n.core import I18n
-from aiogram.utils.i18n.middleware import I18nMiddleware
-from babel import Locale, UnknownLocaleError
 
 from database import create_session
 from utils import get_user

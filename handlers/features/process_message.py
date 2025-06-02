@@ -1,17 +1,13 @@
-from datetime import datetime
-from typing import Optional
 
-from aiogram import Router, Bot
+from aiogram import Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, LinkPreviewOptions, BufferedInputFile
+from aiogram.types import Message
 
 from database import create_session
-from database.models import Persona
 from handlers.features.save_protected_content import process_protected_message
 from utils import get_user
-from utils.botapi import TelegramDataUtils
-from utils.messages import save_message, ContentType
-from utils.userdata import update_persona, get_persona
+from utils.messages import save_message
+from utils.userdata import update_persona
 
 router = Router()
 

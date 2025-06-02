@@ -3,7 +3,6 @@ import json
 from datetime import datetime
 from typing import TypeVar, Type, Optional
 
-from redis import Redis
 from sqlalchemy import inspect
 
 from database import Base, RedisSession

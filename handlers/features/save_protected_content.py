@@ -6,7 +6,6 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import BufferedInputFile, LinkPreviewOptions, Message
 from aiogram.utils.i18n import gettext as _
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 
 from database.models import Persona, User
 from utils.botapi import TelegramDataUtils
@@ -41,7 +40,7 @@ async def send_media(
         return
 
     if content_type == ContentType.VIDEO_NOTE:
-        sent_msg = await bot.send_video(
+        await bot.send_video(
             chat_id,
             video=content,
             caption=caption,

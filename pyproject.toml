@@ -9,3 +9,19 @@ dependencies = [
     "matplotlib>=3.10.3",
     "python-dotenv>=1.1.0",
 ]
+
+[tool.ruff]
+line-length = 142
+indent-width = 4
+target-version = "py312"
+extend-exclude = ["tests", "handle-all.py"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+fixable = ["ALL"]
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-line-length = "dynamic"

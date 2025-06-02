@@ -1,21 +1,15 @@
-import asyncio
-import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from aiogram import Router, F, Bot
-from aiogram.filters import Command, CommandStart, StateFilter, and_f, or_f
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State
-from aiogram.types import Message, FSInputFile, InlineKeyboardMarkup, CallbackQuery, MenuButtonCommands, \
-    BusinessConnection, Chat
-from aiogram.utils.i18n import gettext as _, lazy_gettext as __
+from aiogram.types import FSInputFile, CallbackQuery
+from aiogram.utils.i18n import gettext as _
 
-from config import StartState, SettingsState
 from database import create_session
 from database.models import User
 from keyboards import main_menu_keyboard
 from keyboards.menu import profile_keyboard
-from utils import TelegramMirrorUtils, update_user, get_user, _UNSET, PatchedI18nMiddleware
+from utils import get_user
 
 router = Router()
 

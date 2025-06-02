@@ -1,7 +1,6 @@
-from aiogram import Router, Bot
-from aiogram.filters import Command
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton, LabeledPrice
-from aiogram.utils.i18n import gettext as _, lazy_gettext as __
+from aiogram import Bot
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, LabeledPrice
+from aiogram.utils.i18n import gettext as _
 
 from database.models import User
 

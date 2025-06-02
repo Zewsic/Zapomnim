@@ -225,7 +225,7 @@ async def make_all_messages_private(
         connected_user_id: int,
         session: AsyncSession,
 ):
-    r = await session.execute(
+    await session.execute(
         update(SavedMessage)
         .where(SavedMessage.connected_user_id == connected_user_id)
         .values(connected_user_id=None, chat_id=None, message_id=None)

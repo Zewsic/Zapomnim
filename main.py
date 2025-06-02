@@ -10,17 +10,16 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
-from aiogram.utils.i18n import I18n, gettext as _
+from aiogram.utils.i18n import I18n
 from aiogram.types import MenuButtonCommands
 
 from config import WEBHOOK_HOST, BOT_TOKEN, TELEGRAM_SERVER
-from database import create_tables
 from handlers import (
     initial_setup_router, settings_router, process_message_router,
     delete_messages_router, edit_messages_router, data_management_router, subscription_router,
     menu_router, statistics_router
 )
-from utils import TelegramMirrorUtils, PatchedI18nMiddleware, set_bot_commands
+from utils import PatchedI18nMiddleware, set_bot_commands
 
 BOT_TOKEN: Final[str] = BOT_TOKEN
 WEBHOOK_URL: Final[str] = f"http://{WEBHOOK_HOST}/webhook/main"
@@ -46,7 +45,6 @@ logger = logging.getLogger("app")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await create_tables()
     await main_bot.set_webhook(
         WEBHOOK_URL,
         allowed_updates=[
@@ -93,7 +91,7 @@ async def telegram_main_webhook(bot_id: str, req: Request):
             logger.error(e)
             logger.exception(traceback.format_exc())
         return {"ok": True}
-    except Exception as exc:
+    except Exception:
         logger.exception("Error in webhook handler:")
         logger.exception(traceback.format_exc())
         raise HTTPException(status_code=500, detail="Internal error")

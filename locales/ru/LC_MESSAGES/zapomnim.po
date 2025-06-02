@@ -563,6 +563,9 @@ msgstr "Доступ"
 msgid "SUBSCRIPTION_DESC"
 msgstr "Доступ ко всем функциям бота"
 
+msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
+msgstr "✅ Бесплатный пробный период на 7 дней был успешно активирован!"
+
 msgid "VOICE_MESSAGES_FORBIDDEN"
 msgstr ""
 "⛔️ <b>Бот не может отправлять вам голосовые сообщения</b>.\n"

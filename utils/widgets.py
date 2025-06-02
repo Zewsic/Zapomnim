@@ -1,5 +1,5 @@
-from typing import Optional, List
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.markdown import hblockquote
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,13 +20,13 @@ class SettingsOption:
 async def settings_widget(
         user: User,
         session: AsyncSession,
-        options: List[SettingsOption],
+        options: list[SettingsOption],
         message_callback: str,
         settings_id: str,
         back_id: str,
         title: str,
         description: str,
-        toggle: Optional[str] = None,
+        toggle: str | None = None,
 ) -> tuple[str, InlineKeyboardMarkup]:
     """
     Формирует текст и клавиатуру с настройками.
@@ -41,7 +41,6 @@ async def settings_widget(
     :param toggle: Идентификатор (option_id) опции, которую нужно переключить
     :return: (text, reply_markup) для использования в message.edit_text
     """
-
     if toggle is not None:
         for opt in options:
             if opt.option_id == toggle:

@@ -1,7 +1,6 @@
-import asyncio
 from typing import Final
 
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
@@ -22,7 +21,7 @@ class TelegramMirrorUtils:
 
         try:
             bot_info = await mirror_bot.get_me()
-        except:
+        except:  # noqa: E722
             raise KeyError
 
         return mirror_bot, bot_info

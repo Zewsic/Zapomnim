@@ -1,10 +1,6 @@
-from aiogram import Router
-from aiogram.filters import Command
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
-from aiogram.utils.i18n import gettext as _, lazy_gettext as __
-from sqlalchemy.ext.asyncio import AsyncSession
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.i18n import gettext as _
 
-from database.models import User
 
 
 def messages_settings_keyboard():

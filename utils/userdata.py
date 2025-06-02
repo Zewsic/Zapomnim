@@ -38,7 +38,7 @@ async def update_user(
         user.business_connection_id = business_connection_id
         await RedisSession.set(f"business_connection_to_user_id:{business_connection_id}", str(id))
     if subscription_until is not _UNSET:
-        user.subscription_until = subscription_until
+        user.subscriber_until = subscription_until
     if language is not _UNSET:
         user.language_code = language
     if privacy_mode is not _UNSET:

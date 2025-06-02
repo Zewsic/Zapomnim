@@ -1,21 +1,15 @@
 import json
-from datetime import datetime
-from typing import Optional, List
 
-from aiogram import Router, Bot
+from aiogram import Bot, Router
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.types import (
-    BusinessMessagesDeleted,
-    BufferedInputFile,
-    LinkPreviewOptions
-)
+from aiogram.types import BufferedInputFile, BusinessMessagesDeleted, LinkPreviewOptions
 from aiogram.utils.i18n import gettext as _
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import create_session
 from database.models import Persona, User
 from utils import get_user
-from utils.messages import restore_last_messages, RestoredMessage, ContentType
+from utils.messages import ContentType, RestoredMessage, restore_last_messages
 from utils.userdata import get_persona
 
 router = Router()
@@ -47,17 +41,15 @@ async def send_media(
         bot: Bot,
         chat_id: int,
         content_type: ContentType,
-        content: Optional[str],
-        caption: str
+        content: str | None,
+        caption: str,
 ):
-    """
-    Универсальная функция отправки контента по content_type (Enum).
-    """
+    """Универсальная функция отправки контента по content_type (Enum)."""
     if not content:
         await bot.send_message(
             chat_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True)
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
         return
 
@@ -71,7 +63,7 @@ async def send_media(
         sent_msg = await bot.send_message(
             chat_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True)
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
         await bot.send_sticker(chat_id, sticker=content, reply_to_message_id=sent_msg.message_id)
         return
@@ -80,7 +72,7 @@ async def send_media(
         sent_msg = await bot.send_message(
             chat_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True)
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
         await bot.send_video_note(chat_id, video_note=content, reply_to_message_id=sent_msg.message_id)
         return
@@ -95,14 +87,14 @@ async def send_media(
         await bot.send_document(
             chat_id,
             BufferedInputFile(dump_bytes, filename="dump.json"),
-            caption=caption
+            caption=caption,
         )
         return
 
     await bot.send_message(
         chat_id,
         text=caption,
-        link_preview_options=LinkPreviewOptions(is_disabled=True)
+        link_preview_options=LinkPreviewOptions(is_disabled=True),
     )
 
 
@@ -110,44 +102,40 @@ async def send_deleted_info(
         bot: Bot,
         user: User,
         chat: Persona,
-        restored_messages: List[RestoredMessage],
+        restored_messages: list[RestoredMessage],
         session: AsyncSession,
 ) -> None:
-    """
-    Рассылает в личку пользователю (user_id) информацию об удалённых сообщениях.
-    """
+    """Рассылает в личку пользователю (user_id) информацию об удалённых сообщениях."""
     for msg_data in restored_messages:
         if user.id != msg_data.persona.id:
-            if not await user.get_bool('settings.deleted_messages.enabled', session, default=True):
+            if not await user.get_bool("settings.deleted_messages.enabled", session, default=True):
                 continue
-        else:
-            if not await user.get_bool('settings.deleted_messages.enabled_for_outgoing', session, default=True):
+        elif not await user.get_bool("settings.deleted_messages.enabled_for_outgoing", session, default=True):
                 continue
 
         if msg_data.content_type == ContentType.TEXT:
-            if not await user.get_bool('settings.deleted_messages.save_text', session, default=True):
+            if not await user.get_bool("settings.deleted_messages.save_text", session, default=True):
                 continue
-        elif msg_data.content_type in list(MEDIA_TYPES.keys()) + [ContentType.VIDEO_NOTE, ContentType.STICKER]:
-            if not await user.get_bool('settings.deleted_messages.save_media', session, default=True):
+        elif msg_data.content_type in [*list(MEDIA_TYPES.keys()), ContentType.VIDEO_NOTE, ContentType.STICKER]:
+            if not await user.get_bool("settings.deleted_messages.save_media", session, default=True):
                 continue
-        else:
-            if not await user.get_bool('settings.deleted_messages.save_other', session, default=False):
-                continue
+        elif not await user.get_bool("settings.deleted_messages.save_other", session, default=False):
+            continue
 
-        content_type_str = _(f"REMOVED_CONTENT_TYPE_{msg_data.content_type.value.upper()}")
+        content_type_str = _("REMOVED_CONTENT_TYPE_%s" % msg_data.content_type.value.upper())  # noqa: INT003, UP031
         persona_name = msg_data.persona.hname if msg_data.persona else "Unknown"
         date_str = msg_data.created_at.strftime("%d.%m.%Y %H:%M:%S")
 
         base_text = _(
-            "DELETED_MESSAGE_TEMPLATE"
+            "DELETED_MESSAGE_TEMPLATE",
         ).format(
             content_type=content_type_str,
             **{
                 "from": persona_name,
                 "chat": chat.hname,
                 "date": date_str,
-                "text": f'\n<blockquote expandable>{msg_data.text}</blockquote>\n' if msg_data.text else "",
-            }
+                "text": f"\n<blockquote expandable>{msg_data.text}</blockquote>\n" if msg_data.text else "",
+            },
         )
 
         await send_media(
@@ -155,14 +143,13 @@ async def send_deleted_info(
             chat_id=user.id,
             content_type=msg_data.content_type,
             content=msg_data.content,
-            caption=base_text
+            caption=base_text,
         )
 
 
 @router.deleted_business_messages()
 async def on_delete_messages(event: BusinessMessagesDeleted):
-    """
-    Хэндлер, который ловит событие удаления сообщений в бизнес-чате.
+    """Хэндлер, который ловит событие удаления сообщений в бизнес-чате.
     """
     bot: Bot = event.bot
 
@@ -187,10 +174,10 @@ async def on_delete_messages(event: BusinessMessagesDeleted):
                 user=user,
                 chat=chat,
                 restored_messages=restored,
-                session=session
+                session=session,
             )
         except TelegramBadRequest as e:
-            if 'VOICE_MESSAGES_FORBIDDEN' in e.message:
+            if "VOICE_MESSAGES_FORBIDDEN" in e.message:
                 await event.bot.send_message(user.id, _("VOICE_MESSAGES_FORBIDDEN"))
             else:
                 raise e
