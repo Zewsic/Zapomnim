@@ -573,8 +573,31 @@ msgstr "✅ Your 7-day free trial has been successfully activated!"
 msgid "SUBSCRIPTION_SUCCESS"
 msgstr "✅ Subscription active until {date}"
 
+msgid "SUBSCRIPTION_REFERRAL_SUCCESS"
+msgstr "✅ Your referral has subscribed.\n\nYou have been credited with {days} days."
+
 msgid "SUBSCRIPTION_ADD_BUTTON"
 msgstr "⭐️ Extend subscription"
+
+msgid "REFERRALS_BUTTON"
+msgstr "🧑‍🧑‍🧒 Referral System"
+
+msgid "REFERRALS_TEXT"
+msgstr "<b>🧑‍🧑‍🧒 Referral System</b>\n\n"
+"Invite new users to the bot and get your subscription for free!\n\n"
+"🧑‍💻 <b>Users Invited</b>: {count}\n"
+"💸 <b>Days Earned</b>: {days}\n\n"
+"<b>Your link:</b>\n"
+"<blockquote expandable>https://t.me/zapomnim_bot?start=ref{user_id}</blockquote>"
+
+msgid "REFERRALS_SHARE_BUTTON"
+msgstr "📌 Invite Users"
+
+msgid "REFERRALS_SHARE_TEXT"
+msgstr "**Zapomnim** is a unique solution for protecting your Telegram chats!\n\n"
+"The bot helps you **recover** lost messages, **analyzes** chats for fraud attempts, and **checks** contacts for reliability.\n\n"
+"**Try it now**: https://t.me/zapomnim_bot?start=ref{user_id}"
+
 
 msgid "SUBSCRIPTION_ADD_TEXT"
 msgstr ""

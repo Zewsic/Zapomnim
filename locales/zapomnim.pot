@@ -468,8 +468,23 @@ msgstr ""
 msgid "SUBSCRIPTION_SUCCESS"
 msgstr ""
 
+msgid "SUBSCRIPTION_REFERRAL_SUCCESS"
+msgstr ""
+
 msgid "SUBSCRIPTION_ADD_BUTTON"
 msgstr ""
 
 msgid "SUBSCRIPTION_ADD_TEXT"
+msgstr ""
+
+msgid "REFERRALS_BUTTON"
+msgstr ""
+
+msgid "REFERRALS_TEXT"
+msgstr ""
+
+msgid "REFERRALS_SHARE_BUTTON"
+msgstr ""
+
+msgid "REFERRALS_SHARE_TEXT"
 msgstr ""

@@ -60,17 +60,38 @@ async def payment_success(message: Message, state: FSMContext):
             return
         new_until = max(user.subscriber_until, datetime.now()) + timedelta(days=days)
         await update_user(id=user.id, session=session, subscription_until=new_until)
+
+        if user.referral_id is not None:
+            referral = await get_user(session, id=user.referral_id)
+            referral_days = days // 30 * 5
+
+            new_referral_until = max(referral.subscriber_until, datetime.now()) + timedelta(days=referral_days)
+            await update_user(
+                id=int(referral.id),
+                session=session,
+                subscription_until=new_referral_until,
+                referrals_income=referral.referrals_income + referral_days
+            )
+
+            await message.bot.send_message(referral.id,
+                                           _("SUBSCRIPTION_REFERRAL_SUCCESS").format(days=referral_days),
+                                           reply_markup=continue_keyboard('profile')
+                                           )
+
         await session.commit()
 
-    emoji = await message.answer('💸')
-    await asyncio.sleep(0.7)
+    try:
+        emoji = await message.answer('💸')
+        await asyncio.sleep(0.7)
 
-    if (msg := (await state.get_data()).get('message')) is not None:
-        await msg.delete()
+        if (msg := (await state.get_data()).get('message')) is not None:
+            await msg.delete()
 
-    await message.answer(
-        _("SUBSCRIPTION_SUCCESS").format(date=new_until.strftime('%d.%m.%Y')),
-        reply_markup=continue_keyboard('profile')
-    )
+        await message.answer(
+            _("SUBSCRIPTION_SUCCESS").format(date=new_until.strftime('%d.%m.%Y')),
+            reply_markup=continue_keyboard('profile')
+        )
 
-    await emoji.delete()
+        await emoji.delete()
+    except:
+        ...

@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from sqlalchemy import func, ForeignKey, BIGINT
+from sqlalchemy import func, ForeignKey, BIGINT, Integer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -11,6 +11,7 @@ class UserData(Base):
     user_id: Mapped[int] = mapped_column(BIGINT, ForeignKey('users.id'))
     key: Mapped[str]
     value: Mapped[str]
+
 
 class User(Base):
     first_name: Mapped[str]
@@ -24,6 +25,9 @@ class User(Base):
 
     business_connection_id: Mapped[str | None] = mapped_column(default=None)
     subscriber_until: Mapped[datetime | None] = mapped_column(default=None)
+
+    referral_id: Mapped[int | None] = mapped_column(BIGINT, ForeignKey('users.id'), default=None)
+    referrals_income: Mapped[int] = mapped_column(Integer, default=0)
 
     @property
     def has_subscription(self) -> bool:
@@ -84,6 +88,7 @@ class User(Base):
         res = (await db.execute(stmt)).scalar_one_or_none()
         return res
 
+
 class Persona(Base):
     first_name: Mapped[str]
     last_name: Mapped[str | None]
@@ -92,13 +97,15 @@ class Persona(Base):
 
     @property
     def full_name(self) -> str:
-        return (f"{self.first_name}" + (f" {self.last_name}" if self.last_name else "")).replace('<', '').replace('>', '')
+        return (f"{self.first_name}" + (f" {self.last_name}" if self.last_name else "")).replace('<', '').replace('>',
+                                                                                                                  '')
 
     @property
     def hname(self):
         if self.username:
             return f'<a href="https://t.me/{self.username}">{self.full_name}</a>'
         return f'<a href="tg://user?id={self.id}">{self.full_name}</a>'
+
 
 class SavedMessage(Base):
     # Normal Mode

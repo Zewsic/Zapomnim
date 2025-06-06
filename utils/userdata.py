@@ -22,6 +22,9 @@ async def update_user(
         is_enabled: bool = _UNSET,
         language: str = _UNSET,
         privacy_mode: bool = _UNSET,
+        referral_id: int = _UNSET,
+        referrals_income: int = _UNSET,
+
 ) -> User:
     user = User(id=id)
     if first_name is not _UNSET:
@@ -43,6 +46,11 @@ async def update_user(
         user.language_code = language
     if privacy_mode is not _UNSET:
         user.privacy_mode = privacy_mode
+    if referrals_income is not _UNSET:
+        user.referrals_income = referrals_income
+    if referral_id is not _UNSET:
+        if await session.get(User, id) is None and await session.get(User, referral_id) is not None:
+            user.referral_id = referral_id
 
     user = await session.merge(user)
     await save_to_redis(user)

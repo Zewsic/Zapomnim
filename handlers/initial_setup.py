@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime, timedelta
 
 from aiogram import Router, F
-from aiogram.filters import CommandStart, StateFilter, and_f, or_f, Command
+from aiogram.filters import CommandStart, StateFilter, and_f, or_f, Command, CommandObject
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, FSInputFile, CallbackQuery, BusinessConnection
 from aiogram.utils.i18n import gettext as _
@@ -22,7 +22,7 @@ router = Router()
 async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
     async with create_session() as session:
         user = await get_user(session, id=message.from_user.id)
-        if not user:
+        if not user or not user.is_enabled:
             return await start_command(message, state, i18n_middleware)
 
         await send_profile(message.bot, message.chat.id, user)
@@ -32,7 +32,7 @@ async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI
 async def settings(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
     async with create_session() as session:
         user = await get_user(session, id=message.from_user.id)
-        if not user:
+        if not user or not user.is_enabled:
             return await start_command(message, state, i18n_middleware)
 
         await send_settings(message.bot, message.chat.id, user)
@@ -50,10 +50,16 @@ async def settings(message: Message, state: FSMContext, i18n_middleware: Patched
 async def start_command(
         message: Message,
         state: FSMContext,
-        i18n_middleware: PatchedI18nMiddleware
+        i18n_middleware: PatchedI18nMiddleware,
+        command: CommandObject = None,
 ):
     await state.set_state(StartState.start)
     data = await state.get_data()
+
+    referral_id = None
+    if command is not None and command.args:
+        if command.args.startswith('ref'):
+            referral_id = int(command.args[3:])
 
     selected_language = _UNSET
     if message.text == '🇷🇺':
@@ -73,7 +79,8 @@ async def start_command(
             first_name=message.from_user.first_name,
             last_name=message.from_user.last_name,
             username=message.from_user.username,
-            language=selected_language
+            language=selected_language,
+            referral_id=referral_id
         )
         await session.commit()
 

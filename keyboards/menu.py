@@ -1,3 +1,5 @@
+from urllib.parse import quote
+
 from aiogram import Bot
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, LabeledPrice
 from aiogram.utils.i18n import gettext as _
@@ -22,10 +24,27 @@ async def profile_keyboard(bot: Bot, user: User) -> InlineKeyboardMarkup:
             InlineKeyboardButton(text=_("SUBSCRIPTION_ADD_BUTTON"), callback_data='subscription_add'),
         ],
         [
+            InlineKeyboardButton(text=_("REFERRALS_BUTTON"), callback_data='referrals'),
+        ],
+        [
             InlineKeyboardButton(text=_("DATA_SETTINGS_BUTTON"), callback_data='data_settings')
         ],
         [
             InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data='menu')
+        ]
+    ])
+
+    return kb
+
+
+async def referrals_keyboard(bot: Bot, user: User) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=_("REFERRALS_SHARE_BUTTON"), url='https://t.me/share/url?url=&text=' + quote(
+                _("REFERRALS_SHARE_TEXT").format(user_id=user.id))),
+        ],
+        [
+            InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data='profile')
         ]
     ])
 
