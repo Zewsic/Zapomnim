@@ -49,7 +49,8 @@ async def lifespan(app: FastAPI):
         WEBHOOK_URL,
         allowed_updates=[
             "message", "callback_query", "business_connection",
-            "business_message", "deleted_business_messages", "edited_business_message"
+            "business_message", "deleted_business_messages", "edited_business_message",
+            "successful_payment", "pre_checkout_query"
         ]
     )
     await set_bot_commands(main_bot)

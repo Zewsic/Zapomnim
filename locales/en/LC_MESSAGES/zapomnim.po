@@ -569,3 +569,17 @@ msgstr ""
 
 msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
 msgstr "✅ Your 7-day free trial has been successfully activated!"
+
+msgid "SUBSCRIPTION_SUCCESS"
+msgstr "✅ Subscription active until {date}"
+
+msgid "SUBSCRIPTION_ADD_BUTTON"
+msgstr "⭐️ Extend subscription"
+
+msgid "SUBSCRIPTION_ADD_TEXT"
+msgstr ""
+"<b>⭐️ Subscription</b>\n\n💸 Active until "
+"{subscription_date} (remaining {subscription_days} "
+"days).\n"
+"\n"
+"😉 Choose the duration you want to extend your subscription for."

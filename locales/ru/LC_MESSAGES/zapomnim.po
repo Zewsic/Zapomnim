@@ -558,10 +558,10 @@ msgid "STATISTICS_UNKNOWN_GRAPH_TYPE"
 msgstr "Неизвестный тип графика."
 
 msgid "SUBSCRIPTION_TITLE"
-msgstr "Доступ"
+msgstr "Доступ на {days} дней"
 
 msgid "SUBSCRIPTION_DESC"
-msgstr "Доступ ко всем функциям бота"
+msgstr "Доступ ко всем функциям бота на {days} дней"
 
 msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
 msgstr "✅ Бесплатный пробный период на 7 дней был успешно активирован!"
@@ -573,6 +573,17 @@ msgstr ""
 "Разрешите отправку в <a href=\"tg://settings/privacy\">настройках "
 "приватности</a>"
 
-#~ msgid "SUBSCRIPTION_SUCCESS"
-#~ msgstr "✅ Подписка активна до {date}"
+msgid "SUBSCRIPTION_SUCCESS"
+msgstr "✅ Подписка активна до {date}"
+
+msgid "SUBSCRIPTION_ADD_BUTTON"
+msgstr "⭐️ Продлить подписку"
+
+msgid "SUBSCRIPTION_ADD_TEXT"
+msgstr ""
+"<b>⭐️ Подписка</b>\n"
+"\n"
+"💸 Активна до {subscription_date} (осталось {subscription_days} дней).\n"
+"\n"
+"😉 Выберите срок, на который хотите продлить подписку."
 

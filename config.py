@@ -26,3 +26,6 @@ class StartState(StatesGroup):
 
 class SettingsState(StatesGroup):
     setup_language = State()
+
+class PaymentState(StatesGroup):
+    pay_with_stars = State()

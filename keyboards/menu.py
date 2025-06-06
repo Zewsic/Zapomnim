@@ -19,25 +19,14 @@ def main_menu_keyboard() -> InlineKeyboardMarkup:
 async def profile_keyboard(bot: Bot, user: User) -> InlineKeyboardMarkup:
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [
+            InlineKeyboardButton(text=_("SUBSCRIPTION_ADD_BUTTON"), callback_data='subscription_add'),
+        ],
+        [
             InlineKeyboardButton(text=_("DATA_SETTINGS_BUTTON"), callback_data='data_settings')
         ],
         [
             InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data='menu')
         ]
     ])
-
-    if not user.has_subscription:
-        invoice_link = await bot.create_invoice_link(
-            title=_('SUBSCRIPTION_TITLE').format(days=30),
-            description=_('SUBSCRIPTION_DESC').format(days=30),
-            payload=f"sub_{user.id}_30",
-            currency="XTR",
-            prices=[LabeledPrice(label=_('SUBSCRIPTION_LABEL'), amount=150)],
-            subscription_period=2592000
-        )
-
-        kb.inline_keyboard.insert(0, [
-            InlineKeyboardButton(text=_("BUY_SUBSCRIPTION_BUTTON"), url=invoice_link, pay=True)
-        ])
 
     return kb

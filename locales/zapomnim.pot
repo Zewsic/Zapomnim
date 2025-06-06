@@ -464,3 +464,12 @@ msgstr ""
 
 msgid "VOICE_MESSAGES_FORBIDDEN"
 msgstr ""
+
+msgid "SUBSCRIPTION_SUCCESS"
+msgstr ""
+
+msgid "SUBSCRIPTION_ADD_BUTTON"
+msgstr ""
+
+msgid "SUBSCRIPTION_ADD_TEXT"
+msgstr ""
