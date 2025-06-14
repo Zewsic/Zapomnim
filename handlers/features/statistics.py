@@ -1,5 +1,17 @@
-import logging
-from datetime import datetime
+import uuid
+from collections import Counter
+from datetime import datetime, timedelta
+from typing import Optional, List, Tuple
+
+import boto3
+import matplotlib
+from aiogram.methods import EditMessageReplyMarkup
+from sqlalchemy import select
+
+matplotlib.use('Agg')  # Чтобы не требовался X-server
+import matplotlib.pyplot as plt
+
+from io import BytesIO
 
 from aiogram import Router, F
 from aiogram.types import (
@@ -7,151 +19,311 @@ from aiogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
     Message,
-    BufferedInputFile,
+    ReplyKeyboardMarkup,
+    KeyboardButton,
+    KeyboardButtonRequestUser,
+    ChatShared
 )
 from aiogram.fsm.context import FSMContext
-from aiogram.utils.i18n import gettext as _
-from sqlalchemy import select, and_
+from aiogram.fsm.state import StatesGroup, State
 
+# Пример: импорт ваших моделей и ф-ий работы с БД
 from database import create_session
-from database.models import SavedMessage, Persona
+from database.models import SavedMessage
 from utils import get_user
-from utils.statistics import (
-    calculate_statistics,
-    filter_messages_by_options,
-    render_activity_chart,
-    render_in_out_pie,
-    render_top_interlocutors_bar,
-    render_heatmap,
-)
+
+
+class Save:
+    messages: List[SavedMessage] = []
+
 
 router = Router()
 
-# Значения по умолчанию для настроек
+# -------------------------------------------------------------------
+# Константы / настройки
+# -------------------------------------------------------------------
+# Примерная структура ваших "period"-констант (мы используем их в клавиатуре):
+PERIOD_DAY = "day"
+PERIOD_WEEK = "week"
+PERIOD_MONTH = "month"
+PERIOD_YEAR = "year"
+
+# Значения по умолчанию
 DEFAULT_OPTIONS = {
-    "period": "week",       # day | week | month | all | custom
-    "type_filter": "all",   # all | incoming | outgoing
-    "interlocutor_id": None,  # ID собеседника (None = все)
-    "graph_type": None,       # None, "activity", "pie", "top_interlocutors", "heatmap"
-    "output_format": "text",  # text | graph
-    "start_date": None,       # используется для custom периода
-    "end_date": None,
+    "period": PERIOD_DAY,  # day / week / month / year
+    "interlocutor_id": None,  # None = все чаты
 }
 
 
+# Состояния для управления выбором диалога
+class StatisticsStates(StatesGroup):
+    MAIN = State()  # главное меню статистики
+    WAITING_FOR_DIALOG = State()  # когда нажали "Выбрать человека" и ждём ChatShared
+
+
 # -------------------------------------------------------------------
-# Вспомогательные функции для формирования клавиатуры
+# Утилита: загрузка картинки в S3 и получение пресайнд-ссылки
+# -------------------------------------------------------------------
+def upload_chart_to_s3_and_get_url(image_bytes: bytes) -> str:
+    """
+    Пример функции, которая загружает байты картинки в S3,
+    а затем получает presigned URL с истечением ~15 минут (900 секунд).
+
+    ВНИМАНИЕ: здесь вам нужно прописать реальные данные:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - регион
+    - имя бакета
+    и т.д.
+
+    Либо используйте profile_name (если работаете из локального окружения).
+    """
+    s3 = boto3.client(
+        "s3",
+        aws_access_key_id="ВАШ_AWS_KEY",
+        aws_secret_access_key="ВАШ_AWS_SECRET",
+        region_name="us-east-1"  # пример
+    )
+    bucket_name = "your-bucket"
+
+    # Генерируем уникальный ключ файла
+    chart_key = f"charts/{uuid.uuid4()}.png"
+
+    # Заливаем в S3
+    s3.put_object(
+        Bucket=bucket_name,
+        Key=chart_key,
+        Body=image_bytes,
+        ContentType="image/png",
+        ACL='public-read',  # Или другой, в зависимости от политики
+
+    )
+
+    # Генерируем presigned URL, действительный 900 секунд (15 мин).
+    presigned_url = s3.generate_presigned_url(
+        ClientMethod='get_object',
+        Params={
+            'Bucket': bucket_name,
+            'Key': chart_key
+        },
+        ExpiresIn=900
+    )
+    return presigned_url
+
+
+# -------------------------------------------------------------------
+# Вспомогательная логика для статистики
 # -------------------------------------------------------------------
 
-def _mark(text: str, active: bool) -> str:
-    """
-    Префикс "✅ " для выделения текущего выбранного пункта.
-    """
-    return ("✅ " if active else "") + text
+def _get_period_range(period: str) -> Tuple[Optional[datetime], Optional[datetime]]:
+    now = datetime.now()
+    if period == PERIOD_DAY:  # последние 24 часа
+        start = now - timedelta(days=1)
+        return start, now
+    elif period == PERIOD_WEEK:  # последние 7 дней
+        start = now - timedelta(days=7)
+        return start, now
+    elif period == PERIOD_MONTH:  # последние 30 дней
+        start = now - timedelta(days=30)
+        return start, now
+    elif period == PERIOD_YEAR:  # последние 365 дней
+        start = now - timedelta(days=365)
+        return start, now
+    else:
+        return None, now
 
 
-def statistics_main_keyboard(options: dict) -> InlineKeyboardMarkup:
+def filter_messages(
+        messages: List[SavedMessage],
+        start_date: Optional[datetime],
+        end_date: Optional[datetime],
+        interlocutor_id: Optional[int] = None
+) -> List[SavedMessage]:
     """
-    Основная клавиатура с настройками периода, типа фильтра и форматами вывода.
+    Фильтруем сообщения по дате и по interlocutor_id (если задан).
     """
-    period = options.get("period", "week")
-    type_filter = options.get("type_filter", "all")
-    out_fmt = options.get("output_format", "text")
-
-    # Для наглядности создадим несколько рядов кнопок
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_PERIOD_DAY"), period == "day"),
-                callback_data="stat:period:day",
-            ),
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_PERIOD_WEEK"), period == "week"),
-                callback_data="stat:period:week",
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_PERIOD_MONTH"), period == "month"),
-                callback_data="stat:period:month",
-            ),
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_PERIOD_ALL"), period == "all"),
-                callback_data="stat:period:all",
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_FILTER_ALL"), type_filter == "all"),
-                callback_data="stat:type:all"
-            ),
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_FILTER_INCOMING"), type_filter == "incoming"),
-                callback_data="stat:type:incoming"
-            ),
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_FILTER_OUTGOING"), type_filter == "outgoing"),
-                callback_data="stat:type:outgoing"
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_FORMAT_TEXT"), out_fmt == "text"),
-                callback_data="stat:format:text"
-            ),
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_FORMAT_GRAPH"), out_fmt == "graph"),
-                callback_data="stat:format:graph"
-            )
-        ],
-        [InlineKeyboardButton(text=options.get('interlocutor_id') or _("STATISTICS_CHOOSE_INTERLOCUTOR"), callback_data="stat:choose_interlocutor")],
-        [InlineKeyboardButton(text=_("STATISTICS_CHOOSE_CUSTOM_PERIOD"), callback_data="stat:choose_period")],
-        [
-            InlineKeyboardButton(
-                text=_("STATISTICS_NEXT_STEP"),
-                callback_data="stat:graphs_menu",
-            )
-        ],
-        [InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data="menu")]
-    ])
-    return kb
+    result = []
+    for m in messages:
+        if start_date and m.created_at < start_date:
+            continue
+        if end_date and m.created_at > end_date:
+            continue
+        if interlocutor_id and m.chat_id != interlocutor_id:
+            continue
+        result.append(m)
+    return result
 
 
-def statistics_graphs_keyboard(options: dict) -> InlineKeyboardMarkup:
+def calculate_basic_stats(messages: List[SavedMessage]) -> dict:
     """
-    Клавиатура для выбора конкретного типа графика (или вывод текста).
+    Подсчитываем:
+    - Всего сообщений
+    - Входящие/Исходящие
+    - Медиа контент (фото, видео, голосовые, видеосообщения, стикеры)
     """
-    graph_type = options.get("graph_type")
-    kb = InlineKeyboardMarkup(inline_keyboard=[
+    total = len(messages)
+    incoming = sum(1 for m in messages if not m.outgoing)
+    outgoing = total - incoming
+
+    # Допустим, в SavedMessage.media_type хранится тип: 'photo', 'video', 'voice',
+    # 'video_note', 'sticker' и т.д. Если у вас другая логика — адаптируйте.
+    photos = sum(1 for m in messages if m.content_type == 'photo')
+    videos = sum(1 for m in messages if m.content_type == 'video')
+    voices = sum(1 for m in messages if m.content_type == 'voice')
+    video_notes = sum(1 for m in messages if m.content_type == 'video_note')
+    stickers = sum(1 for m in messages if m.content_type == 'sticker')
+
+    return {
+        "total": total,
+        "incoming": incoming,
+        "outgoing": outgoing,
+        "photos": photos,
+        "videos": videos,
+        "voices": voices,
+        "video_notes": video_notes,
+        "stickers": stickers
+    }
+
+
+def build_stats_text(stats: dict) -> str:
+    """
+    Текстовое представление базовой статистики.
+    Вы можете оформить под свой вкус.
+    """
+    lines = []
+    lines.append(f"Всего сообщений: {stats['total']}")
+    lines.append(f"Входящие: {stats['incoming']}")
+    lines.append(f"Исходящие: {stats['outgoing']}")
+    lines.append("")
+    lines.append("Медиа:")
+    lines.append(f"  Фото: {stats['photos']}")
+    lines.append(f"  Видео: {stats['videos']}")
+    lines.append(f"  Голосовые: {stats['voices']}")
+    lines.append(f"  Видеосообщения: {stats['video_notes']}")
+    lines.append(f"  Стикеры: {stats['stickers']}")
+    return "\n".join(lines)
+
+
+def build_time_distribution_line_chart(
+        messages: List[SavedMessage],
+        period: str
+) -> BytesIO:
+    """
+    Строим линейный график распределения сообщений (вход+исход)
+    по выбранным единицам времени (часы/дни/месяцы и т.д.).
+
+    Принцип:
+      - Если period = 24 часа (day), группируем по часам.
+      - Если week / month, группируем по дням (либо для week - по дням, для month - тоже по дням).
+      - Если year, группируем по месяцам.
+    Для наглядности можно сделать самую простую схему:
+      day -> group by hour (0..23)
+      week -> group by day (кол-во за каждый из 7 дней)
+      month -> group by day (до 30)
+      year -> group by month (до 12)
+
+    Подчёркиваю: вы можете расширить логику под минутный шаг и т.д.
+    """
+    # Сортируем по created_at для удобства
+    messages_sorted = sorted(messages, key=lambda m: m.created_at)
+
+    now = datetime.now()
+    x_labels = []
+    counts = []
+
+    # Подготовим словарь для группировки:
+    grouping_counter = Counter()
+
+    if period == PERIOD_DAY:
+        # Группируем по часам
+        # Собираем все сообщения, группируем: key = hour_of_day
+        for m in messages_sorted:
+            hour = m.created_at.hour
+            grouping_counter[hour] += 1
+        # Формируем X от 0 до 23
+        x_labels = list(range(24))
+        counts = [grouping_counter[h] for h in x_labels]
+
+    elif period in (PERIOD_WEEK, PERIOD_MONTH):
+        # Для упрощения: группируем по дате (YYYY-MM-DD)
+        # Потом возьмём диапазон дат от min до max
+        date_counter = Counter()
+        for m in messages_sorted:
+            d_str = m.created_at.strftime("%Y-%m-%d")
+            date_counter[d_str] += 1
+
+        # Соберём уникальные даты, отсортируем
+        unique_dates = sorted(date_counter.keys())
+        x_labels = unique_dates
+        counts = [date_counter[d] for d in x_labels]
+
+    elif period == PERIOD_YEAR:
+        # Группируем по месяцу (YYYY-MM)
+        month_counter = Counter()
+        for m in messages_sorted:
+            ym = m.created_at.strftime("%Y-%m")
+            month_counter[ym] += 1
+        unique_months = sorted(month_counter.keys())
+        x_labels = unique_months
+        counts = [month_counter[m] for m in x_labels]
+    else:
+        # fallback — например, как для week
+        date_counter = Counter()
+        for m in messages_sorted:
+            d_str = m.created_at.strftime("%Y-%m-%d")
+            date_counter[d_str] += 1
+        unique_dates = sorted(date_counter.keys())
+        x_labels = unique_dates
+        counts = [date_counter[d] for d in x_labels]
+
+    # Рисуем график
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.plot(x_labels, counts, marker='o', color='blue')
+
+    ax.set_xlabel("Временная метка")
+    ax.set_ylabel("Кол-во сообщений")
+    ax.set_title("Распределение сообщений во времени")
+
+    # Повернём подписи на оси X, если слишком много
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+
+    buf = BytesIO()
+    plt.tight_layout()
+    plt.savefig(buf, format='png')
+    plt.close(fig)
+    buf.seek(0)
+    return buf
+
+
+# -------------------------------------------------------------------
+# Клавиатуры
+# -------------------------------------------------------------------
+def get_main_stats_keyboard(interlocutor_id: Optional[int]) -> InlineKeyboardMarkup:
+    """
+    Основная клавиатура под сообщением со статистикой.
+    4 периода + кнопка "Выбрать человека/По всем чатам" + "Показать график" + "Назад".
+    """
+    # Если собеседник выбран, меняем текст кнопки
+    choose_user_text = "По всем чатам" if interlocutor_id else "Выбрать человека"
+
+    kb = [
         [
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_GRAPH_ACTIVITY"), graph_type == "activity"),
-                callback_data="stat:graph:activity",
-            ),
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_GRAPH_IN_OUT"), graph_type == "pie"),
-                callback_data="stat:graph:pie",
-            ),
+            InlineKeyboardButton(text="24 часа", callback_data="stat:period:day"),
+            InlineKeyboardButton(text="7 дней", callback_data="stat:period:week"),
+            InlineKeyboardButton(text="30 дней", callback_data="stat:period:month"),
+            InlineKeyboardButton(text="Год", callback_data="stat:period:year"),
         ],
         [
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_GRAPH_TOP_INTERLOCUTORS"), graph_type == "top_interlocutors"),
-                callback_data="stat:graph:top_interlocutors",
-            ),
-            InlineKeyboardButton(
-                text=_mark(_("STATISTICS_GRAPH_HEATMAP"), graph_type == "heatmap"),
-                callback_data="stat:graph:heatmap",
-            ),
+            InlineKeyboardButton(text=choose_user_text, callback_data="stat:choose_user")
         ],
         [
-            InlineKeyboardButton(
-                text=_("STATISTICS_SHOW_BUTTON"),
-                callback_data="stat:show"
-            )
+            InlineKeyboardButton(text="Показать график", callback_data="stat:show_chart")
         ],
-        [InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data="stat:back_to_main")]
-    ])
-    return kb
+        [
+            InlineKeyboardButton(text="Назад", callback_data="stat:back")
+        ]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=kb)
 
 
 # -------------------------------------------------------------------
@@ -159,331 +331,252 @@ def statistics_graphs_keyboard(options: dict) -> InlineKeyboardMarkup:
 # -------------------------------------------------------------------
 
 @router.callback_query(F.data == "statistics")
-async def statistics_menu_handler(callback: CallbackQuery, state: FSMContext):
+async def on_statistics_open(callback: CallbackQuery, state: FSMContext):
     """
-    Хендлер, вызываемый при переходе в меню "Статистика".
+    Когда пользователь нажимает кнопку "Статистика" в вашем главном меню.
+    Сразу отображаем:
+      - кол-во сообщений (вход/исход)
+      - статы по медиа
+      - инлайн-клавиатура (4 периода, выбрать человека, показать график, назад)
     """
-    async with create_session() as session:
-        user = await get_user(session, id=callback.from_user.id)
-        if user.privacy_mode:
-            await callback.answer(_("STATISTICS_PRIVATE_ERROR"), show_alert=True)
-            return
+    await callback.answer()  # убираем "часики"
 
-    data = await state.get_data()
-    options = data.get("statistics_options", DEFAULT_OPTIONS.copy())
-    await state.update_data(statistics_options=options)
-
-    await callback.message.delete()
-    await callback.message.answer(
-        text=_("STATISTICS_TITLE"),
-        reply_markup=statistics_main_keyboard(options)
-    )
-    await callback.answer()
-
-
-@router.callback_query(lambda c: c.data.startswith("stat:"))
-async def statistics_callback_handler(callback: CallbackQuery, state: FSMContext):
-    """
-    Обработка нажатий на кнопки клавиатуры статистики.
-    """
-    parts = callback.data.split(":")  # Пример: ["stat", "period", "day"]
-    action = parts[1] if len(parts) > 1 else None
-    value = parts[2] if len(parts) > 2 else None
-
-    data = await state.get_data()
-    options = data.get("statistics_options", DEFAULT_OPTIONS.copy())
-
-    if action == "period":
-        # Устанавливаем предустановленный период
-        options["period"] = value
-        # Сбрасываем custom-дату, если пользователь выбрал готовый период
-        options["start_date"] = None
-        options["end_date"] = None
-
-    elif action == "type":
-        # Фильтр по типу (all/incoming/outgoing)
-        options["type_filter"] = value
-
-    elif action == "format":
-        # Формат вывода (текст или график)
-        options["output_format"] = value
-
-    elif action == "graphs_menu":
-        # Переходим к меню выбора графиков
-        await state.update_data(statistics_options=options)
-        await callback.message.edit_text(
-            text=_("STATISTICS_GRAPH_MENU_TITLE"),
-            reply_markup=statistics_graphs_keyboard(options)
-        )
-        await callback.answer()
-        return
-
-    elif action == "graph":
-        # Выбираем конкретный тип графика
-        options["graph_type"] = value
-
-    elif action == "show":
-        # Показать статистику (текст/график)
-        await state.update_data(statistics_options=options)
-        await show_statistics(callback, options)
-        return
-
-    elif action == "back_to_main":
-        # Назад к основной клавиатуре
-        await state.update_data(statistics_options=options)
-        await callback.message.edit_text(
-            text=_("STATISTICS_TITLE"),
-            reply_markup=statistics_main_keyboard(options)
-        )
-        await callback.answer()
-        return
-
-    elif action == "choose_interlocutor":
-        # Переходим к выбору собеседника
-        await list_interlocutors(callback, options)
-        return
-
-    elif action == "choose_period":
-        # Переходим к вводу кастомного периода
-        await callback.message.answer(_("STATISTICS_CUSTOM_PERIOD_INSTRUCTION"))
-        await callback.answer()
-        return
-
-    await state.update_data(statistics_options=options)
-    await callback.message.edit_text(
-        text=_("STATISTICS_TITLE"),
-        reply_markup=statistics_main_keyboard(options)
-    )
-    await callback.answer()
-
-
-@router.message(lambda m: m.text and "=>" in m.text)
-async def custom_period_handler(message: Message, state: FSMContext):
-    """
-    Пример: пользователь вводит "2023-04-01 => 2023-04-10"
-    """
-    data = await state.get_data()
-    options = data.get("statistics_options", DEFAULT_OPTIONS.copy())
-
-    try:
-        text = message.text.strip()
-        start_str, end_str = text.split("=>")
-        start_date = datetime.strptime(start_str.strip(), "%Y-%m-%d")
-        end_date = datetime.strptime(end_str.strip(), "%Y-%m-%d")
-
-        # Если нужно, можно проверять, чтобы end_date >= start_date
-        if start_date > end_date:
-            raise ValueError()
-
-        # Устанавливаем кастомный период
-        options["period"] = "custom"
-        options["start_date"] = start_date
-        options["end_date"] = end_date
-
-        await state.update_data(statistics_options=options)
-        await message.answer(_("STATISTICS_CUSTOM_PERIOD_SAVED"))
-    except Exception as e:
-        logging.error(f"Error parsing custom period: {e}")
-        await message.answer(_("STATISTICS_CUSTOM_PERIOD_ERROR"))
-
-
-async def list_interlocutors(callback: CallbackQuery, options: dict):
-    """
-    Вывод списка собеседников, чтобы пользователь мог выбрать конкретного.
-    """
-    async with create_session() as session:
-        # Получаем список пользователей, с которыми были сообщения
-        # Допустим, по connected_user_id - либо, если ваша логика другая, адаптируйте запрос
-        # Здесь предполагается, что Persona.id - это chat_id собеседника, 
-        # или же вы храните в SavedMessage ещё что-то для идентификации собеседника.
-
-        # Пример: получить всех уникальных chat_id, кроме самого current_user
-        # (но это зависит от вашей структуры БД)
-        # callback.from_user.id - это id в нашей системе user?
-        # Возможно, вам придётся адаптировать логику.
-
-        user_db = await get_user(session, id=callback.from_user.id)
-        if not user_db:
-            await callback.answer(_("STATISTICS_NO_USERS"), show_alert=True)
-            return
-
-        stmt = select(SavedMessage.chat_id).where(
-            and_(
-                SavedMessage.connected_user_id == user_db.id,
-                SavedMessage.chat_id.is_not(None)
-            )
-        ).group_by(-SavedMessage.id).group_by(SavedMessage.chat_id)
-
-        rows = (await session.execute(stmt)).all()
-        interlocutor_ids = [r[0] for r in rows if r[0] is not None]
-
-        # Загружаем записи из таблицы Persona, например:
-        if not interlocutor_ids:
-            await callback.answer(_("STATISTICS_NO_USERS"), show_alert=True)
-            return
-
-        stmt_personas = select(Persona).where(Persona.id.in_(interlocutor_ids))
-        personas = (await session.execute(stmt_personas)).scalars().all()
-
-    # Формируем клавиатуру для выбора собеседника
-    buttons = []
-    for p in personas:
-        text_btn = p.full_name
-        buttons.append([
-            InlineKeyboardButton(
-                text=text_btn,
-                callback_data=f"stat:set_interlocutor:{p.id}"
-            )
-        ])
-
-    buttons.append([InlineKeyboardButton(text=_("STATISTICS_ALL_INTERLOCUTORS"), callback_data="stat:set_interlocutor:none")])
-
-    kb = InlineKeyboardMarkup(inline_keyboard=buttons)
-    await callback.message.edit_text(_("STATISTICS_CHOOSE_INTERLOCUTOR_PROMPT"), reply_markup=kb)
-    await callback.answer()
-
-
-@router.callback_query(lambda c: c.data.startswith("stat:set_interlocutor:"))
-async def set_interlocutor_handler(callback: CallbackQuery, state: FSMContext):
-    """
-    Хендлер для установки выбранного собеседника.
-    """
-    data = await state.get_data()
-    options = data.get("statistics_options", DEFAULT_OPTIONS.copy())
-
-    value = callback.data.split(":")[-1]
-    if value == "none":
-        options["interlocutor_id"] = None
-    else:
-        try:
-            options["interlocutor_id"] = int(value)
-        except ValueError:
-            options["interlocutor_id"] = None
-
-    await state.update_data(statistics_options=options)
-    await callback.message.edit_text(
-        text=_("STATISTICS_TITLE"),
-        reply_markup=statistics_main_keyboard(options)
-    )
-    await callback.answer()
-
-
-# -------------------------------------------------------------------
-# Функция вывода статистики (текст или график)
-# -------------------------------------------------------------------
-
-async def show_statistics(callback: CallbackQuery, options: dict):
-    """
-    В зависимости от output_format формирует текстовый вывод или отправляет график.
-    """
-    # Готовим данные
     async with create_session() as session:
         user = await get_user(session, id=callback.from_user.id)
         if not user:
-            await callback.answer(_("STATISTICS_NO_DATA"), show_alert=True)
+            await callback.answer("Хуйня какая-то", show_alert=True)
             return
 
         stmt = select(SavedMessage).where(SavedMessage.connected_user_id == user.id)
         messages = (await session.execute(stmt)).scalars().all()
 
-    # Фильтруем сообщения по опциям (период, тип, собеседник)
-    messages_filtered = filter_messages_by_options(messages, options)
+    # Возьмём период по умолчанию из DEFAULT_OPTIONS
+    options = DEFAULT_OPTIONS.copy()
 
-    if not messages_filtered:
-        await callback.message.answer(_("STATISTICS_NO_DATA"))
-        await callback.answer()
-        return
+    # Фильтруем (для "здесь и сейчас" — например за 24 часа).
+    start, end = _get_period_range(options["period"])
+    filtered = filter_messages(messages, start, end, None)
 
     # Считаем статистику
-    stats = calculate_statistics(messages_filtered)
+    stats = calculate_basic_stats(filtered)
+    text_stats = build_stats_text(stats)
 
-    # Если пользователь выбрал текстовый формат
-    if options.get("output_format") == "text":
-        text = build_text_statistics(stats, options)
-        await callback.message.answer(text)
+    # Сохраняем в state
+    await state.update_data(
+        statistics_options=options,
+    )
+
+    Save.messages = messages
+
+    await callback.message.delete()  # удаляем старое меню
+    await callback.message.answer(
+        text=f"Статистика за 24 часа:\n\n{text_stats}",
+        reply_markup=get_main_stats_keyboard(interlocutor_id=None)
+    )
+    await state.set_state(StatisticsStates.MAIN)
+
+
+@router.callback_query(F.data.startswith("stat:"))
+async def on_statistics_callback(callback: CallbackQuery, state: FSMContext):
+    """
+    Универсальная обработка нажатий на инлайн-кнопки в меню статистики.
+    """
+    parts = callback.data.split(":")
+    # Пример: "stat:period:week" -> parts = ["stat", "period", "week"]
+    action = parts[1] if len(parts) > 1 else None
+    value = parts[2] if len(parts) > 2 else None
+
+    data = await state.get_data()
+    options = data.get("statistics_options", DEFAULT_OPTIONS.copy())
+    messages = Save.messages
+
+    if action == "period":
+        # Меняем период
+        if value in (PERIOD_DAY, PERIOD_WEEK, PERIOD_MONTH, PERIOD_YEAR):
+            options["period"] = value
+
+        # Пересчитываем статистику
+        start, end = _get_period_range(options["period"])
+        filtered = filter_messages(messages, start, end, options["interlocutor_id"])
+        stats = calculate_basic_stats(filtered)
+
+        text_stats = build_stats_text(stats)
+        await callback.message.edit_text(
+            text=f"Статистика за выбранный период:\n\n{text_stats}",
+            reply_markup=get_main_stats_keyboard(options["interlocutor_id"])
+        )
+
+    elif action == "choose_user":
+        # Либо сброс interlocutor_id, либо переходим к выбору
+        if options["interlocutor_id"]:
+            # Уже выбран — тогда сбрасываем (=> все чаты)
+            options["interlocutor_id"] = None
+            start, end = _get_period_range(options["period"])
+            filtered = filter_messages(messages, start, end, None)
+            stats = calculate_basic_stats(filtered)
+            text_stats = build_stats_text(stats)
+
+            await callback.message.edit_text(
+                text=f"Статистика (по всем чатам):\n\n{text_stats}",
+                reply_markup=get_main_stats_keyboard(None)
+            )
+        else:
+
+            # Отдельное сообщение "Выберите диалог"
+            request_chat_btn = KeyboardButton(
+                text="Выбрать беседу",
+                request_user=KeyboardButtonRequestUser(request_id=123, user_is_bot=False)
+            )
+            keyboard = ReplyKeyboardMarkup(
+                keyboard=[[request_chat_btn]],
+                resize_keyboard=True,
+                one_time_keyboard=True
+            )
+            dialog_msg = await callback.message.answer(
+                "Нажмите кнопку, чтобы выбрать чат:",
+                reply_markup=keyboard
+            )
+
+            # Сохраним id этого "временного" сообщения и перейдём в состояние WAITING_FOR_DIALOG
+            data["dialog_message_id"] = dialog_msg.message_id
+            await state.update_data(data)
+            await state.set_state(StatisticsStates.WAITING_FOR_DIALOG)
+
+    elif action == "cancel_choose":
+        # Нажали "Отмена" вместо выбора чата
+        # Просто откатываем клавиатуру обратно и убираем сообщение, если оно есть
+        dialog_msg_id = data.get("dialog_message_id")
+        if dialog_msg_id:
+            try:
+                await callback.message.bot.delete_message(
+                    chat_id=callback.message.chat.id,
+                    message_id=dialog_msg_id
+                )
+            except:
+                pass
+            data["dialog_message_id"] = None
+            await state.update_data(data)
+
+        # Возвращаем клавиатуру исходного сообщения
+        # Надо также вернуть текст статистики (с актуальными параметрами)
+        start, end = _get_period_range(options["period"])
+        filtered = filter_messages(messages, start, end, options["interlocutor_id"])
+        stats = calculate_basic_stats(filtered)
+        text_stats = build_stats_text(stats)
+
+        await callback.message.edit_text(
+            text=f"Статистика:\n\n{text_stats}",
+            reply_markup=get_main_stats_keyboard(options["interlocutor_id"])
+        )
         await callback.answer()
+
+    elif action == "show_chart":
+        # Пользователь хочет вывести линейный график в виде ссылки
+        start, end = _get_period_range(options["period"])
+        filtered = filter_messages(messages, start, end, options["interlocutor_id"])
+
+        if not filtered:
+            await callback.answer("Нет данных для построения графика.", show_alert=True)
+            return
+
+        # Строим линейный график
+        chart_bytes = build_time_distribution_line_chart(filtered, options["period"])
+
+        # Загружаем в S3 и получаем presigned URL
+        # presigned_url = upload_chart_to_s3_and_get_url(chart_bytes.getvalue())
+
+        # Прячем ссылку за эмодзи (Markdown)
+        # chart_link_markdown = f"[🔗]({presigned_url})"
+
+        await callback.message.answer(
+            text=f"График (действителен ~15 минут): ",
+            parse_mode="Markdown",
+            disable_web_page_preview=True
+        )
+        await callback.answer()
+
+    elif action == "back":
+        # Возврат в предыдущее меню (зависит от вашей логики).
+        # Здесь просто уберём сообщение и скажем "назад".
+        await callback.message.delete()
+        await callback.answer("Возврат назад.")
+        # Или вызовите свой главный хендлер меню.
+
+    else:
+        await callback.answer("Неизвестная команда.", show_alert=True)
+
+    # Не забудьте обновить state
+    await state.update_data(statistics_options=options)
+
+
+# -------------------------------------------------------------------
+# Хендлер, который срабатывает, когда пользователь выбрал чат (ChatShared).
+# Функционал появился в Telegram 6.0. Aiogram 3.x поддерживает это событие.
+# -------------------------------------------------------------------
+# @router.message(F.user_shared)
+async def on_chat_shared(message: Message, state: FSMContext):
+    """
+    Когда пользователь выбирает чат через request_chat_btn,
+    приходит объект ChatShared (у него есть chat_id).
+    """
+    data = await state.get_data()
+    current_state = await state.get_state()
+
+    if current_state != StatisticsStates.WAITING_FOR_DIALOG:
+        # Игнорируем, если мы не в состоянии ожидания
         return
 
-    # Если формат - графический
-    graph_type = options.get("graph_type")
-    if not graph_type:
-        # Если пользователь не выбрал конкретный график, можно отдать дефолтный
-        graph_type = "activity"  # по умолчанию график активности
+    # Получаем chat_id
+    chat_shared: ChatShared = message.chat_shared
+    # ВАЖНО: в aiogram 3.x поле chat_shared может содержать:
+    #   chat_shared.chat_id (это именно id выбранного чата,
+    #                        если бот админ в целевом чате)
+    #   chat_shared.request_id (совпадает с тем, что мы задавали)
+    # Будьте внимательны, иногда в зависимости от настроек приватности
+    # может вернуться None.
+    # Нужно проверить фактическую структуру ChatShared.
 
-    # Генерируем картинку
-    image_bytes = None
-    if graph_type == "activity":
-        image_bytes = render_activity_chart(stats, options)
-    elif graph_type == "pie":
-        image_bytes = render_in_out_pie(stats, options)
-    elif graph_type == "top_interlocutors":
-        # Для этого графика (Топ собеседников) нужны дополнительные данные:
-        # например, можно запрашивать top-5 собеседников отфильтрованных, если нужно.
-        image_bytes = render_top_interlocutors_bar(stats, options)
-    elif graph_type == "heatmap":
-        image_bytes = render_heatmap(stats, options)
+    # Часто chat_shared.chat_id — это фактический id канала/группы,
+    # но не Persona.id. Нужно сопоставлять с логикой вашей БД.
+    # Ниже — упрощённый вариант, где мы считаем, что chat_id
+    # совпадает со SavedMessage.chat_id.
+    real_chat_id = chat_shared.chat_id  # Настоящий ID чата
 
-    if image_bytes:
-        await callback.message.answer_photo(
-            photo=BufferedInputFile(image_bytes.getvalue(), filename='chart.png'),
-            caption=_("STATISTICS_GRAPH_GENERATED")
-        )
-    else:
-        await callback.message.answer(_("STATISTICS_UNKNOWN_GRAPH_TYPE"))
+    # Сохраняем в options
+    options = data.get("statistics_options", DEFAULT_OPTIONS.copy())
+    options["interlocutor_id"] = real_chat_id
 
-    await callback.answer()
+    data["statistics_options"] = options
+    await state.update_data(data)
 
+    # Удаляем "вспомогательное" сообщение (с ReplyKeyboardMarkup)
+    dialog_msg_id = data.get("dialog_message_id")
+    if dialog_msg_id:
+        try:
+            await message.bot.delete_message(
+                chat_id=message.chat.id,
+                message_id=dialog_msg_id
+            )
+        except:
+            pass
+        data["dialog_message_id"] = None
+        await state.update_data(data)
 
-def build_text_statistics(stats: dict, options: dict) -> str:
-    """
-    Формируем человекочитаемый текст со всеми нужными показателями:
-      1) Общее кол-во сообщений
-      2) Соотношение входящих / исходящих
-      3) Средняя длина сообщений
-      4) Топ-5 самых активных собеседников
-      5) Время самой высокой/низкой активности
-      6) Среднее время ответа
-      и т.д.
-    """
-    total = stats.get("total_messages", 0)
-    incoming = stats.get("incoming_count", 0)
-    outgoing = stats.get("outgoing_count", 0)
-    avg_length = stats.get("average_length", 0)
-    top_5 = stats.get("top_interlocutors", [])
-    busiest_hour = stats.get("busiest_hour")
-    quietest_hour = stats.get("quietest_hour")
-    avg_response = stats.get("average_response_time")
+    # Возвращаемся к исходному сообщению со статистикой (которое в состоянии MAIN).
+    # Чтобы обновить текст/клавиатуру, надо знать message_id того сообщения.
+    # Но если мы не сохраняли, то можно просто ответить заново.
+    all_messages = data.get("all_messages", [])
 
-    lines = []
-    lines.append(_("STATISTICS_TITLE"))
-    lines.append("")
-    lines.append(_("STATISTICS_TOTAL_MESSAGES").format(count=total))
-    lines.append(_("STATISTICS_INCOMING") + f": {incoming}")
-    lines.append(_("STATISTICS_OUTGOING") + f": {outgoing}")
-    lines.append(_("STATISTICS_AVG_LENGTH").format(length=round(avg_length, 2)))
+    start, end = _get_period_range(options["period"])
+    filtered = filter_messages(all_messages, start, end, real_chat_id)
+    stats = calculate_basic_stats(filtered)
+    text_stats = build_stats_text(stats)
 
-    # Топ собеседников
-    lines.append("")
-    lines.append(_("STATISTICS_TOP_INTERLOCUTORS"))
-    if top_5:
-        for i, (p_name, count) in enumerate(top_5, start=1):
-            lines.append(f"{i}. {p_name}: {count}")
-    else:
-        lines.append(_("STATISTICS_NO_DATA"))
+    # Шлём заново (или, если сохранили ID исходного сообщения, редактируем)
+    await message.answer(
+        text=f"Статистика по выбранному чату:\n\n{text_stats}",
+        reply_markup=get_main_stats_keyboard(interlocutor_id=real_chat_id)
+    )
 
-    # Часы наибольшей / наименьшей активности
-    lines.append("")
-    if busiest_hour is not None:
-        lines.append(_("STATISTICS_HIGHEST_ACTIVITY").format(hour=busiest_hour))
-    if quietest_hour is not None:
-        lines.append(_("STATISTICS_LOWEST_ACTIVITY").format(hour=quietest_hour))
-
-    # Среднее время ответа
-    if avg_response is not None:
-        # Преобразуем секундный формат в что-то удобочитаемое
-        # Для примера возьмем формат "X мин. Y сек."
-        minutes = int(avg_response // 60)
-        seconds = int(avg_response % 60)
-        lines.append(_("STATISTICS_AVG_RESPONSE_TIME").format(minutes=minutes, seconds=seconds))
-
-    return "\n".join(lines)
+    # Убираем состояние
+    await state.set_state(StatisticsStates.MAIN)

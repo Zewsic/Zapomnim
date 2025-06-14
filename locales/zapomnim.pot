@@ -488,3 +488,36 @@ msgstr ""
 
 msgid "REFERRALS_SHARE_TEXT"
 msgstr ""
+
+msgid "LANG_NAME"
+msgstr ""
+
+msgid "LANG_NAME"
+msgstr "Русский"
+
+msgid "STA_BUTTON"
+msgstr ""
+
+msgid "STA_START_TEXT"
+msgstr ""
+
+msgid "STA_INVALID_CHAT_ERROR"
+msgstr ""
+
+msgid "STA_ANALYZING_CHAT"
+msgstr ""
+
+msgid "STA_SELECT_CHAT_BUTTON"
+msgstr ""
+
+msgid "STA_RESPONSE_TOPIC_TEMPLATE"
+msgstr ""
+
+msgid "STA_RESPONSE_PARTICIPANT_TEMPLATE"
+msgstr ""
+
+msgid "STA_RESPONSE_TEMPLATE"
+msgstr ""
+
+msgid "STA_NO_MORE_REQUESTS_ERROR"
+msgstr ""

@@ -29,3 +29,6 @@ class SettingsState(StatesGroup):
 
 class PaymentState(StatesGroup):
     pay_with_stars = State()
+
+class STA_State(StatesGroup):
+    select_user = State()

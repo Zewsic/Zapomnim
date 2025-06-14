@@ -3,6 +3,7 @@ from handlers.features.delete_messages_handler import router as delete_messages_
 from handlers.features.edit_messages_handler import router as edit_messages_router
 from handlers.features.process_message import router as process_message_router
 from handlers.features.statistics import router as statistics_router
+from handlers.features.static_chat_analyzer import router as STA_router
 from handlers.initial_setup import router as initial_setup_router
 from handlers.menu import router as menu_router
 from handlers.settings import router as settings_router
@@ -18,5 +19,6 @@ __all__ = [
     "settings_router",
     "statistics_router",
     "subscription_router",
+    "STA_router"
 
 ]

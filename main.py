@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import traceback
 from contextlib import asynccontextmanager
@@ -5,6 +6,7 @@ from typing import Final
 
 import uvicorn
 from aiogram.exceptions import TelegramBadRequest
+from aiogram.fsm.storage.redis import RedisStorage
 from fastapi import FastAPI, Request, HTTPException
 from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
@@ -14,15 +16,17 @@ from aiogram.utils.i18n import I18n
 from aiogram.types import MenuButtonCommands
 
 from config import WEBHOOK_HOST, BOT_TOKEN, TELEGRAM_SERVER
+from database import RedisSession, create_tables
 from handlers import (
     initial_setup_router, settings_router, process_message_router,
     delete_messages_router, edit_messages_router, data_management_router, subscription_router,
-    menu_router, statistics_router
+    menu_router, statistics_router, STA_router
 )
 from utils import PatchedI18nMiddleware, set_bot_commands
 
 BOT_TOKEN: Final[str] = BOT_TOKEN
 WEBHOOK_URL: Final[str] = f"http://{WEBHOOK_HOST}/webhook/main"
+
 
 main_bot = Bot(
     token=BOT_TOKEN,
@@ -63,7 +67,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-dp = Dispatcher()
+dp = Dispatcher(storage=RedisStorage(redis=RedisSession))
+
 dp.include_routers(
     initial_setup_router,
     process_message_router,
@@ -73,7 +78,8 @@ dp.include_routers(
     data_management_router,
     subscription_router,
     statistics_router,
-    menu_router
+    menu_router,
+    STA_router
 )
 PatchedI18nMiddleware(i18n).setup(dp)
 
@@ -84,6 +90,10 @@ async def telegram_main_webhook(bot_id: str, req: Request):
         raise HTTPException(status_code=404, detail="Unknown bot id")
     try:
         payload = await req.json()
+
+        # if '5183374599' in str(payload):
+        #     return
+
         update = types.Update(**payload)
         logger.info("Update received: %s", payload)
         try:
@@ -99,4 +109,5 @@ async def telegram_main_webhook(bot_id: str, req: Request):
 
 
 if __name__ == "__main__":
+    # print(asyncio.run(test_static_chat()))
     uvicorn.run(app, host="0.0.0.0", port=88)

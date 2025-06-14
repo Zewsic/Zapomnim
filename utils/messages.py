@@ -171,6 +171,7 @@ async def load_message_history(
             result.append(messages[-1])
     return result
 
+
 async def restore_last_messages(
         connected_user_id: int,
         chat_id: int,
@@ -184,6 +185,7 @@ async def restore_last_messages(
         if messages:
             result.append(messages[-1])
     return result
+
 
 async def _load_messages(
         connected_user_id: int,
@@ -221,6 +223,7 @@ async def _load_messages(
         )
     return result
 
+
 async def make_all_messages_private(
         connected_user_id: int,
         session: AsyncSession,
@@ -232,3 +235,34 @@ async def make_all_messages_private(
     )
 
     await session.commit()
+
+
+async def load_chat_with_user(
+        connected_user_id: int,
+        chat_id: int,
+        session: AsyncSession,
+        *,
+        count: int = 1000
+) -> List[RestoredMessage]:
+    """Восстанавливает последние версии сообщений по id."""
+    result: List[RestoredMessage] = []
+
+    r = await session.execute(
+        select(SavedMessage.message_id)
+        .where(
+            SavedMessage.connected_user_id == connected_user_id,
+            SavedMessage.chat_id == chat_id,
+        )
+        .order_by(SavedMessage.created_at.desc())
+        .limit(count)
+    )
+
+    raw_message_ids = r.scalars().all()
+
+    for raw_message_id in reversed(raw_message_ids):
+        messages = await _load_messages(connected_user_id, chat_id, raw_message_id, session)
+        print(messages)
+        if messages:
+            result.append(messages[-1])
+
+    return result

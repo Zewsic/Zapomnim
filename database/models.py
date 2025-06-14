@@ -121,3 +121,13 @@ class SavedMessage(Base):
     text: Mapped[str | None]
     content_type: Mapped[str]
     content: Mapped[str | None]
+
+
+class Metric(Base):
+    # Normal Mode
+    connected_user_id: Mapped[int | None] = mapped_column(BIGINT)
+    chat_id: Mapped[int | None] = mapped_column(BIGINT)
+    message_id: Mapped[int | None] = mapped_column(BIGINT)
+
+    name: Mapped[str]
+    value: Mapped[str | None]

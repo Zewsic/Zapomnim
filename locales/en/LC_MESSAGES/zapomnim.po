@@ -606,3 +606,45 @@ msgstr ""
 "days).\n"
 "\n"
 "😉 Choose the duration you want to extend your subscription for."
+
+msgid "LANG_NAME"
+msgstr "English"
+
+msgid "STA_BUTTON"
+msgstr "🤔 Chat Analysis"
+
+msgid "STA_START_TEXT"
+msgstr "👀 Please select the chat you would like to analyze."
+
+msgid "STA_INVALID_CHAT_ERROR"
+msgstr "⛔️ This chat cannot be analyzed."
+
+msgid "STA_ANALYZING_CHAT"
+msgstr "Analyzing..."
+
+msgid "STA_SELECT_CHAT_BUTTON"
+msgstr "👩‍🦳 Select Chat"
+
+msgid "STA_RESPONSE_TOPIC_TEMPLATE"
+msgstr "{num}. <b>{title}</b>\n"
+"<blockquote expandable>{description}\n\n"
+"<b>Result</b>: {result}"
+"</blockquote>\n"
+
+msgid "STA_RESPONSE_PARTICIPANT_TEMPLATE"
+msgstr "<b>💬 {full_name}</b>:\n"
+"<blockquote expandable>- <b>Personality</b>: {character}\n"
+"- <b>Profile</b>: {psychological_profile}\n"
+"- <b>Mood</b>: {mood}\n"
+"- <b>Manipulativeness</b>: {manipulative_tendencies}\n"
+"- <b>Frequent Words</b>: {frequent_words}</blockquote>\n"
+
+msgid "STA_RESPONSE_TEMPLATE"
+msgstr "<b>🧐 Chat Analysis with {receiver_first_name}</b>\n\n"
+"{participants}\n\n"
+"<b>👀 Topics Discussed</b>\n\n"
+"{topics}\n"
+"⚠️ You have {remaining_count} requests remaining."
+
+msgid "STA_NO_MORE_REQUESTS_ERROR"
+msgstr "⛔️ You have reached your request limit for this month."
