@@ -10,3 +10,4 @@ greenlet
 asyncpg
 cryptography
 matplotlib
+openai
