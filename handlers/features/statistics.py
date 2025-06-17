@@ -17,7 +17,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import StatisticsState
 from database import create_session
-from database.models import SavedMessage, Persona
+from database.models import SavedMessage, Persona, Metric
 from keyboards.statistics import get_main_stats_keyboard, select_user_keyboard
 from utils import get_user
 from utils.files import upload_file
@@ -313,6 +313,13 @@ async def on_statistics_open(callback: CallbackQuery, state: FSMContext):
             await callback.answer("Хуйня какая-то", show_alert=True)
             return
 
+        metric = Metric(
+            connected_user_id=user.id if not user.privacy_mode else None,
+            name='metrics.statistic',
+        )
+        session.add(metric)
+        await session.commit()
+
         messages = await load_encrypted_user_messages(session=session, connected_user_id=user.id,
                                                       cutoff=_get_period_range(PERIOD_DAY)[0])
 
@@ -320,6 +327,8 @@ async def on_statistics_open(callback: CallbackQuery, state: FSMContext):
         selected_period=PERIOD_DAY,
         interlocutor_id=None
     )
+    session.add(metric)
+    await session.commit()
 
     await make_message(callback.bot, messages, PERIOD_DAY, None, callback.message.chat.id,
                        message_id=None)

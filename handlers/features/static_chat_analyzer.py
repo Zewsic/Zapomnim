@@ -18,6 +18,7 @@ from database import create_session
 from aiogram.utils.i18n import gettext as _
 from database.models import SavedMessage, User, Metric, Persona
 from handlers.menu import send_main_menu
+from keyboards import continue_keyboard
 from keyboards.static_chat_analyzer import STA_keyboard
 from utils.messages import RestoredMessage, load_chat_with_user
 from utils.userdata import get_persona, get_user
@@ -202,7 +203,7 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
         select(Metric)
         .where(
             Metric.connected_user_id == user.id,
-            Metric.name == 'metrics.static_chat_analyzer.high',
+            Metric.name == 'system.static_chat_analyzer.high',
             Metric.created_at >= thirty_days_ago
         )
     )).scalars().all()
@@ -211,7 +212,7 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
         select(Metric)
         .where(
             Metric.connected_user_id == user.id,
-            Metric.name == 'metrics.static_chat_analyzer.low',
+            Metric.name == 'system.static_chat_analyzer.low',
             Metric.created_at >= thirty_days_ago
         )
     )).scalars().all()
@@ -259,7 +260,7 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
     metric = Metric(
         connected_user_id=user.id,
         chat_id=persona.id if not user.privacy_mode else None,
-        name='metrics.static_chat_analyzer.' + ('high' if high_mode else 'low'),
+        name='system.static_chat_analyzer.' + ('high' if high_mode else 'low'),
         value=usage.model_dump_json()
     )
     session.add(metric)
@@ -269,6 +270,14 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
 
 
 async def send_STA(bot: Bot, chat_id: int, user: User, state: FSMContext):
+    if not user.is_working:
+        await bot.send_message(
+            chat_id,
+            text=_("SUBSCRIPTION_REQUIRED_ERROR"),
+            reply_markup=continue_keyboard('profile'),
+        )
+        return
+
     await state.set_state(STA_State.select_user)
 
     m = await bot.send_message(

@@ -7,7 +7,8 @@ from aiogram.types import BufferedInputFile, LinkPreviewOptions, Message
 from aiogram.utils.i18n import gettext as _
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.models import Persona, User
+from database.models import Persona, User, Metric
+from keyboards import continue_keyboard
 from utils.botapi import TelegramDataUtils
 from utils.messages import ContentType, save_message
 from utils.userdata import get_persona
@@ -104,6 +105,11 @@ async def process_protected_message(
         file_data = TelegramDataUtils.get_file(await message.bot.get_file(content))
 
         if not user.is_working:
+            await message.bot.send_message(
+                user.id,
+                text=_("SUBSCRIPTION_REQUIRED_ERROR"),
+                reply_markup=continue_keyboard('profile'),
+            )
             return
 
         chat = await get_persona(session, message.chat.id)
@@ -115,3 +121,12 @@ async def process_protected_message(
                 await message.bot.send_message(user.id, _("VOICE_MESSAGES_FORBIDDEN"))
             else:
                 raise e
+
+        metric = Metric(
+            connected_user_id=user.id if not user.privacy_mode else None,
+            chat_id=chat.id if not user.privacy_mode else None,
+            message_id=message.message_id if not user.privacy_mode else None,
+            name='metrics.save_protected_content',
+        )
+        session.add(metric)
+        await session.commit()

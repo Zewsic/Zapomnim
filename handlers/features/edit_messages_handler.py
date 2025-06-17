@@ -11,7 +11,7 @@ from aiogram.types import (
 from aiogram.utils.i18n import gettext as _
 
 from database import create_session
-from database.models import Persona
+from database.models import Persona, Metric
 from utils import get_user
 from utils.messages import restore_last_messages, save_message, ContentType, RestoredMessage
 from utils.userdata import update_persona
@@ -211,3 +211,12 @@ async def on_edit_messages(event: Message):
                 await event.bot.send_message(user.id, _("VOICE_MESSAGES_FORBIDDEN"))
             else:
                 raise e
+
+        metric = Metric(
+            connected_user_id=user.id if not user.privacy_mode else None,
+            chat_id=chat.id if not user.privacy_mode else None,
+            message_id=event.message_id if not user.privacy_mode else None,
+            name='metrics.save_edited_messages',
+        )
+        session.add(metric)
+        await session.commit()
