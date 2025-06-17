@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Iterable, Optional, List
 
 from aiogram.types import Message
@@ -266,3 +266,31 @@ async def load_chat_with_user(
             result.append(messages[-1])
 
     return result
+
+
+async def load_encrypted_user_messages(
+        connected_user_id: int,
+        session: AsyncSession,
+        *,
+        chat_id: Optional[int] = None,
+        cutoff: Optional[datetime] = None,
+) -> List[SavedMessage]:
+    filters = [
+        SavedMessage.connected_user_id == connected_user_id
+    ]
+
+    if chat_id:
+        filters.append(SavedMessage.chat_id == chat_id)
+
+    if cutoff:
+        filters.append(SavedMessage.created_at >= cutoff)
+
+    r = (await session.execute(
+        select(SavedMessage)
+        .where(
+            *filters
+        )
+        .order_by(SavedMessage.created_at.desc())
+    )).scalars().all()
+
+    return list(r)

@@ -290,7 +290,6 @@ async def sta_callback(callback_query: CallbackQuery, state: FSMContext):
 
 @router.message(and_f(F.user_shared, StateFilter(STA_State.select_user)))
 async def on_chat_shared(message: Message, state: FSMContext):
-    print('on_chat_shared')
     data = await state.get_data()
     m = data.get('message_id')
     try:
@@ -318,7 +317,7 @@ async def on_chat_shared(message: Message, state: FSMContext):
         c = False
         leaders = r'/-\|'
         while not task.done():
-            await asyncio.sleep(3)
+            await asyncio.sleep(1.5)
             c = not c
 
             await m.edit_text(('🌟 ' if c else '⭐️ ') + _('STA_ANALYZING_CHAT'))

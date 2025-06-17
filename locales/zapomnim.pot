@@ -521,3 +521,106 @@ msgstr ""
 
 msgid "STA_NO_MORE_REQUESTS_ERROR"
 msgstr ""
+
+msgid "STATISTICS_SELECT_CHAT_BUTTON"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_BUTTON_DAY"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_BUTTON_WEEK"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_BUTTON_MONTH"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_BUTTON_YEAR"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_ALL_CHATS_BUTTON"
+msgstr ""
+
+msgid "STATISTICS_PERIOD_SELECT_CHAT_BUTTON"
+msgstr ""
+
+msgid "STATISTICS_RESPONSE_TEMPLATE"
+msgstr ""
+
+msgid "STATISTICS_RESPONSE_GRAPH_TITLE"
+msgstr ""
+
+msgid "STATISTICS_RESPONSE_GRAPH_Y_LABEL"
+msgstr ""
+
+msgid "STATISTICS_RESPONSE_TITLE"
+msgstr ""
+
+msgid "STATISTICS_RESPONSE_SELECTED_USER_TITLE"
+msgstr ""
+
+msgid "STATISTICS_RESPONSE_GRAPH_LOADING"
+msgstr ""
+
+msgid "STATISTICS_SELECT_CHAT_MESSAGE"
+msgstr ""
+
+msgid "STATISTICS_SELECT_CHAT_ERROR"
+msgstr ""
+
+msgid "MONDAY"
+msgstr ""
+
+msgid "TUESDAY"
+msgstr ""
+
+msgid "WEDNESDAY"
+msgstr ""
+
+msgid "THURSDAY"
+msgstr ""
+
+msgid "FRIDAY"
+msgstr ""
+
+msgid "SATURDAY"
+msgstr ""
+
+msgid "SUNDAY"
+msgstr ""
+
+msgid "JANUARY"
+msgstr ""
+
+msgid "FEBRUARY"
+msgstr ""
+
+msgid "MARCH"
+msgstr ""
+
+msgid "APRIL"
+msgstr ""
+
+msgid "MAY"
+msgstr ""
+
+msgid "JUNE"
+msgstr ""
+
+msgid "JULY"
+msgstr ""
+
+msgid "AUGUST"
+msgstr ""
+
+msgid "SEPTEMBER"
+msgstr ""
+
+msgid "OCTOBER"
+msgstr ""
+
+msgid "NOVEMBER"
+msgstr ""
+
+msgid "DECEMBER"
+msgstr ""
+

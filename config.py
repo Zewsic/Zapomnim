@@ -32,3 +32,7 @@ class PaymentState(StatesGroup):
 
 class STA_State(StatesGroup):
     select_user = State()
+
+class StatisticsState(StatesGroup):
+    main = State()  # главное меню статистики
+    wait_for_dialog = State()  # когда нажали "Выбрать человека" и ждём ChatShared

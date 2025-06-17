@@ -648,3 +648,114 @@ msgstr "<b>🧐 Chat Analysis with {receiver_first_name}</b>\n\n"
 
 msgid "STA_NO_MORE_REQUESTS_ERROR"
 msgstr "⛔️ You have reached your request limit for this month."
+
+
+msgid "STATISTICS_SELECT_CHAT_BUTTON"
+msgstr "👩‍🦳 Select Chat"
+
+msgid "STATISTICS_PERIOD_BUTTON_DAY"
+msgstr "24 Hours"
+
+msgid "STATISTICS_PERIOD_BUTTON_WEEK"
+msgstr "Week"
+
+msgid "STATISTICS_PERIOD_BUTTON_MONTH"
+msgstr "Month"
+
+msgid "STATISTICS_PERIOD_BUTTON_YEAR"
+msgstr "Year"
+
+msgid "STATISTICS_PERIOD_ALL_CHATS_BUTTON"
+msgstr "💬 Show All Chats"
+
+msgid "STATISTICS_PERIOD_SELECT_CHAT_BUTTON"
+msgstr "🤷‍♂️ Select Chat"
+
+msgid "STATISTICS_RESPONSE_TEMPLATE"
+msgstr "<b>💬 Total messages:</b> <code>{total}</code>\n"
+"├ <b>Incoming:</b> <code>{incoming}</code>\n"
+"└ <b>Outgoing:</b> <code>{outgoing}</code>\n\n"
+"<b>📷 Media:</b>\n"
+"├ <b>Photos:</b> <code>{photos}</code>\n"
+"├ <b>Videos:</b> <code>{videos}</code>\n"
+"├ <b>Voice messages:</b> <code>{voices}</code>\n"
+"├ <b>Video notes:</b> <code>{video_notes}</code>\n"
+"└ <b>Stickers:</b> <code>{stickers}</code>\n"
+
+msgid "STATISTICS_RESPONSE_GRAPH_TITLE"
+msgstr "Dialog Statistics"
+
+msgid "STATISTICS_RESPONSE_GRAPH_Y_LABEL"
+msgstr "Number of Messages"
+
+msgid "STATISTICS_RESPONSE_TITLE"
+msgstr "Your Chat Statistics"
+
+msgid "STATISTICS_RESPONSE_SELECTED_USER_TITLE"
+msgstr "Chat Statistics with"
+
+msgid "STATISTICS_RESPONSE_GRAPH_LOADING"
+msgstr "( loading chart ... )"
+
+msgid "STATISTICS_SELECT_CHAT_MESSAGE"
+msgstr "👀 Please select a chat to view statistics."
+
+msgid "STATISTICS_SELECT_CHAT_ERROR"
+msgstr "⛔️ Unable to retrieve statistics for the selected chat.\nPlease select another chat."
+
+msgid "MONDAY"
+msgstr "Monday"
+
+msgid "TUESDAY"
+msgstr "Tuesday"
+
+msgid "WEDNESDAY"
+msgstr "Wednesday"
+
+msgid "THURSDAY"
+msgstr "Thursday"
+
+msgid "FRIDAY"
+msgstr "Friday"
+
+msgid "SATURDAY"
+msgstr "Saturday"
+
+msgid "SUNDAY"
+msgstr "Sunday"
+
+msgid "JANUARY"
+msgstr "January"
+
+msgid "FEBRUARY"
+msgstr "February"
+
+msgid "MARCH"
+msgstr "March"
+
+msgid "APRIL"
+msgstr "April"
+
+msgid "MAY"
+msgstr "May"
+
+msgid "JUNE"
+msgstr "June"
+
+msgid "JULY"
+msgstr "July"
+
+msgid "AUGUST"
+msgstr "August"
+
+msgid "SEPTEMBER"
+msgstr "September"
+
+msgid "OCTOBER"
+msgstr "October"
+
+msgid "NOVEMBER"
+msgstr "November"
+
+msgid "DECEMBER"
+msgstr "December"
