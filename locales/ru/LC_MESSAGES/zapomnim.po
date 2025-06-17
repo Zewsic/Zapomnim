@@ -785,6 +785,15 @@ msgstr "Ноябрь"
 msgid "DECEMBER"
 msgstr "Декабрь"
 
-#~ msgid "SUBSCRIPTION_REQUIRED_ERROR"
-#~ msgstr "<b>⛔️ Для данного действия требуется подписка.</b>"
+msgid "SUBSCRIPTION_REQUIRED_ERROR"
+msgstr "<b>⛔️ Для данного действия требуется подписка.</b>"
+
+msgid "DELETED_MESSAGES_SETTINGS_SILENT_MODE"
+msgstr "\"Тихий\" режим"
+
+msgid "DELETED_MESSAGES_SETTINGS_SILENT_MODE_DESCRIPTION"
+msgstr "Сообщения об удалении будут приходить без уведомлений (тихо)."
+
+msgid "EDITED_MESSAGES_SETTINGS_SILENT_MODE_DESCRIPTION"
+msgstr "Сообщения об изменениях будут приходить без уведомлений (тихо)."
 

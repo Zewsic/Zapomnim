@@ -43,6 +43,7 @@ async def send_media(
         content_type: ContentType,
         content: str | None,
         caption: str,
+        silent_mode: bool,
 ):
     """Универсальная функция отправки контента по content_type (Enum)."""
     if not content:
@@ -50,13 +51,14 @@ async def send_media(
             chat_id,
             text=caption,
             link_preview_options=LinkPreviewOptions(is_disabled=True),
+            disable_notification=silent_mode
         )
         return
 
     if content_type in MEDIA_TYPES:
         method_name = MEDIA_TYPES[content_type]
         send_method = getattr(bot, method_name)
-        await send_method(**{content_type.value: content}, chat_id=chat_id, caption=caption)
+        await send_method(**{content_type.value: content}, chat_id=chat_id, caption=caption, disable_notification=silent_mode)
         return
 
     if content_type == ContentType.STICKER:
@@ -64,8 +66,9 @@ async def send_media(
             chat_id,
             text=caption,
             link_preview_options=LinkPreviewOptions(is_disabled=True),
+            disable_notification=silent_mode
         )
-        await bot.send_sticker(chat_id, sticker=content, reply_to_message_id=sent_msg.message_id)
+        await bot.send_sticker(chat_id, sticker=content, reply_to_message_id=sent_msg.message_id, disable_notification=silent_mode)
         return
 
     if content_type == ContentType.VIDEO_NOTE:
@@ -73,8 +76,9 @@ async def send_media(
             chat_id,
             text=caption,
             link_preview_options=LinkPreviewOptions(is_disabled=True),
+            disable_notification=silent_mode
         )
-        await bot.send_video_note(chat_id, video_note=content, reply_to_message_id=sent_msg.message_id)
+        await bot.send_video_note(chat_id, video_note=content, reply_to_message_id=sent_msg.message_id, disable_notification=silent_mode)
         return
 
     if content_type in DUMPABLE_TYPES:
@@ -88,6 +92,7 @@ async def send_media(
             chat_id,
             BufferedInputFile(dump_bytes, filename="dump.json"),
             caption=caption,
+            disable_notification=silent_mode
         )
         return
 
@@ -95,6 +100,7 @@ async def send_media(
         chat_id,
         text=caption,
         link_preview_options=LinkPreviewOptions(is_disabled=True),
+        disable_notification=silent_mode
     )
 
 
@@ -107,6 +113,9 @@ async def send_deleted_info(
         message_ids: list[int],
 ) -> None:
     """Рассылает в личку пользователю (user_id) информацию об удалённых сообщениях."""
+
+    silent_mode = await user.get_bool('settings.deleted_messages.silent_mode', session, default=True)
+
     for msg_data, msg_id in zip(restored_messages, message_ids):
         if user.id != msg_data.persona.id:
             if not await user.get_bool("settings.deleted_messages.enabled", session, default=True):
@@ -145,6 +154,7 @@ async def send_deleted_info(
             content_type=msg_data.content_type,
             content=msg_data.content,
             caption=base_text,
+            silent_mode=silent_mode
         )
 
         metric = Metric(

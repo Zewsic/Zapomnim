@@ -48,6 +48,7 @@ async def send_media(
         content: Optional[str],
         caption: str,
         keyboard: InlineKeyboardMarkup,
+        silent_mode: bool = True,
 ):
     """
     Универсальная отправка медиа по content_type.
@@ -55,16 +56,17 @@ async def send_media(
     if content_type in MEDIA_TYPES and content:
         send_method_name = MEDIA_TYPES[content_type]
         send_method = getattr(bot, send_method_name)
-        await send_method(chat_id=user_id, **{content_type.value: content}, caption=caption, reply_markup=keyboard)
+        await send_method(chat_id=user_id, **{content_type.value: content}, caption=caption, reply_markup=keyboard, disable_notification=silent_mode)
         return
 
     if content_type == ContentType.STICKER and content:
         sent_msg = await bot.send_message(
             user_id,
             text=caption,
-            link_preview_options=LinkPreviewOptions(is_disabled=True)
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
+            disable_notification=silent_mode
         )
-        await bot.send_sticker(user_id, sticker=content, reply_to_message_id=sent_msg.message_id)
+        await bot.send_sticker(user_id, sticker=content, reply_to_message_id=sent_msg.message_id, disable_notification=silent_mode)
         return
 
     if content_type == ContentType.VIDEO_NOTE and content:
@@ -72,8 +74,9 @@ async def send_media(
             user_id,
             text=caption,
             link_preview_options=LinkPreviewOptions(is_disabled=True),
+            disable_notification=silent_mode
         )
-        await bot.send_video_note(user_id, video_note=content, reply_to_message_id=sent_msg.message_id)
+        await bot.send_video_note(user_id, video_note=content, reply_to_message_id=sent_msg.message_id, disable_notification=silent_mode)
         return
 
     if content_type in DUMPABLE_TYPES and content:
@@ -87,6 +90,7 @@ async def send_media(
             document=BufferedInputFile(dump_bytes, filename="dump.json"),
             caption=caption,
             reply_markup=keyboard,
+            disable_notification=silent_mode,
         )
         return
 
@@ -95,6 +99,7 @@ async def send_media(
         text=caption,
         link_preview_options=LinkPreviewOptions(is_disabled=True),
         reply_markup=keyboard,
+        disable_notification=silent_mode
     )
 
 
@@ -104,7 +109,8 @@ async def send_edited_info(
         chat: Persona,
         old_msg: RestoredMessage,
         new_msg: RestoredMessage,
-        message_id: int
+        message_id: int,
+        silent_mode: bool,
 ) -> None:
     """
     Отправляем в личку пользователю сообщение о том,
@@ -135,7 +141,8 @@ async def send_edited_info(
         content_type=old_msg.content_type,
         content=old_msg.content or "",
         caption=base_msg,
-        keyboard=InlineKeyboardMarkup(inline_keyboard=[])
+        keyboard=InlineKeyboardMarkup(inline_keyboard=[]),
+        silent_mode=silent_mode
     )
 
 
@@ -197,6 +204,8 @@ async def on_edit_messages(event: Message):
             if not await user.get_bool('settings.edited_messages.save_other', session, default=False):
                 return
 
+        silent_mode = await user.get_bool('settings.edited_messages.silent_mode', session, default=True)
+
         try:
             await send_edited_info(
                 bot=bot,
@@ -204,7 +213,8 @@ async def on_edit_messages(event: Message):
                 chat=chat,
                 old_msg=old_msg,
                 new_msg=new_msg,
-                message_id=event.message_id
+                message_id=event.message_id,
+                silent_mode=silent_mode
             )
         except TelegramBadRequest as e:
             if 'VOICE_MESSAGES_FORBIDDEN' in e.message:

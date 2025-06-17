@@ -120,6 +120,12 @@ async def deleted_messages_settings(callback: CallbackQuery):
                 description=_("DELETED_MESSAGES_SETTINGS_SAVE_OTHER_DESCRIPTION"),
                 default=False
             ),
+            SettingsOption(
+                option_id="silent_mode",
+                name=_("DELETED_MESSAGES_SETTINGS_SILENT_MODE"),
+                description=_("DELETED_MESSAGES_SETTINGS_SILENT_MODE_DESCRIPTION"),
+                default=True
+            ),
         ]
 
         title = _("DELETED_MESSAGES_SETTINGS_BUTTON")
@@ -179,6 +185,12 @@ async def edited_messages_settings(callback: CallbackQuery):
                 name=_("DELETED_MESSAGES_SETTINGS_SAVE_OTHER"),
                 description=_("DELETED_MESSAGES_SETTINGS_SAVE_OTHER_DESCRIPTION"),
                 default=False
+            ),
+            SettingsOption(
+                option_id="silent_mode",
+                name=_("DELETED_MESSAGES_SETTINGS_SILENT_MODE"),
+                description=_("EDITED_MESSAGES_SETTINGS_SILENT_MODE_DESCRIPTION"),
+                default=True
             ),
         ]
 

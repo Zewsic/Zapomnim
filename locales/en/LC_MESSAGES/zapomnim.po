@@ -382,6 +382,12 @@ msgstr "Other messages"
 msgid "DELETED_MESSAGES_SETTINGS_SAVE_OTHER_DESCRIPTION"
 msgstr "Contacts, locations, polls, stories, gifts, etc."
 
+msgid "DELETED_MESSAGES_SETTINGS_SILENT_MODE"
+msgstr "Silent mode"
+
+msgid "DELETED_MESSAGES_SETTINGS_SILENT_MODE_DESCRIPTION"
+msgstr "Deletion notifications will be delivered silently (without alerts)."
+
 # ## Edited
 msgid "EDITED_MESSAGES_SETTINGS_BUTTON"
 msgstr "📝 Save edited"
@@ -399,6 +405,9 @@ msgstr "Enables edit notifications for outgoing messages."
 
 msgid "EDITED_MESSAGES_SETTINGS_SAVE_TEXT_DESCRIPTION"
 msgstr "Saves edited text messages."
+
+msgid "EDITED_MESSAGES_SETTINGS_SILENT_MODE_DESCRIPTION"
+msgstr "Editing notifications will be delivered silently (without sound)."
 
 # Protected
 msgid "PROTECTED_MESSAGES_SETTINGS_BUTTON"
@@ -654,7 +663,6 @@ msgstr "<b>🧐 Chat Analysis with {receiver_first_name}</b>\n\n"
 
 msgid "STA_NO_MORE_REQUESTS_ERROR"
 msgstr "⛔️ You have reached your request limit for this month."
-
 
 msgid "STATISTICS_SELECT_CHAT_BUTTON"
 msgstr "👩‍🦳 Select Chat"
