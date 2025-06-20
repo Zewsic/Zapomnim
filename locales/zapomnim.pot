@@ -650,3 +650,31 @@ msgstr ""
 
 msgid "PROMO_ERROR_ALREADY_ACTIVATED"
 msgstr ""
+
+msgid "SUBSCRIPTION_PAYMENT_METHOD"
+msgstr ""
+
+msgid "SUBSCRIPTION_PAYMENT_METHOD_YOUKASSA"
+msgstr ""
+
+msgid "SUBSCRIPTION_PAYMENT_METHOD_STARS"
+msgstr ""
+
+msgid "SUBSCRIPTION_DURATION"
+msgstr ""
+
+msgid "SUBSCRIPTION_DURATION_30"
+msgstr ""
+
+msgid "SUBSCRIPTION_DURATION_90"
+msgstr ""
+
+msgid "SUBSCRIPTION_DURATION_180"
+msgstr ""
+
+msgid "SUBSCRIPTION_DURATION_360"
+msgstr ""
+
+msgid "SUBSCRIPTION_GO_PAY"
+msgstr ""
+

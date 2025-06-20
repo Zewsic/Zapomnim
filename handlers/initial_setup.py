@@ -91,8 +91,8 @@ async def start_command(
     if selected_language is not _UNSET:
         i18n_middleware.i18n.current_locale = selected_language
         await message.delete()
-        if 'lang_message' in data:
-            await data['lang_message'].delete()
+        if 'lang_message_id' in data:
+            await message.bot.delete_message(message.chat.id, data['lang_message_id'])
 
     async with create_session() as session:
         if promo:
@@ -136,7 +136,7 @@ async def start_command(
             reply_markup=language_keyboard()
         )
         await emoji.delete()
-        await state.update_data({'lang_message': lang_message})
+        await state.update_data({'lang_message_id': lang_message.message_id})
         await state.set_state(StartState.setup_language)
         return
 
@@ -257,3 +257,8 @@ async def initial_setup_select_mode_callback(query: CallbackQuery, state: FSMCon
                 reply_markup=bot_mode_keyboard())
 
         await session.commit()
+
+
+@router.callback_query(F.data.startswith('nothing'))
+async def nothing(query: CallbackQuery, state: FSMContext):
+    await query.answer()

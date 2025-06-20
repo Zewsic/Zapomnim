@@ -623,11 +623,40 @@ msgstr "**Zapomnim** is a unique solution for protecting your Telegram chats!\n\
 
 msgid "SUBSCRIPTION_ADD_TEXT"
 msgstr ""
-"<b>⭐️ Subscription</b>\n\n💸 Active until "
-"{subscription_date} (remaining {subscription_days} "
-"days).\n"
+"<b>⭐️ Subscription</b>\n"
 "\n"
-"😉 Choose the duration you want to extend your subscription for."
+"💸 <b>Payment method</b>: {payment_method}.\n"
+"⏱️ <b>Duration</b>: {duration}.\n"
+"\n"
+"😉 <b>Price: {price} {currency}</b>."
+
+msgid "SUBSCRIPTION_PAYMENT_METHOD"
+msgstr "Payment Method"
+
+msgid "SUBSCRIPTION_PAYMENT_METHOD_YOUKASSA"
+msgstr "YooKassa"
+
+msgid "SUBSCRIPTION_PAYMENT_METHOD_STARS"
+msgstr "Telegram Stars"
+
+msgid "SUBSCRIPTION_DURATION"
+msgstr "Subscription Period"
+
+msgid "SUBSCRIPTION_DURATION_30"
+msgstr "1 month"
+
+msgid "SUBSCRIPTION_DURATION_90"
+msgstr "3 months"
+
+msgid "SUBSCRIPTION_DURATION_180"
+msgstr "6 months"
+
+msgid "SUBSCRIPTION_DURATION_360"
+msgstr "12 months"
+
+msgid "SUBSCRIPTION_GO_PAY"
+msgstr "👉 Proceed to Payment 👈"
+
 
 msgid "LANG_NAME"
 msgstr "English"

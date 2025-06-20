@@ -73,4 +73,4 @@ def check_promocode(code: str) -> int | None:
 if __name__ == "__main__":
     for _ in [14, 14, 14, 14, 14, 360, 360, 1488, 1488]:
         promo = make_promocode(_)
-        print(promo, '\t days =', check_promocode(promo))
+        print(f'# {_} дней\nhttps://t.me/zapomnim_bot?start=promo{promo}\n')

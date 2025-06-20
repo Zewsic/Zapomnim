@@ -12,8 +12,8 @@ def main_menu_keyboard() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text=_("STATISTICS_BUTTON"), callback_data='statistics')],
         [InlineKeyboardButton(text=_("STA_BUTTON"), callback_data='analyze')],
         [
-            InlineKeyboardButton(text=_("SETTINGS_BUTTON"), callback_data='settings'),
             InlineKeyboardButton(text=_("PROFILE_BUTTON"), callback_data='profile'),
+            InlineKeyboardButton(text=_("SETTINGS_BUTTON"), callback_data='settings'),
         ],
         [
             InlineKeyboardButton(text=_("SUPPORT_BUTTON"), url=_("SUPPORT_LINK")),

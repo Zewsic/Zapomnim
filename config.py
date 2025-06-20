@@ -16,6 +16,9 @@ SUBSCRIPTION_PLANS = [
     {"days": 90, "price": 350},
 ]
 
+class EmptyState(StatesGroup):
+    state = State()
+
 
 class StartState(StatesGroup):
     setup_language = State()
@@ -28,6 +31,7 @@ class SettingsState(StatesGroup):
     setup_language = State()
 
 class PaymentState(StatesGroup):
+    select_params = State()
     pay_with_stars = State()
 
 class STA_State(StatesGroup):

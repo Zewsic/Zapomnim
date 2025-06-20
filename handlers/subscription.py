@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime, timedelta
+from pyexpat.errors import messages
 
 from aiogram import Router, F, Bot
 from aiogram.client import bot
@@ -17,26 +18,88 @@ from utils import get_user, update_user
 router = Router()
 
 
+def calculate_price(method: str, duration: int):
+    if method == 'youkassa':
+        if duration == 30:
+            price = 199
+        elif duration == 90:
+            price = 569
+        elif duration == 180:
+            price = 1079
+        elif duration == 360:
+            price = 2029
+        else:
+            price = 9999
+        return price, 'RUB'
+    elif method == 'stars':
+        if duration == 30:
+            price = 400
+        elif duration == 90:
+            price = 1100
+        elif duration == 180:
+            price = 2100
+        elif duration == 360:
+            price = 4000
+        else:
+            price = 9999
+        return price, 'Telegram Stars'
+    return 9999, 'USD'
+
+
 async def send_subscription_add(bot: Bot, chat_id: int, user: User, state: FSMContext):
+    await state.update_data({'duration': 30, 'method': 'youkassa'})
+    price, currency = calculate_price('youkassa', 30)
     msg = await bot.send_message(
         chat_id,
         text=_("SUBSCRIPTION_ADD_TEXT").format(
-            subscription_date=user.subscriber_until.strftime("%d.%m.%Y"),
-            subscription_days=max((user.subscriber_until - datetime.now()).days, 0),
+            payment_method=_("SUBSCRIPTION_PAYMENT_METHOD_YOUKASSA"),
+            duration=_(f"SUBSCRIPTION_DURATION_30"),
+            price=price,
+            currency=currency,
         ),
-        reply_markup=await subscription_keyboard(bot, user)
+        reply_markup=await subscription_keyboard(bot, user, 30, 'youkassa')
     )
-
-    await state.set_state(PaymentState.pay_with_stars)
-    await state.update_data({'message_id': msg.message_id})
+    await state.update_data({'message_id': msg.message_id, 'subscription_menu_opened': True})
 
 
-@router.callback_query(F.data == 'subscription_add')
-async def profile(callback_query: CallbackQuery, state: FSMContext):
+@router.callback_query(F.data.startswith('subscription_add'))
+async def subscription_add(callback_query: CallbackQuery, state: FSMContext):
     async with create_session() as session:
         user = await get_user(session, id=callback_query.from_user.id)
-    await send_subscription_add(callback_query.bot, callback_query.message.chat.id, user, state=state)
-    await callback_query.message.delete()
+
+    data = await state.get_data()
+    if not data.get('subscription_menu_opened'):
+        await state.set_state(PaymentState.select_params)
+        await send_subscription_add(callback_query.bot, callback_query.message.chat.id, user, state=state)
+        await callback_query.message.delete()
+    else:
+        parts = callback_query.data.split(':')
+        if len(parts) == 3:
+            cmd, key, value = parts
+        else:
+            cmd, key, value = None, None, None
+
+        if key == 'method':
+            await state.update_data({'method': value})
+            data['method'] = value
+        elif key == 'duration':
+            await state.update_data({'duration': value})
+            data['duration'] = value
+
+        price, currency = calculate_price(data['method'], int(data['duration']))
+
+        msg_id = data['message_id']
+        await callback_query.bot.edit_message_text(
+            chat_id=callback_query.message.chat.id,
+            message_id=msg_id,
+            text=_("SUBSCRIPTION_ADD_TEXT").format(
+                payment_method=_(f"SUBSCRIPTION_PAYMENT_METHOD_{data['method'].upper()}"),
+                duration=_(f"SUBSCRIPTION_DURATION_{data['duration']}"),
+                price=price,
+                currency=currency,
+            ),
+            reply_markup=await subscription_keyboard(callback_query.bot, user, int(data['duration']), data['method'])
+        )
 
 
 @router.pre_checkout_query()

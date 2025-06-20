@@ -594,11 +594,12 @@ msgstr "⭐️ Продлить подписку"
 
 msgid "SUBSCRIPTION_ADD_TEXT"
 msgstr ""
-"<b>⭐️ Подписка</b>\n"
+"<b>⭐️ Продление подписки</b>\n"
 "\n"
-"💸 Активна до {subscription_date} (осталось {subscription_days} дней).\n"
+"💸 <b>Платежный метод</b>: {payment_method}.\n"
+"⏱️ <b>Срок подписки</b>: {duration}.\n"
 "\n"
-"😉 Выберите срок, на который хотите продлить подписку."
+"😉 <b>Стоимость: {price} {currency}</b>."
 
 msgid "REFERRALS_BUTTON"
 msgstr "🧑‍🧑‍🧒 Реферальная система"
@@ -813,4 +814,31 @@ msgstr "<b>⛔️ Неверный промокод.</b>"
 
 msgid "PROMO_ERROR_ALREADY_ACTIVATED"
 msgstr "<b>⛔️ Промокод уже был активирован.</b>"
+
+msgid "SUBSCRIPTION_PAYMENT_METHOD"
+msgstr "Способ оплаты"
+
+msgid "SUBSCRIPTION_PAYMENT_METHOD_YOUKASSA"
+msgstr "ЮКасса"
+
+msgid "SUBSCRIPTION_PAYMENT_METHOD_STARS"
+msgstr "Telegram Stars"
+
+msgid "SUBSCRIPTION_DURATION"
+msgstr "Срок подписки"
+
+msgid "SUBSCRIPTION_DURATION_30"
+msgstr "1 месяц"
+
+msgid "SUBSCRIPTION_DURATION_90"
+msgstr "3 месяца"
+
+msgid "SUBSCRIPTION_DURATION_180"
+msgstr "6 месяцев"
+
+msgid "SUBSCRIPTION_DURATION_360"
+msgstr "12 месяцев"
+
+msgid "SUBSCRIPTION_GO_PAY"
+msgstr "👉 Перейти к оплате 👈"
 

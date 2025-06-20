@@ -1,60 +1,70 @@
+from typing import Any
+
 from aiogram import Bot
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, LabeledPrice
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, LabeledPrice, Message
 from aiogram.utils.i18n import gettext as _
 
 from database.models import User
 
 
-async def subscription_keyboard(bot: Bot, user: User) -> InlineKeyboardMarkup:
-    # invoice_7_link = await bot.create_invoice_link(
-    #     title=_('SUBSCRIPTION_TITLE').format(days=7),
-    #     description=_('SUBSCRIPTION_DESC').format(days=7),
-    #     payload=f"sub_{user.id}_7",
-    #     currency="XTR",
-    #     prices=[LabeledPrice(label=_('SUBSCRIPTION_LABEL'), amount=1)],
-    # )
+async def make_payment_url(bot: Bot, user_id, selected_period: int, selected_payment_method: str):
+    if selected_payment_method == 'youkassa':
+        return 'https://google.com'
+    elif selected_payment_method == 'stars':
+        return await bot.create_invoice_link(
+            title=_('SUBSCRIPTION_TITLE').format(days=selected_period),
+            description=_('SUBSCRIPTION_DESC').format(days=selected_period),
+            payload=f"sub_{user_id}_{selected_period}",
+            currency="XTR",
+            prices=[LabeledPrice(label=_('SUBSCRIPTION_LABEL'), amount=1900)],
+        )
+    return 'https://google.com'
 
-    invoice_30_link = await bot.create_invoice_link(
-        title=_('SUBSCRIPTION_TITLE').format(days=30),
-        description=_('SUBSCRIPTION_DESC').format(days=30),
-        payload=f"sub_{user.id}_30",
-        currency="XTR",
-        prices=[LabeledPrice(label=_('SUBSCRIPTION_LABEL'), amount=180)], # 250
-        subscription_period=2592000
-    )
 
-    invoice_180_link = await bot.create_invoice_link(
-        title=_('SUBSCRIPTION_TITLE').format(days=180),
-        description=_('SUBSCRIPTION_DESC').format(days=180),
-        payload=f"sub_{user.id}_180",
-        currency="XTR",
-        prices=[LabeledPrice(label=_('SUBSCRIPTION_LABEL'), amount=1000)],
-    )
+async def subscription_keyboard(bot: Bot, user: User, selected_period: int,
+                                selected_payment_method: str, selected_type: str = None) -> InlineKeyboardMarkup:
+    def make_selected(text: str, value: Any, required: Any) -> str:
+        return f'⭐️ {text} ⭐️' if value == required else text
 
-    invoice_360_link = await bot.create_invoice_link(
-        title=_('SUBSCRIPTION_TITLE').format(days=360),
-        description=_('SUBSCRIPTION_DESC').format(days=360),
-        payload=f"sub_{user.id}_360",
-        currency="XTR",
-        prices=[LabeledPrice(label=_('SUBSCRIPTION_LABEL'), amount=1900)],
-    )
-
-    kb = InlineKeyboardMarkup(inline_keyboard=[
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=_("SUBSCRIPTION_PAYMENT_METHOD"), callback_data='nothing')
+        ],
+        [
+            InlineKeyboardButton(text=make_selected(_("SUBSCRIPTION_PAYMENT_METHOD_YOUKASSA"), selected_payment_method, 'youkassa'),
+                                 callback_data='subscription_add:method:youkassa'),
+            InlineKeyboardButton(text=make_selected(_("SUBSCRIPTION_PAYMENT_METHOD_STARS"), selected_payment_method, 'stars'),
+                                 callback_data='subscription_add:method:stars')
+        ],
         # [
-        #     InlineKeyboardButton(text=_('SUBSCRIPTION_TITLE').format(days=7), url=invoice_7_link, pay=True)
+        #     InlineKeyboardButton(text=_("Подписка"), callback_data='nothing')
+        # ],
+        # [
+        #     InlineKeyboardButton(text=make_selected(_('Обычная'), selected_type, 'normal'),
+        #                          callback_data='subscription_add:type:normal'),
+        #     InlineKeyboardButton(text=make_selected(_('Расширенная'), selected_type, 'plus'),
+        #                          callback_data='subscription_add:type:plus')
         # ],
         [
-            InlineKeyboardButton(text=_('SUBSCRIPTION_TITLE').format(days=30), url=invoice_30_link, pay=True)
+            InlineKeyboardButton(text=_("SUBSCRIPTION_DURATION"), callback_data='nothing')
         ],
         [
-            InlineKeyboardButton(text=_('SUBSCRIPTION_TITLE').format(days=180), url=invoice_180_link, pay=True)
+            InlineKeyboardButton(text=make_selected(_('SUBSCRIPTION_DURATION_30'), selected_period, 30),
+                                 callback_data='subscription_add:duration:30'),
+            InlineKeyboardButton(text=make_selected(_('SUBSCRIPTION_DURATION_90'), selected_period, 90),
+                                 callback_data='subscription_add:duration:90')
         ],
         [
-            InlineKeyboardButton(text=_('SUBSCRIPTION_TITLE').format(days=360), url=invoice_360_link, pay=True)
+            InlineKeyboardButton(text=make_selected(_('SUBSCRIPTION_DURATION_180'), selected_period, 180),
+                                 callback_data='subscription_add:duration:180'),
+            InlineKeyboardButton(text=make_selected(_('SUBSCRIPTION_DURATION_360'), selected_period, 360),
+                                 callback_data='subscription_add:duration:360')
+        ],
+        [
+            InlineKeyboardButton(text=_("SUBSCRIPTION_GO_PAY"), pay=True,
+                                 url=await make_payment_url(bot, user.id, selected_period, selected_payment_method)),
         ],
         [
             InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data='profile')
         ]
     ])
-
-    return kb

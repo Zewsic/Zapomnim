@@ -6,6 +6,7 @@ from aiogram.types import FSInputFile, CallbackQuery
 from aiogram.utils.i18n import gettext as _
 from sqlalchemy import select
 
+from config import EmptyState
 from database import create_session
 from database.models import User
 from keyboards import main_menu_keyboard
@@ -80,6 +81,8 @@ async def send_referrals(bot: Bot, chat_id: int, user: User):
 
 @router.callback_query(F.data == 'profile')
 async def profile(callback_query: CallbackQuery, state: FSMContext):
+    await state.set_state(EmptyState.state)
+    await state.set_data({})
     async with create_session() as session:
         user = await get_user(session, id=callback_query.from_user.id)
     await send_profile(callback_query.bot, callback_query.message.chat.id, user)
@@ -87,7 +90,7 @@ async def profile(callback_query: CallbackQuery, state: FSMContext):
 
 
 @router.callback_query(F.data == 'referrals')
-async def profile(callback_query: CallbackQuery, state: FSMContext):
+async def referrals(callback_query: CallbackQuery, state: FSMContext):
     async with create_session() as session:
         user = await get_user(session, id=callback_query.from_user.id)
     await send_referrals(callback_query.bot, callback_query.message.chat.id, user)
