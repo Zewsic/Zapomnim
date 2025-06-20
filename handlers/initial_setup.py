@@ -6,15 +6,18 @@ from aiogram.filters import CommandStart, StateFilter, and_f, or_f, Command, Com
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, FSInputFile, CallbackQuery, BusinessConnection
 from aiogram.utils.i18n import gettext as _
+from sqlalchemy import select
 
 from config import StartState
 from database import create_session
+from database.models import Metric
 from handlers.features.static_chat_analyzer import send_STA
 from handlers.menu import send_main_menu, send_profile
 from handlers.settings import send_settings
 from keyboards import start_keyboard, continue_keyboard, language_keyboard
 from keyboards.initial_setup import bot_mode_keyboard
 from utils import update_user, get_user, _UNSET, PatchedI18nMiddleware
+from utils.security import check_promocode
 
 router = Router()
 
@@ -73,8 +76,11 @@ async def start_command(
         if command.args.startswith('ref'):
             referral_id = int(command.args[3:])
         if command.args.startswith('promo'):
-            promo = command.args[5:]
-
+            _promo = check_promocode(command.args[5:])
+            if _promo:
+                promo = (command.args[5:], _promo)
+            else:
+                await state.update_data({'activate_promo_error': 'INVALID_PROMO'})
 
     selected_language = _UNSET
     if message.text == '🇷🇺':
@@ -89,6 +95,28 @@ async def start_command(
             await data['lang_message'].delete()
 
     async with create_session() as session:
+        if promo:
+            is_promo_activated = (await session.execute(
+                select(Metric)
+                .where(
+                    Metric.name == 'system.promocode.activated',
+                    Metric.value.contains(promo[0])
+                )
+            )).scalar_one_or_none()
+
+            if not is_promo_activated:
+                await state.update_data({'activate_promo': promo})
+
+                metric = Metric(
+                    connected_user_id=message.from_user.id,
+                    name='system.promocode.activated',
+                    value=promo[0]
+                )
+                session.add(metric)
+                await session.commit()
+            else:
+                await state.update_data({'activate_promo_error': 'ALREADY_ACTIVATED'})
+
         user = await update_user(
             id=message.from_user.id, session=session,
             first_name=message.from_user.first_name,
@@ -119,7 +147,7 @@ async def start_command(
             reply_markup=start_keyboard()
         )
     else:
-        await send_main_menu(message.bot, message.chat.id, user)
+        await send_main_menu(message.bot, message.chat.id, user, state)
     await emoji.delete()
 
 
@@ -174,6 +202,7 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
             await instruction_message.delete()
 
         if not _had_been_enabled:
+
             if user.subscriber_until is None:
                 await update_user(
                     id=user.id,
@@ -214,11 +243,11 @@ async def initial_setup_select_mode_callback(query: CallbackQuery, state: FSMCon
 
         if action == 'standard':
             await update_user(id=user.id, session=session, privacy_mode=False)
-            await send_main_menu(query.bot, query.message.chat.id, user)
+            await send_main_menu(query.bot, query.message.chat.id, user, state)
             await query.message.delete()
         elif action == 'privacy':
             await update_user(id=user.id, session=session, privacy_mode=True)
-            await send_main_menu(query.bot, query.message.chat.id, user)
+            await send_main_menu(query.bot, query.message.chat.id, user, state)
             await query.message.delete()
         else:
             await query.message.edit_text(

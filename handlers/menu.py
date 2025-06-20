@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
@@ -10,12 +10,27 @@ from database import create_session
 from database.models import User
 from keyboards import main_menu_keyboard
 from keyboards.menu import profile_keyboard, referrals_keyboard
-from utils import get_user
+from utils import get_user, update_user
 
 router = Router()
 
 
-async def send_main_menu(bot: Bot, chat_id: int, user: User):
+async def send_main_menu(bot: Bot, chat_id: int, user: User, state: FSMContext = None):
+    if state:
+        data = await state.get_data()
+
+        if promo := data.get('activate_promo'):
+            async with create_session() as session:
+                new_until = max(user.subscriber_until, datetime.now()) + timedelta(days=promo[1])
+                user = await update_user(id=user.id, session=session, subscription_until=new_until)
+                await session.commit()
+            await state.update_data({'activate_promo': None})
+            await bot.send_message(chat_id=chat_id, text=_("PROMO_ACTIVATED").format(days=promo[1]))
+        elif promo_error := data.get('activate_promo_error'):
+            await bot.send_message(chat_id=chat_id, text=_("PROMO_ERROR_" + promo_error))
+            await state.update_data({'activate_promo_error': None})
+
+
     await bot.send_photo(
         chat_id,
         photo=FSInputFile(_("MAIN_MENU_IMAGE")),

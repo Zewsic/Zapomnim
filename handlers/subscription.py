@@ -28,7 +28,7 @@ async def send_subscription_add(bot: Bot, chat_id: int, user: User, state: FSMCo
     )
 
     await state.set_state(PaymentState.pay_with_stars)
-    await state.update_data({'message': msg})
+    await state.update_data({'message_id': msg.message_id})
 
 
 @router.callback_query(F.data == 'subscription_add')
@@ -84,8 +84,8 @@ async def payment_success(message: Message, state: FSMContext):
         emoji = await message.answer('💸')
         await asyncio.sleep(0.7)
 
-        if (msg := (await state.get_data()).get('message')) is not None:
-            await msg.delete()
+        if (msg_id := (await state.get_data()).get('message_id')) is not None:
+            await message.bot.delete_message(chat_id=message.chat.id, message_id=msg_id)
 
         await message.answer(
             _("SUBSCRIPTION_SUCCESS").format(date=new_until.strftime('%d.%m.%Y')),

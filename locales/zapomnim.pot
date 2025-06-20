@@ -59,6 +59,12 @@ msgstr ""
 msgid "SUPPORT_LINK"
 msgstr ""
 
+msgid "CHANNEL_BUTTON"
+msgstr ""
+
+msgid "CHANNEL_LINK"
+msgstr ""
+
 # ## ------------------------------------------------- ###
 # ## --------------------- OTHER --------------------- ###
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
@@ -636,4 +642,11 @@ msgstr ""
 msgid "EDITED_MESSAGES_SETTINGS_SILENT_MODE_DESCRIPTION"
 msgstr ""
 
+msgid "PROMO_ACTIVATED"
+msgstr ""
 
+msgid "PROMO_ERROR_INVALID_PROMO"
+msgstr ""
+
+msgid "PROMO_ERROR_ALREADY_ACTIVATED"
+msgstr ""

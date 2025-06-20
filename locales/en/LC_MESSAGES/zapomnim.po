@@ -88,6 +88,13 @@ msgstr "🆘 Support"
 msgid "SUPPORT_LINK"
 msgstr "https://t.me/zewsic"
 
+msgid "CHANNEL_BUTTON"
+msgstr "📣 Channel"
+
+msgid "CHANNEL_LINK"
+msgstr "https://t.me/zewblog"
+
+
 # ## ------------------------------------------------- ###
 # ## --------------------- OTHER --------------------- ###
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
@@ -134,9 +141,9 @@ msgstr ""
 "\n"
 "<b>The following features are unavailable in Private Mode:</b>\n"
 "- AI chat analysis\n"
-"- Anti-fraud protection\n"
+"- Anti-fraud protection (in development)\n"
 "- Chat statistics\n"
-"- Chat history export\n"
+"- Chat history export (in development)\n"
 "\n"
 "Messages sent in private mode can only be deleted — export is not possible.\n"
 "\n"
@@ -610,7 +617,7 @@ msgstr "📌 Invite Users"
 
 msgid "REFERRALS_SHARE_TEXT"
 msgstr "**Zapomnim** is a unique solution for protecting your Telegram chats!\n\n"
-"The bot helps you **recover** lost messages, **analyzes** chats for fraud attempts, and **checks** contacts for reliability.\n\n"
+"The bot helps you **recover** lost messages, **analyzes** chats for fraud attempts (in development), and **checks** contacts for reliability.\n\n"
 "**Try it now**: https://t.me/zapomnim_bot?start=ref{user_id}"
 
 
@@ -773,3 +780,12 @@ msgstr "November"
 
 msgid "DECEMBER"
 msgstr "December"
+
+msgid "PROMO_ACTIVATED"
+msgstr "<b>✅ Promo code successfully activated!</b>\n{days} days have been added to your subscription."
+
+msgid "PROMO_ERROR_INVALID_PROMO"
+msgstr "<b>⛔️ Invalid promo code.</b>"
+
+msgid "PROMO_ERROR_ALREADY_ACTIVATED"
+msgstr "<b>⛔️ Promo code has already been activated.</b>"

@@ -4,11 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f68afd11-622a-4ab0-bbbe-41fae5f95094" name="Changes" comment="- AI Chat Analyzer">
-      <change afterPath="$PROJECT_DIR$/handlers/features/statistics.old.py" afterDir="false" />
+    <list default="true" id="f68afd11-622a-4ab0-bbbe-41fae5f95094" name="Changes" comment="- add silent mode">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/features/statistics.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/features/statistics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/messages.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/messages.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/initial_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/initial_setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/subscription.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/subscription.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keyboards/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/keyboards/menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.mo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/zapomnim.pot" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zapomnim.pot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/security.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/security.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +64,7 @@
     "Python.main.executor": "Run",
     "Python.mirror.executor": "Run",
     "Python.patcher.executor": "Run",
+    "Python.security.executor": "Run",
     "Python.webhook.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -212,7 +221,8 @@
       <workItem from="1749768440315" duration="8283000" />
       <workItem from="1749930180925" duration="4007000" />
       <workItem from="1750004669822" duration="1936000" />
-      <workItem from="1750067828736" duration="1621000" />
+      <workItem from="1750067828736" duration="21258000" />
+      <workItem from="1750410884140" duration="6467000" />
     </task>
     <task id="LOCAL-00001" summary="Added:&#10;- Saving Messages&#10;- Notifications about message removing&#10;- Notifications about message editing">
       <option name="closed" value="true" />
@@ -342,7 +352,39 @@
       <option name="project" value="LOCAL" />
       <updated>1749930200265</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="- Statistics Refactoring">
+      <option name="closed" value="true" />
+      <created>1750180816270</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1750180816270</updated>
+    </task>
+    <task id="LOCAL-00018" summary="- add metrics">
+      <option name="closed" value="true" />
+      <created>1750182373082</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1750182373082</updated>
+    </task>
+    <task id="LOCAL-00019" summary="- add silent mode">
+      <option name="closed" value="true" />
+      <created>1750183765680</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1750183765680</updated>
+    </task>
+    <task id="LOCAL-00020" summary="- add silent mode">
+      <option name="closed" value="true" />
+      <created>1750185205881</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1750185205881</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -376,12 +418,16 @@
     <MESSAGE value="- Several Subscriptions" />
     <MESSAGE value="- Fix Prices" />
     <MESSAGE value="- AI Chat Analyzer" />
-    <option name="LAST_COMMIT_MESSAGE" value="- AI Chat Analyzer" />
+    <MESSAGE value="- Statistics Refactoring" />
+    <MESSAGE value="- add metrics" />
+    <MESSAGE value="- add silent mode" />
+    <option name="LAST_COMMIT_MESSAGE" value="- add silent mode" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/base$Run_Main.coverage" NAME="Run Main Coverage Results" MODIFIED="1749774808825" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/base$Run_Main.coverage" NAME="Run Main Coverage Results" MODIFIED="1750417011324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/base$mirror.coverage" NAME="mirror Coverage Results" MODIFIED="1747186150065" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/base$patcher.coverage" NAME="patcher Coverage Results" MODIFIED="1747190356681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
+    <SUITE FILE_PATH="coverage/base$security.coverage" NAME="security Coverage Results" MODIFIED="1750416739898" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/base$webhook.coverage" NAME="webhook Coverage Results" MODIFIED="1747177276548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/base$main.coverage" NAME="main Coverage Results" MODIFIED="1747178240422" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

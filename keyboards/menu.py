@@ -15,7 +15,10 @@ def main_menu_keyboard() -> InlineKeyboardMarkup:
             InlineKeyboardButton(text=_("SETTINGS_BUTTON"), callback_data='settings'),
             InlineKeyboardButton(text=_("PROFILE_BUTTON"), callback_data='profile'),
         ],
-        [InlineKeyboardButton(text=_("SUPPORT_BUTTON"), url=_("SUPPORT_LINK"))]
+        [
+            InlineKeyboardButton(text=_("SUPPORT_BUTTON"), url=_("SUPPORT_LINK")),
+            InlineKeyboardButton(text=_("CHANNEL_BUTTON"), url=_("CHANNEL_LINK")),
+        ]
     ])
 
 

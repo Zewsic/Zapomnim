@@ -90,6 +90,12 @@ msgstr "🆘 Помощь"
 msgid "SUPPORT_LINK"
 msgstr "https://t.me/zewsic"
 
+msgid "CHANNEL_BUTTON"
+msgstr "📣 Канал"
+
+msgid "CHANNEL_LINK"
+msgstr "https://t.me/zewblog"
+
 msgid "ONLY_FOR_TELEGRAM_PREMIUM"
 msgstr ""
 "😢 К сожалению, данный бот доступен только пользователям с подпиской "
@@ -138,9 +144,9 @@ msgstr ""
 "\n"
 "<b>В приватном режиме недоступны следующие функции:</b>\n"
 "- ИИ-анализ чатов\n"
-"- Защита от мошенничества\n"
+"- Защита от мошенничества (в разработке)\n"
 "- Статистика чатов\n"
-"- Экспорт истории чата\n"
+"- Экспорт истории чата (в разработке)\n"
 "\n"
 "Сообщения, отправленные в приватном режиме, невозможно экспортировать.\n"
 "\n"
@@ -796,4 +802,15 @@ msgstr "Сообщения об удалении будут приходить �
 
 msgid "EDITED_MESSAGES_SETTINGS_SILENT_MODE_DESCRIPTION"
 msgstr "Сообщения об изменениях будут приходить без уведомлений (тихо)."
+
+msgid "PROMO_ACTIVATED"
+msgstr ""
+"<b>✅ Промокод успешно активирован!</b>\n"
+"К вашей подписке добавлено {days} дней."
+
+msgid "PROMO_ERROR_INVALID_PROMO"
+msgstr "<b>⛔️ Неверный промокод.</b>"
+
+msgid "PROMO_ERROR_ALREADY_ACTIVATED"
+msgstr "<b>⛔️ Промокод уже был активирован.</b>"
 
