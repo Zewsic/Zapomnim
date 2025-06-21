@@ -4,21 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f68afd11-622a-4ab0-bbbe-41fae5f95094" name="Changes" comment="- promocodes">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="f68afd11-622a-4ab0-bbbe-41fae5f95094" name="Changes" comment="- new buy menu">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/initial_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/initial_setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/subscription.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/subscription.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keyboards/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/keyboards/menu.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/keyboards/subscription.py" beforeDir="false" afterPath="$PROJECT_DIR$/keyboards/subscription.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en/LC_MESSAGES/zapomnim.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/zapomnim.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/zapomnim.pot" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zapomnim.pot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/security.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/security.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,7 +212,7 @@
       <workItem from="1749930180925" duration="4007000" />
       <workItem from="1750004669822" duration="1936000" />
       <workItem from="1750067828736" duration="21258000" />
-      <workItem from="1750410884140" duration="18750000" />
+      <workItem from="1750410884140" duration="21499000" />
     </task>
     <task id="LOCAL-00001" summary="Added:&#10;- Saving Messages&#10;- Notifications about message removing&#10;- Notifications about message editing">
       <option name="closed" value="true" />
@@ -394,7 +382,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750417690978</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="- new buy menu">
+      <option name="closed" value="true" />
+      <created>1750438897632</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1750438897632</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -432,7 +428,8 @@
     <MESSAGE value="- add metrics" />
     <MESSAGE value="- add silent mode" />
     <MESSAGE value="- promocodes" />
-    <option name="LAST_COMMIT_MESSAGE" value="- promocodes" />
+    <MESSAGE value="- new buy menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="- new buy menu" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/base$Run_Main.coverage" NAME="Run Main Coverage Results" MODIFIED="1750436708602" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
