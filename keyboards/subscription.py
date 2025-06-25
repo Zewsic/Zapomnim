@@ -25,7 +25,7 @@ async def make_payment_url(bot: Bot, user_id, selected_period: int, selected_pay
             description=_('SUBSCRIPTION_DESC').format(days=selected_period),
             payload=f"sub_{user_id}_{selected_period}",
             currency="RUB",
-            prices=[LabeledPrice(label=_('SUBSCRIPTION_LABEL'), amount=price)],
+            prices=[LabeledPrice(label=_('SUBSCRIPTION_DESC').format(days=selected_period), amount=price)],
             provider_token="390540012:LIVE:72415",
         )
 
