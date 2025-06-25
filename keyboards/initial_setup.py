@@ -32,3 +32,8 @@ def bot_mode_keyboard() -> InlineKeyboardMarkup:
             InlineKeyboardButton(text=_("BOT_MODE_PRIVACY"), callback_data='initial_setup_select_mode:privacy'),
         ],
     ])
+
+def privacy_policy_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=_("AGREE"), callback_data='start:agree_privacy')]
+    ])

@@ -29,6 +29,8 @@ class User(Base):
     referral_id: Mapped[int | None] = mapped_column(BIGINT, ForeignKey('users.id'), default=None)
     referrals_income: Mapped[int] = mapped_column(Integer, default=0)
 
+    privacy_agreed: Mapped[datetime | None]
+
     @property
     def has_subscription(self) -> bool:
         """Return True if the subscription is still active."""

@@ -678,3 +678,11 @@ msgstr ""
 msgid "SUBSCRIPTION_GO_PAY"
 msgstr ""
 
+msgid "PRIVACY_URL"
+msgstr ""
+
+msgid "PRIVACY_TEXT"
+msgstr ""
+
+msgid "AGREE"
+msgstr ""

@@ -24,6 +24,7 @@ async def update_user(
         privacy_mode: bool = _UNSET,
         referral_id: int = _UNSET,
         referrals_income: int = _UNSET,
+        privacy_agreed: Optional[datetime] = _UNSET,
 
 ) -> User:
     user = User(id=id)
@@ -51,6 +52,8 @@ async def update_user(
     if referral_id is not _UNSET:
         if await session.get(User, id) is None and await session.get(User, referral_id) is not None:
             user.referral_id = referral_id
+    if privacy_agreed is not _UNSET:
+        user.privacy_agreed = privacy_agreed
 
     user = await session.merge(user)
     await save_to_redis(user)

@@ -9,7 +9,26 @@ from database.models import User
 
 async def make_payment_url(bot: Bot, user_id, selected_period: int, selected_payment_method: str):
     if selected_payment_method == 'youkassa':
-        return 'https://google.com'
+        if selected_period == 30:
+            price = 199
+        elif selected_period == 90:
+            price = 569
+        elif selected_period == 180:
+            price = 1079
+        elif selected_period == 360:
+            price = 2029
+        else:
+            price = 9999
+
+        return await bot.create_invoice_link(
+            title=_('SUBSCRIPTION_TITLE').format(days=selected_period),
+            description=_('SUBSCRIPTION_DESC').format(days=selected_period),
+            payload=f"sub_{user_id}_{selected_period}",
+            currency="RUB",
+            prices=[LabeledPrice(label=_('SUBSCRIPTION_LABEL'), amount=price)],
+            provider_token="390540012:LIVE:72415",
+        )
+
     elif selected_payment_method == 'stars':
         if selected_period == 30:
             price = 400

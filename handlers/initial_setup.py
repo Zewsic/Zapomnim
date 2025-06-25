@@ -6,6 +6,7 @@ from aiogram.filters import CommandStart, StateFilter, and_f, or_f, Command, Com
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, FSInputFile, CallbackQuery, BusinessConnection
 from aiogram.utils.i18n import gettext as _
+from pyparsing import with_class
 from sqlalchemy import select
 
 from config import StartState
@@ -15,7 +16,7 @@ from handlers.features.static_chat_analyzer import send_STA
 from handlers.menu import send_main_menu, send_profile
 from handlers.settings import send_settings
 from keyboards import start_keyboard, continue_keyboard, language_keyboard
-from keyboards.initial_setup import bot_mode_keyboard
+from keyboards.initial_setup import bot_mode_keyboard, privacy_policy_keyboard
 from utils import update_user, get_user, _UNSET, PatchedI18nMiddleware
 from utils.security import check_promocode
 
@@ -157,13 +158,23 @@ async def start_callback(query: CallbackQuery, state: FSMContext):
         await query.answer(_("ONLY_FOR_TELEGRAM_PREMIUM"), show_alert=True)
         return
 
-    await state.set_state(StartState.connect_business_bot)
-    await query.message.edit_reply_markup(reply_markup=None)
-    emoji = await query.message.answer('🚀')
+    async with create_session() as session:
+        user = await get_user(session, id=query.from_user.id)
+        if user.privacy_agreed is None:
+            if 'agree_privacy' in query.data:
+                await update_user(id=query.from_user.id, session=session, privacy_agreed=datetime.now())
+            else:
+                await query.message.delete()
+                await query.message.answer(_("PRIVACY_TEXT").format(link=_("PRIVACY_URL")), reply_markup=privacy_policy_keyboard())
+                return
+        else:
+            await state.set_state(StartState.connect_business_bot)
+            await query.message.edit_reply_markup(reply_markup=None)
+            emoji = await query.message.answer('🚀')
 
-    await asyncio.sleep(1)
+            await asyncio.sleep(1)
+            await emoji.delete()
     await query.message.delete()
-    await emoji.delete()
 
     instruction_message = await query.message.answer_photo(
         photo=FSInputFile(_("CONNECT_BUSINESS_BOT_IMAGE")),

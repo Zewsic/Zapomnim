@@ -842,3 +842,16 @@ msgstr "12 месяцев"
 msgid "SUBSCRIPTION_GO_PAY"
 msgstr "👉 Перейти к оплате 👈"
 
+msgid "PRIVACY_URL"
+msgstr ""
+"https://telegra.ph/Soglasie-na-obrabotku-personalnyh-dannyh-dlya-"
+"posetitelej-sajta-IP-Sabirova-R-S-INN-773467178714-06-25"
+
+msgid "PRIVACY_TEXT"
+msgstr ""
+"🧑‍💻 <b>Используя наш сервис вы соглашаетесь с <a "
+"href=\"{link}\">политикой обработки персональных данных</a>.</b>"
+
+msgid "AGREE"
+msgstr "✅ Согласен."
+

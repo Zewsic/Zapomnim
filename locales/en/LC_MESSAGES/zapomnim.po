@@ -818,3 +818,12 @@ msgstr "<b>⛔️ Invalid promo code.</b>"
 
 msgid "PROMO_ERROR_ALREADY_ACTIVATED"
 msgstr "<b>⛔️ Promo code has already been activated.</b>"
+
+msgid "PRIVACY_URL"
+msgstr "https://telegra.ph/Soglasie-na-obrabotku-personalnyh-dannyh-dlya-posetitelej-sajta-IP-Sabirova-R-S-INN-773467178714-06-25"
+
+msgid "PRIVACY_TEXT"
+msgstr "🧑‍💻 <b>By using our service, you agree to the <a href=\"{link}\">personal data processing policy</a>.</b>"
+
+msgid "AGREE"
+msgstr "✅ Agree."
