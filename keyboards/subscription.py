@@ -10,15 +10,15 @@ from database.models import User
 async def make_payment_url(bot: Bot, user_id, selected_period: int, selected_payment_method: str):
     if selected_payment_method == 'youkassa':
         if selected_period == 30:
-            price = 199
+            price = 19900
         elif selected_period == 90:
-            price = 569
+            price = 56900
         elif selected_period == 180:
-            price = 1079
+            price = 107900
         elif selected_period == 360:
-            price = 2029
+            price = 202900
         else:
-            price = 9999
+            price = 999900
 
         return await bot.create_invoice_link(
             title=_('SUBSCRIPTION_TITLE').format(days=selected_period),
