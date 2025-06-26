@@ -1,3 +1,4 @@
+import json
 from typing import Any
 
 from aiogram import Bot
@@ -27,6 +28,26 @@ async def make_payment_url(bot: Bot, user_id, selected_period: int, selected_pay
             currency="RUB",
             prices=[LabeledPrice(label=_('SUBSCRIPTION_DESC').format(days=selected_period), amount=price)],
             provider_token="390540012:LIVE:72415",
+            need_email=True,
+            send_email_to_provider=True,
+            provider_data=json.dumps({
+                'receipt': {
+                    'customer': {},
+                    'items': [
+                        {
+                            'description': _('SUBSCRIPTION_DESC').format(days=selected_period),
+                            'quantity': 1,
+                            'amount': {
+                                'currency': 'RUB',
+                                'amount': price / 100,
+                            },
+                            'vat_code': 1,
+                            'payment_mode': 'full_prepayment',
+                            'payment_subject': 'commodity'
+                        }
+                    ],
+                }
+            })
         )
 
     elif selected_payment_method == 'stars':
