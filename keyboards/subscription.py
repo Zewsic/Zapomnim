@@ -39,7 +39,7 @@ async def make_payment_url(bot: Bot, user_id, selected_period: int, selected_pay
                             'quantity': 1,
                             'amount': {
                                 'currency': 'RUB',
-                                'amount': price / 100,
+                                'amount': price,
                             },
                             'vat_code': 1,
                             'payment_mode': 'full_prepayment',
