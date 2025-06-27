@@ -8,7 +8,7 @@ async def set_bot_commands(bot: Bot):
         BotCommand(command='analyze', description='Analyze chat with AI'),
         BotCommand(command='profile', description='Open user profile'),
         BotCommand(command='settings', description='Open bot settings'),
-        BotCommand(command='privacy', description='Show Privacy Policy'),
+        # BotCommand(command='privacy', description='Show Privacy Policy'),
     ], language_code='en')
 
     await bot.set_my_commands(commands=[
@@ -16,5 +16,5 @@ async def set_bot_commands(bot: Bot):
         BotCommand(command='analyze', description='Проанализировать чат'),
         BotCommand(command='profile', description='Открыть профиль пользователя'),
         BotCommand(command='settings', description='Открыть настройки'),
-        BotCommand(command='privacy', description='Политика обработки персональных данных'),
+        # BotCommand(command='privacy', description='Политика обработки персональных данных'),
     ], language_code='ru')
