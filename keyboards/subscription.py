@@ -10,45 +10,41 @@ from database.models import User
 
 async def make_payment_url(bot: Bot, user_id, selected_period: int, selected_payment_method: str):
     if selected_payment_method == 'youkassa':
-        if selected_period == 30:
-            price = 19900
-        elif selected_period == 90:
-            price = 56900
-        elif selected_period == 180:
-            price = 107900
-        elif selected_period == 360:
-            price = 202900
-        else:
-            price = 999900
+        price_rub = {  # цены в РУБЛЯХ
+            30: 199,
+            90: 569,
+            180: 1079,
+            360: 2029,
+        }.get(selected_period, 9999)  # рубли
+        price_kop = price_rub * 100  # копейки для Telegram
+
+        receipt_item = {
+            'description': _('SUBSCRIPTION_DESC').format(days=selected_period),
+            'quantity': '1.00',
+            'amount': {
+                'value': f'{price_rub:.2f}',  # строка '199.00'
+                'currency': 'RUB',
+            },
+            'vat_code': 1,
+            'payment_mode': 'full_prepayment',
+            'payment_subject': 'commodity'
+        }
+
+        provider_data = json.dumps({'receipt': {'customer': {}, 'items': [receipt_item]}})
 
         return await bot.create_invoice_link(
             title=_('SUBSCRIPTION_TITLE').format(days=selected_period),
             description=_('SUBSCRIPTION_DESC').format(days=selected_period),
             payload=f"sub_{user_id}_{selected_period}",
             currency="RUB",
-            prices=[LabeledPrice(label=_('SUBSCRIPTION_DESC').format(days=selected_period), amount=price)],
+            prices=[LabeledPrice(label=_('SUBSCRIPTION_DESC').format(days=selected_period),
+                                 amount=price_kop)],
             provider_token="390540012:LIVE:72415",
             need_email=True,
             send_email_to_provider=True,
-            provider_data=json.dumps({
-                'receipt': {
-                    'customer': {},
-                    'items': [
-                        {
-                            'description': _('SUBSCRIPTION_DESC').format(days=selected_period),
-                            'quantity': 1,
-                            'amount': {
-                                'currency': 'RUB',
-                                'amount': price,
-                            },
-                            'vat_code': 1,
-                            'payment_mode': 'full_prepayment',
-                            'payment_subject': 'commodity'
-                        }
-                    ],
-                }
-            })
+            provider_data=provider_data,
         )
+
 
     elif selected_payment_method == 'stars':
         if selected_period == 30:
