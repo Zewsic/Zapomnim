@@ -187,7 +187,7 @@ async def on_edit_messages(event: Message):
             username=event.chat.username
         )
 
-        if new_result[0] == 'voice' and new_result[2].startswith('🎤'):
+        if new_result[0] == 'voice' and (new_msg.text.startswith('🎤') or old_msg.text.startswith('🎤')):
             return
 
         if user.id != new_msg.persona.id:
