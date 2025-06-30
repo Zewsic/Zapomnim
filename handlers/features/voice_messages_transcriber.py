@@ -69,9 +69,6 @@ async def transcribe_voice_messages(user: User, message: Message, session: Async
     if not enabled:
         return
 
-    IGNORE_CHANGES_KEY = f'ignore_changes:{user.id}:{message.message_id}'
-    await RedisSession.set(IGNORE_CHANGES_KEY, 1, ex=360)
-
     """Основная точка входа: конвертация, транскрипция, ответ."""
     watermark = hlink("(?)", f"https://t.me/zapomnim_bot?start=ref{message.from_user.id}") if use_watermark else ''
     await message.edit_text(_("VOICE_TRANSCRIBE_IN_PROCESS_TEXT").format(watermark=watermark))
@@ -103,8 +100,6 @@ async def transcribe_voice_messages(user: User, message: Message, session: Async
     except Exception:
         logger.exception("Transcription error")
         await message.edit_text(_("VOICE_TRANSCRIBE_ERROR_TEXT").format(watermark=watermark))
-        await asyncio.sleep(5)
-        await RedisSession.delete(IGNORE_CHANGES_KEY)
         return
     finally:
         for path in (src, dst):
@@ -119,5 +114,3 @@ async def transcribe_voice_messages(user: User, message: Message, session: Async
     await message.edit_text(
         f'<blockquote expandable><i>{cleaned}. {watermark}</i></blockquote>'
     )
-    await asyncio.sleep(5)
-    await RedisSession.delete(IGNORE_CHANGES_KEY)
