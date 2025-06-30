@@ -313,6 +313,10 @@ async def on_statistics_open(callback: CallbackQuery, state: FSMContext):
             await callback.answer("Хуйня какая-то", show_alert=True)
             return
 
+        if user.privacy_mode:
+            await callback.answer(_("UNAVAILABLE_IN_PRIVACY_MODE"), show_alert=True)
+            return
+
         metric = Metric(
             connected_user_id=user.id if not user.privacy_mode else None,
             name='metrics.statistic',

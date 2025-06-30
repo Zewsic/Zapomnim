@@ -1,5 +1,6 @@
 from typing import Final
 
+import aiofiles
 from aiogram import Bot
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
@@ -60,6 +61,6 @@ class TelegramDataUtils():
         return path
 
     @staticmethod
-    def get_file(file: File) -> bytes:
-        with open(TelegramDataUtils.get_normal_file_path(file), 'rb') as f:
-            return f.read()
+    async def get_file(file: File) -> bytes:
+        async with aiofiles.open(TelegramDataUtils.get_normal_file_path(file), 'rb') as f:
+            return await f.read()

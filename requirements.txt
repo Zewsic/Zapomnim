@@ -11,3 +11,5 @@ asyncpg
 cryptography
 matplotlib
 openai
+yookassa
+aiofiles

@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 from datetime import datetime, timedelta
+from typing import Any, Coroutine
 
 from aiogram import Bot, F, Router
 from aiogram.filters import and_f, StateFilter
@@ -49,9 +50,11 @@ class DialogueData(BaseModel):
     dialogue_topics: list[DialogueTopic]
 
 
-async def send_request(messages: str, language: str = '', high_mode: bool = False) -> tuple[DialogueData, ResponseUsage]:
+async def send_request(messages: str, language: str = '', high_mode: bool = False) -> tuple[
+    DialogueData, dict[str, int | str]]:
+    model = "o4-mini" if high_mode else "gpt-4.1-nano"
     response = await client.responses.create(
-        model="o4-mini" if high_mode else "gpt-4.1-nano",
+        model=model,
         input=[
             {
                 "role": "developer",
@@ -169,7 +172,11 @@ async def send_request(messages: str, language: str = '', high_mode: bool = Fals
     )
 
     raw = response.output[int(high_mode)].content[0].text
-    return DialogueData.model_validate_json(raw), response.usage
+    return DialogueData.model_validate_json(raw), {
+        "input_tokens": response.usage.input_tokens,
+        "output_tokens": response.usage.output_tokens,
+        "model": model
+    }
 
 
 async def make_request(messages: list[RestoredMessage], user: User, high_mode: bool):
@@ -261,7 +268,7 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
         connected_user_id=user.id,
         chat_id=persona.id if not user.privacy_mode else None,
         name='system.static_chat_analyzer.' + ('high' if high_mode else 'low'),
-        value=usage.model_dump_json()
+        value=json.dumps(usage)
     )
     session.add(metric)
     await session.commit()
@@ -275,6 +282,13 @@ async def send_STA(bot: Bot, chat_id: int, user: User, state: FSMContext):
             chat_id,
             text=_("SUBSCRIPTION_REQUIRED_ERROR"),
             reply_markup=continue_keyboard('profile'),
+        )
+        return
+    if user.privacy_mode:
+        await bot.send_message(
+            chat_id,
+            text=_("UNAVAILABLE_IN_PRIVACY_MODE"),
+            reply_markup=continue_keyboard('menu'),
         )
         return
 
@@ -293,6 +307,9 @@ async def send_STA(bot: Bot, chat_id: int, user: User, state: FSMContext):
 async def sta_callback(callback_query: CallbackQuery, state: FSMContext):
     async with create_session() as session:
         user = await get_user(session, id=callback_query.from_user.id)
+        if user.privacy_mode:
+            await callback_query.answer(_("UNAVAILABLE_IN_PRIVACY_MODE"), show_alert=True)
+            return
     await send_STA(callback_query.bot, callback_query.message.chat.id, user, state=state)
     await callback_query.message.delete()
 
@@ -300,7 +317,7 @@ async def sta_callback(callback_query: CallbackQuery, state: FSMContext):
 @router.message(and_f(F.user_shared, StateFilter(STA_State.select_user)))
 async def on_chat_shared(message: Message, state: FSMContext):
     data = await state.get_data()
-    m = data.get('message_id')
+    m: int = data.get('message_id')
     try:
         await message.bot.delete_message(chat_id=message.chat.id, message_id=m)
     except:
@@ -311,12 +328,12 @@ async def on_chat_shared(message: Message, state: FSMContext):
 
         persona = await get_persona(session, message.user_shared.user_id)
         if persona is None:
-            m = await message.answer(
+            msg = await message.answer(
                 text=_("STA_INVALID_CHAT_ERROR"),
                 reply_markup=STA_keyboard(),
             )
 
-            await state.update_data({'message_id': m.message_id})
+            await state.update_data({'message_id': msg.message_id})
             return
 
         task = asyncio.create_task(process_analysis(persona, user, session))
@@ -335,20 +352,20 @@ async def on_chat_shared(message: Message, state: FSMContext):
 
         result = task.result()
         if result == -1:
-            m = await message.answer(
+            msg = await message.answer(
                 text=_("STA_INVALID_CHAT_ERROR"),
                 reply_markup=STA_keyboard(),
             )
 
-            await state.update_data({'message_id': m.message_id})
+            await state.update_data({'message_id': msg.message_id})
             return
         elif result is None:
-            m = await message.answer(
+            msg = await message.answer(
                 text=_("STA_NO_MORE_REQUESTS_ERROR"),
                 reply_markup=STA_keyboard(),
             )
 
-            await state.update_data({'message_id': m.message_id})
+            await state.update_data({'message_id': msg.message_id})
             return
 
         await message.answer(result)
