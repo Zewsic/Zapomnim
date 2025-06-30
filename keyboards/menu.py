@@ -7,19 +7,27 @@ from aiogram.utils.i18n import gettext as _
 from database.models import User
 
 
-def main_menu_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=_("STATISTICS_BUTTON"), callback_data='statistics')],
-        [InlineKeyboardButton(text=_("STA_BUTTON"), callback_data='analyze')],
+def main_menu_keyboard(user: User) -> InlineKeyboardMarkup:
+    keyboard = []
+
+    if not user.privacy_mode:
+        keyboard.extend([
+            [InlineKeyboardButton(text=_("STATISTICS_BUTTON"), callback_data='statistics')],
+            [InlineKeyboardButton(text=_("STA_BUTTON"), callback_data='analyze')],
+        ])
+
+    keyboard.extend([
         [
             InlineKeyboardButton(text=_("PROFILE_BUTTON"), callback_data='profile'),
             InlineKeyboardButton(text=_("SETTINGS_BUTTON"), callback_data='settings'),
         ],
         [
-            InlineKeyboardButton(text=_("SUPPORT_BUTTON"), url=_("SUPPORT_LINK")),
+            # InlineKeyboardButton(text=_("SUPPORT_BUTTON"), url=_("SUPPORT_LINK")),
             InlineKeyboardButton(text=_("CHANNEL_BUTTON"), url=_("CHANNEL_LINK")),
         ]
     ])
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 
 async def profile_keyboard(bot: Bot, user: User) -> InlineKeyboardMarkup:

@@ -10,7 +10,7 @@ from aiogram.types import (
 )
 from aiogram.utils.i18n import gettext as _
 
-from database import create_session
+from database import create_session, RedisSession
 from database.models import Persona, Metric
 from utils import get_user
 from utils.messages import restore_last_messages, save_message, ContentType, RestoredMessage
@@ -153,7 +153,7 @@ async def on_edit_messages(event: Message):
     """
     bot: Bot = event.bot
 
-    async with create_session() as session:
+    async with (create_session() as session):
         user = await get_user(business_connection_id=event.business_connection_id, session=session)
         if not user or not user.is_enabled or user.is_banned:
             return
@@ -186,6 +186,10 @@ async def on_edit_messages(event: Message):
             last_name=event.chat.last_name,
             username=event.chat.username
         )
+
+        is_ignored = await RedisSession.get(f'ignore_changes:{user.id}:{event.message_id}')
+        if is_ignored is not None:
+            return
 
         if user.id != new_msg.persona.id:
             if not await user.get_bool('settings.edited_messages.enabled', session, default=True):

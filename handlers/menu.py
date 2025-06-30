@@ -41,7 +41,7 @@ async def send_main_menu(bot: Bot, chat_id: int, user: User, state: FSMContext =
             days=max((user.subscriber_until - datetime.now()).days, 0),
             bot_mode=_("BOT_MODE_PRIVACY" if user.privacy_mode else "BOT_MODE_STANDARD"),
         ),
-        reply_markup=main_menu_keyboard()
+        reply_markup=main_menu_keyboard(user)
     )
 
 

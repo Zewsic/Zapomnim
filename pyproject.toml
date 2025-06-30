@@ -10,6 +10,7 @@ dependencies = [
     "matplotlib>=3.10.3",
     "openai>=1.85.0",
     "python-dotenv>=1.1.0",
+    "yookassa>=3.5.0",
 ]
 
 [tool.ruff]

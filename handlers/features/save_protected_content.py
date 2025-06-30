@@ -102,7 +102,7 @@ async def process_protected_message(
     except TypeError:
         return
     if message.has_protected_content:
-        file_data = TelegramDataUtils.get_file(await message.bot.get_file(content))
+        file_data = await TelegramDataUtils.get_file(await message.bot.get_file(content))
 
         if not user.is_working:
             await message.bot.send_message(

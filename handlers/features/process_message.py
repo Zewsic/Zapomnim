@@ -1,3 +1,4 @@
+import asyncio
 
 from aiogram import Router
 from aiogram.fsm.context import FSMContext
@@ -5,6 +6,7 @@ from aiogram.types import Message
 
 from database import create_session
 from handlers.features.save_protected_content import process_protected_message
+from handlers.features.voice_messages_transcriber import transcribe_voice_messages
 from utils import get_user
 from utils.messages import save_message
 from utils.userdata import update_persona
@@ -30,8 +32,13 @@ async def new_message(message: Message, state: FSMContext):
             return
 
         # Save Message
-        await save_message(user, message, session)
+        content_type, content, text = await save_message(user, message, session)
 
         # Check Protected Content
         if message.reply_to_message:
             await process_protected_message(user, message.reply_to_message, session)
+
+        # Transcribe Voice Messages
+        if content_type == "voice" and message.from_user.id == user.id and not user.privacy_mode and not message.forward_from:
+            asyncio.create_task(transcribe_voice_messages(user, message, session))
+

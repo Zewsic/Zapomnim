@@ -15,6 +15,9 @@ def messages_settings_keyboard():
             InlineKeyboardButton(text=_("PROTECTED_MESSAGES_SETTINGS_BUTTON"), callback_data="protected_messages_settings"),
         ],
         [
+            InlineKeyboardButton(text=_("TRANSCRIBE_VOICE_MESSAGES_SETTINGS_BUTTON"), callback_data="transcribe_voice_messages_settings"),
+        ],
+        [
             InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data="settings"),
         ]
     ])
