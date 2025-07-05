@@ -14,3 +14,9 @@ def confirm_clear_keyboard(step: int) -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text=_("CONTINUE_BUTTON"), callback_data=f"clear_data_confirm:{step}")],
         [InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data="data_settings")]
     ])
+
+def back_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data="profile")]
+    ])
+

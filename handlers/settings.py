@@ -8,7 +8,7 @@ from database import create_session
 from database.models import User
 from keyboards.settings import settings_keyboard, messages_settings_keyboard, bot_mode_keyboard, confirm_mode_keyboard
 from utils import update_user, get_user
-from utils.messages import make_all_messages_private
+from utils.messages import make_all_messages_private, anonymize_metrics
 from utils.widgets import settings_widget, SettingsOption
 
 router = Router()
@@ -68,7 +68,10 @@ async def bot_mode_settings(callback_query: CallbackQuery, state: FSMContext):
             )
         elif action == 'privacy-confirm':
             await update_user(id=user.id, session=session, privacy_mode=True)
+
             await make_all_messages_private(user.id, session)
+            await anonymize_metrics(user.id, session)
+
             await callback_query.answer(_("BOT_CHANGE_OK"), show_alert=True)
             await settings(callback_query, state)
         else:

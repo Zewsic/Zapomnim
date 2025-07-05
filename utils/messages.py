@@ -7,7 +7,7 @@ from aiogram.types import Message
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.models import User, SavedMessage, Persona
+from database.models import User, SavedMessage, Persona, Metric
 from utils.security import (
     generate_privacy_key, generate_encryption_data,
     encrypt_message, decrypt_message
@@ -235,6 +235,21 @@ async def make_all_messages_private(
     )
 
     await session.commit()
+
+async def anonymize_metrics(user_id: int, session: AsyncSession):
+    await session.execute(
+        update(Metric)
+        .where(
+            Metric.connected_user_id == user_id,
+            Metric.name.in_([
+                'metrics.save_deleted_messages',
+                'metrics.save_edited_messages',
+                'metrics.save_protected_messages',
+                'metrics.transcribe_voice_message'
+            ]),
+        )
+        .values(connected_user_id=None, chat_id=None, message_id=None)
+    )
 
 
 async def load_chat_with_user(
