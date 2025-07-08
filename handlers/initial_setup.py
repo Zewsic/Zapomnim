@@ -143,7 +143,7 @@ async def start_command(
 
     if not user.language_code:
         lang_message = await message.answer(
-            "<b>Choose a language.</b>",
+            "<b>Choose a language / Выберите язык.</b>",
             reply_markup=language_keyboard()
         )
         await emoji.delete()
