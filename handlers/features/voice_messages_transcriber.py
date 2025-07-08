@@ -5,7 +5,9 @@ from io import BytesIO
 from pathlib import Path
 from typing import Tuple, Dict
 
-from aiogram.types import Message
+from aiogram import Router, F
+from aiogram.filters import or_f
+from aiogram.types import Message, LinkPreviewOptions
 from aiogram.utils.markdown import hlink
 from aiogram.utils.i18n import gettext as _
 from openai import AsyncOpenAI
@@ -19,6 +21,9 @@ from utils.botapi import TelegramDataUtils
 
 logger = logging.getLogger('Zapomnim/VoiceMessagesTranscriber')
 client = AsyncOpenAI()
+
+router = Router()
+
 
 async def get_text_from_voice(path, enhanced: bool) -> Tuple[str, Dict[str, int]]:
     """Отправляет аудио в OpenAI, возвращает текст и метрики."""
@@ -61,46 +66,35 @@ async def ffmpeg_convert(src: Path, dst: Path) -> None:
         raise RuntimeError("ffmpeg failed")
 
 
-async def transcribe_voice_messages(user: User, message: Message, session: AsyncSession) -> None:
-    enabled = await user.get_bool('settings.transcribe_voice_messages.enabled', session, default=True)
-    enhanced = await user.get_bool('settings.transcribe_voice_messages.enhanced', session, default=True)
-    use_watermark = await user.get_bool('settings.transcribe_voice_messages.watermark', session, default=True)
-
-    if not enabled:
-        return
-
-    """Основная точка входа: конвертация, транскрипция, ответ."""
-    watermark = hlink("(?)", f"https://t.me/zapomnim_bot?start=ref{message.from_user.id}") if use_watermark else ''
-    await message.edit_text(_("VOICE_TRANSCRIBE_IN_PROCESS_TEXT").format(watermark=watermark))
+async def _transcribe_voice_message(message: Message, enhanced: bool, watermark: str, reply_mode: bool) -> None:
+    if reply_mode:
+        status_message = await message.answer(
+            _("VOICE_TRANSCRIBE_IN_PROCESS_TEXT").format(watermark=watermark),
+            reply_to_message_id=message.message_id,
+            link_preview_options=LinkPreviewOptions(is_disabled=True)
+        )
+    else:
+        status_message = message
+        await status_message.edit_text(_("VOICE_TRANSCRIBE_IN_PROCESS_TEXT").format(watermark=watermark))
 
     # -- загрузка файла TG
-    file_info = await message.bot.get_file(message.voice.file_id)
+    to_transcribe = message.voice or message.video_note
+    file_info = await message.bot.get_file(to_transcribe.file_id)
     src = Path(TelegramDataUtils.get_normal_file_path(file_info))
-    dst = Path(f"cache/voice_{message.voice.file_id}.m4a")
+    dst = Path(f"cache/voice_{to_transcribe.file_id}.m4a")
 
     try:
         await ffmpeg_convert(src, dst)
         text, usage = await get_text_from_voice(dst, enhanced)
 
-        usage['audio_duration'] = message.voice.duration
-
-        async with create_session() as session:
-            user = await get_user(session, id=message.from_user.id)
-
-            metric = Metric(
-                connected_user_id=user.id if not user.privacy_mode else None,
-                chat_id=message.chat.id if not user.privacy_mode else None,
-                message_id=message.message_id if not user.privacy_mode else None,
-                name='metrics.transcribe_voice_message',
-                value=json.dumps(usage)
-            )
-            session.add(metric)
-            await session.commit()
-
+        usage['audio_duration'] = to_transcribe.duration
     except Exception:
         logger.exception("Transcription error")
-        await message.edit_text(_("VOICE_TRANSCRIBE_ERROR_TEXT").format(watermark=watermark))
-        return
+        await status_message.edit_text(
+            _("VOICE_TRANSCRIBE_ERROR_TEXT").format(watermark=watermark),
+            link_preview_options=LinkPreviewOptions(is_disabled=True)
+        )
+        return None
     finally:
         for path in (src, dst):
             try:
@@ -111,6 +105,56 @@ async def transcribe_voice_messages(user: User, message: Message, session: Async
     cleaned = text[:-1]
     if len(cleaned) > 1800:
         cleaned = cleaned[:1800] + ' ... '
-    await message.edit_text(
-        f'<blockquote expandable><i>{cleaned}. {watermark}</i></blockquote>'
+    await status_message.edit_text(
+        f'<blockquote expandable><i>{cleaned}. {watermark}</i></blockquote>',
+        link_preview_options=LinkPreviewOptions(is_disabled=True)
     )
+
+    return usage
+
+
+async def transcribe_voice_messages(user: User, message: Message, session: AsyncSession, reply_mode: bool) -> None:
+    enabled = await user.get_bool('settings.transcribe_voice_messages.enabled', session, default=True)
+    enhanced = await user.get_bool('settings.transcribe_voice_messages.enhanced', session, default=True)
+    use_watermark = await user.get_bool('settings.transcribe_voice_messages.watermark', session, default=True)
+
+    if not enabled:
+        return
+
+    watermark = hlink("(?)", f"https://t.me/zapomnim_bot?start=ref{message.from_user.id}") if use_watermark else ''
+
+    usage = await _transcribe_voice_message(message, enhanced, watermark, reply_mode)
+    if not usage:
+        return
+
+    async with create_session() as session:
+        user = await get_user(session, id=message.from_user.id)
+
+        metric = Metric(
+            connected_user_id=user.id if not user.privacy_mode else None,
+            chat_id=message.chat.id if not user.privacy_mode else None,
+            message_id=message.message_id if not user.privacy_mode else None,
+            name='metrics.transcribe_voice_message',
+            value=json.dumps(usage)
+        )
+        session.add(metric)
+        await session.commit()
+
+
+@router.message(or_f(F.voice, F.video_note))
+async def process_process_input_voice_message(message: Message):
+    usage = await _transcribe_voice_message(message, True, hlink("(?)", f"https://t.me/zapomnim_bot"), True)
+    if not usage:
+        return
+
+    metric_name = 'metrics.input.transcribe_voice_message' if message.chat.id == message.from_user.id else 'metrics.chat.transcribe_voice_message'
+
+    async with create_session() as session:
+        metric = Metric(
+            chat_id=message.chat.id,
+            message_id=message.message_id,
+            name=metric_name,
+            value=json.dumps(usage)
+        )
+        session.add(metric)
+        await session.commit()

@@ -1,5 +1,6 @@
 from aiogram import Bot
-from aiogram.types import BotCommand
+from aiogram.types import BotCommand, BotCommandScopeDefault, BotCommandScope, BotCommandScopeAllPrivateChats, \
+    BotCommandScopeAllGroupChats
 
 
 async def set_bot_commands(bot: Bot):
@@ -9,7 +10,8 @@ async def set_bot_commands(bot: Bot):
         BotCommand(command='profile', description='Open user profile'),
         BotCommand(command='settings', description='Open bot settings'),
         # BotCommand(command='legal', description='Show Legal Documents'),
-    ], language_code='en')
+    ], language_code='en', scope=BotCommandScopeAllPrivateChats())
+    await bot.set_my_commands(commands=[], language_code='en', scope=BotCommandScopeAllGroupChats())
 
     await bot.set_my_commands(commands=[
         BotCommand(command='start', description='Открыть главное меню'),
@@ -17,4 +19,5 @@ async def set_bot_commands(bot: Bot):
         BotCommand(command='profile', description='Открыть профиль пользователя'),
         BotCommand(command='settings', description='Открыть настройки'),
         # BotCommand(command='legal', description='Показать юридические документы'),
-    ], language_code='ru')
+    ], language_code='ru', scope=BotCommandScopeAllPrivateChats())
+    await bot.set_my_commands(commands=[], language_code='ru', scope=BotCommandScopeAllGroupChats())

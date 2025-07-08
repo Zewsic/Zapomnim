@@ -12,6 +12,7 @@ from sqlalchemy import select
 from config import StartState
 from database import create_session
 from database.models import Metric
+from handlers.features.chat_export import send_export_menu
 from handlers.features.static_chat_analyzer import send_STA
 from handlers.menu import send_main_menu, send_profile
 from handlers.settings import send_settings
@@ -22,6 +23,15 @@ from utils.security import check_promocode
 
 router = Router()
 
+
+@router.message(Command('export'))
+async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
+    async with create_session() as session:
+        user = await get_user(session, id=message.from_user.id)
+        if not user or not user.is_enabled:
+            return await start_command(message, state, i18n_middleware)
+
+        await send_export_menu(message.bot, message.chat.id, user, state)
 
 @router.message(Command('profile'))
 async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
