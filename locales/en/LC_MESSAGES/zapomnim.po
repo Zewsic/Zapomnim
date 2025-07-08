@@ -888,6 +888,12 @@ msgstr "Enable for outgoing"
 msgid "TRANSCRIBE_VOICE_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
 msgstr "Enable automatic transcription of your voice messages."
 
+msgid "TRANSCRIBE_VIDEO_MESSAGES_SETTINGS_ENABLED_NAME"
+msgstr "Enable for outgoing video-messages"
+
+msgid "TRANSCRIBE_VIDEO_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr "Transcribe also a video-messages"
+
 msgid "TRANSCRIBE_VOICE_MESSAGES_SETTINGS_ENHANCED_NAME"
 msgstr "Use Enhanced AI Processing"
 

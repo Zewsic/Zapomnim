@@ -924,6 +924,12 @@ msgstr "Включить для исходящих"
 msgid "TRANSCRIBE_VOICE_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
 msgstr "Включить автоматическую расшифровку ваших голосовых сообщений."
 
+msgid "TRANSCRIBE_VIDEO_MESSAGES_SETTINGS_ENABLED_NAME"
+msgstr "Включить для видео-сообщений"
+
+msgid "TRANSCRIBE_VIDEO_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"
+msgstr "Создавать текстовую расшифровку также для видео-сообщений"
+
 msgid "TRANSCRIBE_VOICE_MESSAGES_SETTINGS_ENHANCED_NAME"
 msgstr "Улучшать расшифровки"
 

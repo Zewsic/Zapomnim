@@ -271,6 +271,12 @@ async def transcribe_voice_messages_settings(callback: CallbackQuery) -> None:  
                 default=True
             ),
             SettingsOption(
+                option_id="enabled_video",
+                name=_("TRANSCRIBE_VIDEO_MESSAGES_SETTINGS_ENABLED_NAME"),
+                description=_("TRANSCRIBE_VIDEO_MESSAGES_SETTINGS_ENABLE_DESCRIPTION"),
+                default=True
+            ),
+            SettingsOption(
                 option_id="enhanced",
                 name=_("TRANSCRIBE_VOICE_MESSAGES_SETTINGS_ENHANCED_NAME"),
                 description=_("TRANSCRIBE_VOICE_MESSAGES_SETTINGS_ENHANCED_DESCRIPTION"),

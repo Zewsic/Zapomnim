@@ -74,8 +74,15 @@ async def _transcribe_voice_message(message: Message, enhanced: bool, watermark:
             link_preview_options=LinkPreviewOptions(is_disabled=True)
         )
     else:
-        status_message = message
-        await status_message.edit_text(_("VOICE_TRANSCRIBE_IN_PROCESS_TEXT").format(watermark=watermark))
+        try:
+            status_message = message
+            await status_message.edit_text(_("VOICE_TRANSCRIBE_IN_PROCESS_TEXT").format(watermark=watermark))
+        except:
+            status_message = await message.answer(
+                _("VOICE_TRANSCRIBE_IN_PROCESS_TEXT").format(watermark=watermark),
+                reply_to_message_id=message.message_id,
+                link_preview_options=LinkPreviewOptions(is_disabled=True)
+            )
 
     # -- загрузка файла TG
     to_transcribe = message.voice or message.video_note
@@ -115,10 +122,11 @@ async def _transcribe_voice_message(message: Message, enhanced: bool, watermark:
 
 async def transcribe_voice_messages(user: User, message: Message, session: AsyncSession, reply_mode: bool) -> None:
     enabled = await user.get_bool('settings.transcribe_voice_messages.enabled', session, default=True)
+    enabled_video = await user.get_bool('settings.transcribe_voice_messages.enabled_video', session, default=True)
     enhanced = await user.get_bool('settings.transcribe_voice_messages.enhanced', session, default=True)
     use_watermark = await user.get_bool('settings.transcribe_voice_messages.watermark', session, default=True)
 
-    if not enabled:
+    if (message.voice and not enabled) or (message.video_note and not enabled_video):
         return
 
     watermark = hlink("(?)", f"https://t.me/zapomnim_bot?start=ref{message.from_user.id}") if use_watermark else ''
