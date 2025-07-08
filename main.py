@@ -22,7 +22,8 @@ from handlers import (
     delete_messages_router, edit_messages_router, data_management_router, subscription_router,
     menu_router, statistics_router, STA_router, chat_export_router, voice_transcribe_router
 )
-from utils import PatchedI18nMiddleware, set_bot_commands
+from utils import PatchedI18nMiddleware, set_bot_commands, admin_api_router
+from utils.anti_ddos import DistributedThrottleMiddleware, ThrottleConfig
 
 BOT_TOKEN: Final[str] = BOT_TOKEN
 WEBHOOK_URL: Final[str] = f"http://{WEBHOOK_HOST}/webhook/main"
@@ -83,7 +84,17 @@ dp.include_routers(
     chat_export_router,
     voice_transcribe_router
 )
+
+dp.message.middleware(
+    DistributedThrottleMiddleware(
+        RedisSession,
+        ThrottleConfig(capacity=2, window_seconds=3),
+        ban_message="Не спамь!",
+    )
+)
+
 PatchedI18nMiddleware(i18n).setup(dp)
+app.include_router(admin_api_router)
 
 
 @app.post('/webhook/{bot_id}')
