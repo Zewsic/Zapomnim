@@ -37,7 +37,7 @@ async def _get_metrics(user_id: int, session):
         'edited_messages_count': await _get_metric(user_id, 'metrics.save_edited_messages', session),
         'protected_messages_count': await _get_metric(user_id, 'metrics.save_protected_messages', session),
         'transcribed_voice_count': await _get_metric(user_id, 'metrics.transcribe_voice_message', session),
-        'chat_analyzed_count': await _get_metric(user_id, 'system.static_chat_analyzer.high', session),
+        'chat_analyzed_count': await _get_metric(user_id, 'system.static_chat_analyzer.high', session) + await _get_metric(user_id, 'system.static_chat_analyzer.low', session),
     }
 
 
