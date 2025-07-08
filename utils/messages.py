@@ -236,6 +236,7 @@ async def make_all_messages_private(
 
     await session.commit()
 
+
 async def anonymize_metrics(user_id: int, session: AsyncSession):
     await session.execute(
         update(Metric)
@@ -257,26 +258,29 @@ async def load_chat_with_user(
         chat_id: int,
         session: AsyncSession,
         *,
-        count: int = 1000
+        count: int = None
 ) -> List[RestoredMessage]:
     """Восстанавливает последние версии сообщений по id."""
     result: List[RestoredMessage] = []
 
-    r = await session.execute(
+    req = (
         select(SavedMessage.message_id)
         .where(
             SavedMessage.connected_user_id == connected_user_id,
             SavedMessage.chat_id == chat_id,
         )
         .order_by(SavedMessage.created_at.desc())
-        .limit(count)
     )
 
-    raw_message_ids = r.scalars().all()
+    if count:
+        req = req.limit(count)
+
+    resp = await session.execute(req)
+
+    raw_message_ids = resp.scalars().all()
 
     for raw_message_id in reversed(raw_message_ids):
         messages = await _load_messages(connected_user_id, chat_id, raw_message_id, session)
-        print(messages)
         if messages:
             result.append(messages[-1])
 

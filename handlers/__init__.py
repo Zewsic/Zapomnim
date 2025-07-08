@@ -4,6 +4,8 @@ from handlers.features.edit_messages_handler import router as edit_messages_rout
 from handlers.features.process_message import router as process_message_router
 from handlers.features.statistics import router as statistics_router
 from handlers.features.static_chat_analyzer import router as STA_router
+from handlers.features.chat_export import router as chat_export_router
+from handlers.features.voice_messages_transcriber import router as voice_transcribe_router
 from handlers.initial_setup import router as initial_setup_router
 from handlers.menu import router as menu_router
 from handlers.settings import router as settings_router
@@ -19,6 +21,7 @@ __all__ = [
     "settings_router",
     "statistics_router",
     "subscription_router",
-    "STA_router"
-
+    "STA_router",
+    "chat_export_router",
+    "voice_transcribe_router"
 ]
