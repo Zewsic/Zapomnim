@@ -78,6 +78,7 @@ async def sta_callback(callback_query: CallbackQuery, state: FSMContext):
 
 @router.message(and_f(F.user_shared, StateFilter(Export_State.select_user)))
 async def on_chat_shared(message: Message, state: FSMContext):
+    return
     data = await state.get_data()
     m: int = data.get('message_id')
     try:
