@@ -53,9 +53,8 @@ async def lifespan(app: FastAPI):
     await main_bot.set_webhook(
         WEBHOOK_URL,
         allowed_updates=[
-            "message", "callback_query", "business_connection",
-            "business_message", "deleted_business_messages", "edited_business_message",
-            "successful_payment", "pre_checkout_query"
+            "message", "callback_query", "business_connection", "business_message",
+            "deleted_business_messages", "edited_business_message", "pre_checkout_query"
         ]
     )
     await set_bot_commands(main_bot)
@@ -118,7 +117,7 @@ async def telegram_main_webhook(bot_id: str, req: Request):
     except Exception:
         logger.exception("Error in webhook handler:")
         logger.exception(traceback.format_exc())
-        raise HTTPException(status_code=500, detail="Internal error")
+        return {"ok": True}
 
 
 if __name__ == "__main__":
