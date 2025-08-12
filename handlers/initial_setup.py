@@ -228,7 +228,7 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
                 await update_user(
                     id=user.id,
                     session=session,
-                    subscription_until=datetime.now() + timedelta(days=7),
+                    subscription_until=datetime.now() + timedelta(days=30),
                 )
                 await session.commit()
 
