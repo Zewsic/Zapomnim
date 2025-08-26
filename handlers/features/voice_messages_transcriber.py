@@ -55,7 +55,6 @@ async def get_text_from_voice(path, enhanced: bool) -> Tuple[str, Dict[str, int]
     enhanced = await client.responses.create(
         prompt={
             "id": prompt,
-            "version": "2"
         },
         model=model,
         reasoning=Reasoning(effort=effort),
