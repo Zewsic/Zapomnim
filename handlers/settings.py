@@ -325,13 +325,13 @@ async def enhance_messages_settings(callback: CallbackQuery) -> None:  # noqa: D
                 option_id="correct_grammars",
                 name=_("ENABLE_GRAMMAR_CORRECTION_BUTTON"),
                 description=_("ENABLE_GRAMMAR_CORRECTION_DESCRIPTION"),
-                default=True
+                default=False
             ),
             # SettingsOption(
             #     option_id="blur_adult_content",
             #     name=_("ENABLE_BLUR_ADULT_CONTENT_BUTTON"),
             #     description=_("ENABLE_BLUR_ADULT_CONTENT_DESCRIPTION"),
-            #     default=True
+            #     default=False
             # ),
         ]
 

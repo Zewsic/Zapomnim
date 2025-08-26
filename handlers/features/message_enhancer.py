@@ -69,8 +69,8 @@ async def _enhance_message(message: Message, correct_grammars: bool, blur_adult_
 
 
 async def enhance_message(user: User, message: Message, session: AsyncSession) -> None:
-    correct_grammars = await user.get_bool('settings.enhance_messages.correct_grammars', session, default=True)
-    blur_adult_content = await user.get_bool('settings.enhance_messages.blur_adult_content', session, default=True)
+    correct_grammars = await user.get_bool('settings.enhance_messages.correct_grammars', session, default=False)
+    blur_adult_content = await user.get_bool('settings.enhance_messages.blur_adult_content', session, default=False)
 
     usage = await _enhance_message(message, correct_grammars=correct_grammars, blur_adult_content=blur_adult_content)
     if not usage:
