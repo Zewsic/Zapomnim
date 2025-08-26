@@ -6,6 +6,7 @@ from aiogram.types import Message
 
 from database import create_session
 from handlers.features.save_protected_content import process_protected_message
+from handlers.features.message_enhancer import enhance_message
 from handlers.features.voice_messages_transcriber import transcribe_voice_messages
 from utils import get_user
 from utils.messages import save_message
@@ -41,7 +42,9 @@ async def new_message(message: Message, state: FSMContext):
         if message.reply_to_message:
             await process_protected_message(user, message.reply_to_message, session)
 
-        # Transcribe Voice Messages
-        if content_type in ('voice', 'video_note') and message.from_user.id == user.id and not user.privacy_mode and not message.forward_from:
-            asyncio.create_task(transcribe_voice_messages(user, message, session, content_type == 'video_note'))
+        if not user.privacy_mode and not message.forward_from:
+            if content_type in ('voice', 'video_note') and message.from_user.id == user.id:
+                asyncio.create_task(transcribe_voice_messages(user, message, session, content_type == 'video_note'))
+            else:
+                asyncio.create_task(enhance_message(user, message, session))
 

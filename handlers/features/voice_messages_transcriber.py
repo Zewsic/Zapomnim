@@ -11,6 +11,7 @@ from aiogram.types import Message, LinkPreviewOptions
 from aiogram.utils.markdown import hlink
 from aiogram.utils.i18n import gettext as _
 from openai import AsyncOpenAI
+from openai.types.shared_params import Reasoning
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing_extensions import BinaryIO
 
@@ -36,13 +37,30 @@ async def get_text_from_voice(path, enhanced: bool) -> Tuple[str, Dict[str, int]
     if not enhanced:
         return transcription.text, {}
 
-    is_short = len(transcription.text) < 512
-    prompt = _("VOICE_TRANSCRIBE_ENHANCE_PROMPT") if is_short else _("VOICE_TRANSCRIBE_SUMMARY_PROMPT")
-    model = "gpt-4.1-mini" if is_short else "o4-mini"
+    ln = len(transcription.text)
+
+    if ln < 512:
+        prompt = "pmpt_68ae0b51698c8197810793a1976de55d07039109783e92af"
+        model = 'gpt-5-nano'
+        effort = 'low'
+    elif ln < 2048:
+        prompt = "pmpt_68ae0ca1e9948194a02fb84b43422b2d06029f9789848684"
+        model = 'gpt-5-nano'
+        effort = 'medium'
+    else:
+        prompt = "pmpt_68ae0ca1e9948194a02fb84b43422b2d06029f9789848684"
+        model = 'gpt-5-mini'
+        effort = 'medium'
 
     enhanced = await client.responses.create(
+        prompt={
+            "id": prompt,
+            "version": "2"
+        },
         model=model,
-        input=prompt + transcription.text,
+        reasoning=Reasoning(effort=effort),
+        input=transcription.text,
+        store=False
     )
 
     return enhanced.output_text, {

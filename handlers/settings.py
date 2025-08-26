@@ -307,3 +307,48 @@ async def transcribe_voice_messages_settings(callback: CallbackQuery) -> None:  
 
         await callback.message.edit_text(text, reply_markup=reply_markup)
         await callback.answer()
+
+
+@router.callback_query(lambda c: c.data.startswith("enhance_messages_settings"))
+async def enhance_messages_settings(callback: CallbackQuery) -> None:  # noqa: D103
+    async with create_session() as session:
+        user = await get_user(session, id=callback.from_user.id)
+        if user.privacy_mode:
+            await callback.answer(_("UNAVAILABLE_IN_PRIVACY_MODE"), show_alert=True)
+            return
+
+        parts = callback.data.split(":")
+        toggle_id = parts[2] if len(parts) > 2 and parts[1] == "toggle" else None
+
+        options = [
+            SettingsOption(
+                option_id="correct_grammars",
+                name=_("ENABLE_GRAMMAR_CORRECTION_BUTTON"),
+                description=_("ENABLE_GRAMMAR_CORRECTION_DESCRIPTION"),
+                default=True
+            ),
+            # SettingsOption(
+            #     option_id="blur_adult_content",
+            #     name=_("ENABLE_BLUR_ADULT_CONTENT_BUTTON"),
+            #     description=_("ENABLE_BLUR_ADULT_CONTENT_DESCRIPTION"),
+            #     default=True
+            # ),
+        ]
+
+        title = _("ENHANCE_MESSAGES_SETTINGS_BUTTON")
+        description = _("ENHANCE_MESSAGES_SETTINGS_DESCRIPTION")
+
+        text, reply_markup = await settings_widget(
+            user=user,
+            session=session,
+            options=options,
+            message_callback="enhance_messages_settings",
+            settings_id="enhance_messages",
+            back_id="messages_settings",
+            title=title,
+            description=description,
+            toggle=toggle_id
+        )
+
+        await callback.message.edit_text(text, reply_markup=reply_markup)
+        await callback.answer()

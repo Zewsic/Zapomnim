@@ -919,3 +919,21 @@ msgstr "Your referral link will be added at the end of each transcription."
 
 msgid "DATA_MANAGEMENT_UNAVAILABLE_IN_PRIVACY_MODE"
 msgstr "⛔️ In private mode, data management is not available, as it is stored in an anonymized form and cannot be identified."
+
+msgid "ENHANCE_MESSAGES_SETTINGS_BUTTON"
+msgstr "⭐️ Message Enhancement"
+
+msgid "ENHANCE_MESSAGES_SETTINGS_DESCRIPTION"
+msgstr "Features that positively improve your outgoing messages."
+
+msgid "ENABLE_GRAMMAR_CORRECTION_BUTTON"
+msgstr "Grammar Correction"
+
+msgid "ENABLE_GRAMMAR_CORRECTION_DESCRIPTION"
+msgstr "Corrects spelling, grammar, and punctuation errors in outgoing messages."
+
+msgid "ENABLE_BLUR_ADULT_CONTENT_BUTTON"
+msgstr "Blur Adult Content"
+
+msgid "ENABLE_BLUR_ADULT_CONTENT_DESCRIPTION"
+msgstr "Automatically hides photos with adult content behind a spoiler. The feature may work inconsistently."

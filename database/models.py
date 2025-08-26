@@ -31,6 +31,9 @@ class User(Base):
 
     privacy_agreed: Mapped[datetime | None]
 
+    payment_id: Mapped[str | None]
+    autopayment: Mapped[int | None]
+
     @property
     def has_subscription(self) -> bool:
         """Return True if the subscription is still active."""

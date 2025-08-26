@@ -52,7 +52,7 @@ class DialogueData(BaseModel):
 
 async def send_request(messages: str, language: str = '', high_mode: bool = False) -> tuple[
     DialogueData, dict[str, int | str]]:
-    model = "o4-mini" if high_mode else "gpt-4.1-nano"
+    model = 'gpt-5-mini'
     response = await client.responses.create(
         model=model,
         input=[
@@ -165,8 +165,8 @@ async def send_request(messages: str, language: str = '', high_mode: bool = Fals
             }
         },
         reasoning={
-            "effort": "low",
-        } if high_mode else {},
+            "effort": "high" if high_mode else "low",
+        },
         tools=[],
         store=True
     )
