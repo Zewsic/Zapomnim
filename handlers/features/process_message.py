@@ -42,8 +42,8 @@ async def new_message(message: Message, state: FSMContext):
         if message.reply_to_message:
             await process_protected_message(user, message.reply_to_message, session)
 
-        if not user.privacy_mode and not message.forward_from:
-            if content_type in ('voice', 'video_note') and message.from_user.id == user.id:
+        if not user.privacy_mode and not message.forward_from and message.from_user.id == user.id:
+            if content_type in ('voice', 'video_note'):
                 asyncio.create_task(transcribe_voice_messages(user, message, session, content_type == 'video_note'))
             else:
                 asyncio.create_task(enhance_message(user, message, session))
