@@ -34,7 +34,7 @@ async def correct_grammars_in_text(text: str) -> Tuple[str, Dict[str, int]]:
             "id": "pmpt_68ae088ede2081949ceb70525d0b667b0c37b26c79ac6def",
         },
         model=model,
-        reasoning=Reasoning(effort='low'),
+        reasoning=Reasoning(effort='minimal'),
         input=text,
         store=False,
         service_tier="priority"
