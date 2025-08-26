@@ -24,7 +24,8 @@ async def correct_grammars_in_text(text: str) -> Tuple[str, Dict[str, int]]:
     ln = len(text)
 
     if ln < 2048:
-        model = 'gpt-5-nano'
+        # model = 'gpt-5-nano'
+        model = 'gpt-5-mini'
     else:
         model = 'gpt-5-mini'
 
@@ -36,6 +37,7 @@ async def correct_grammars_in_text(text: str) -> Tuple[str, Dict[str, int]]:
         reasoning=Reasoning(effort='low'),
         input=text,
         store=False,
+        service_tier="priority"
     )
 
     return enhanced.output_text, {
