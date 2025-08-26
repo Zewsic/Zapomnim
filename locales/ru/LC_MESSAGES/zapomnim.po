@@ -176,6 +176,9 @@ msgstr "✅ Успешно."
 msgid "START_BUTTON"
 msgstr "🚀 Поехали!"
 
+msgid "BOT_FUNCTIONS_BUTTON"
+msgstr "🛠 Функции бота"
+
 msgid "OPEN_HISTORY_BUTTON"
 msgstr "📗 История редактирования"
 
@@ -578,7 +581,7 @@ msgid "SUBSCRIPTION_DESC"
 msgstr "Доступ ко всем функциям бота на {days} дней"
 
 msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
-msgstr "✅ Бесплатный пробный период на 7 дней был успешно активирован!"
+msgstr "✅ Бесплатный пробный период на 1 месяц был успешно активирован!"
 
 msgid "VOICE_MESSAGES_FORBIDDEN"
 msgstr ""

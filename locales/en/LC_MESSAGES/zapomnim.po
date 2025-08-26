@@ -168,6 +168,9 @@ msgstr "✅ Successful."
 msgid "START_BUTTON"
 msgstr "🚀 Get Started!"
 
+msgid "BOT_FUNCTIONS_BUTTON"
+msgstr "🛠 Bot Functions"
+
 msgid "OPEN_HISTORY_BUTTON"
 msgstr "📗 Open History"
 
@@ -597,7 +600,7 @@ msgstr ""
 
 
 msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
-msgstr "✅ Your 7-day free trial has been successfully activated!"
+msgstr "✅ Your 1-month free trial has been successfully activated!"
 
 msgid "SUBSCRIPTION_SUCCESS"
 msgstr "✅ Subscription active until {date}"

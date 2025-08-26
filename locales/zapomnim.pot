@@ -97,6 +97,9 @@ msgstr ""
 msgid "START_BUTTON"
 msgstr ""
 
+msgid "BOT_FUNCTIONS_BUTTON"
+msgstr ""
+
 msgid "OPEN_HISTORY_BUTTON"
 msgstr ""
 

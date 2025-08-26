@@ -11,9 +11,8 @@ def language_keyboard():
 
 def start_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(text=_("START_BUTTON"), callback_data="start")
-        ]
+        [InlineKeyboardButton(text=_("START_BUTTON"), callback_data="start")],
+        [InlineKeyboardButton(text=_("BOT_FUNCTIONS_BUTTON"), url="https://example.com")],
     ])
 
 def continue_keyboard(callback_data):

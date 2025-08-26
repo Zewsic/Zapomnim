@@ -8,7 +8,7 @@ from database.models import User
 
 
 def main_menu_keyboard(user: User) -> InlineKeyboardMarkup:
-    keyboard = []
+    keyboard = [[InlineKeyboardButton(text=_("BOT_FUNCTIONS_BUTTON"), url="https://example.com")]]
 
     if not user.privacy_mode:
         keyboard.extend([
