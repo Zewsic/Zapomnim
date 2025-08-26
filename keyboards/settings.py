@@ -19,7 +19,7 @@ def messages_settings_keyboard():
         ],
         [
             InlineKeyboardButton(text=_("ENHANCE_MESSAGES_SETTINGS_BUTTON"),
-                                 callback_data="transcribe_voice_messages_settings"),
+                                 callback_data="enhance_messages_settings"),
         ],
         [
             InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data="settings"),

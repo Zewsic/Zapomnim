@@ -1,24 +1,16 @@
-import asyncio
 import json
 import logging
-from io import BytesIO
-from pathlib import Path
 from typing import Tuple, Dict
 
-from aiogram import Router, F
-from aiogram.filters import or_f
-from aiogram.types import Message, LinkPreviewOptions
-from aiogram.utils.markdown import hlink
-from aiogram.utils.i18n import gettext as _
+from aiogram import Router
+from aiogram.types import Message
 from openai import AsyncOpenAI
 from openai.types.shared_params import Reasoning
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing_extensions import BinaryIO
 
-from database import create_session, RedisSession
+from database import create_session
 from database.models import Metric, User
 from utils import get_user
-from utils.botapi import TelegramDataUtils
 
 logger = logging.getLogger('Zapomnim/VoiceMessagesTranscriber')
 client = AsyncOpenAI()
@@ -78,7 +70,7 @@ async def _enhance_message(message: Message, correct_grammars: bool, blur_adult_
 
 async def enhance_message(user: User, message: Message, session: AsyncSession) -> None:
     correct_grammars = await user.get_bool('settings.enhance_messages.correct_grammars', session, default=True)
-    # blur_adult_content = await user.get_bool('settings.enhance_messages.blur_adult_content', session, default=True)
+    blur_adult_content = await user.get_bool('settings.enhance_messages.blur_adult_content', session, default=True)
 
     usage = await _enhance_message(message, correct_grammars=correct_grammars, blur_adult_content=blur_adult_content)
     if not usage:
