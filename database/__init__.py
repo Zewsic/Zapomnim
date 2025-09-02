@@ -18,7 +18,11 @@ logger = logging.getLogger('Zapomnim/Database')
 engine = create_async_engine(
     os.getenv('DATABASE_CONNECTION_STRING'),
     echo=environ.get('BUILD_TYPE') == 'test',
-    pool_pre_ping=True
+    pool_pre_ping=True,
+    pool_size=50,  # сколько держать постоянно
+    max_overflow=100,  # сколько «долить» при всплесках
+    pool_timeout=30,  # менять при необходимости
+    pool_recycle=1800,  # для длинных коннектов
 )
 create_session = async_sessionmaker(
     bind=engine,
