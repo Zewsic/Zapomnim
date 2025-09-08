@@ -168,7 +168,6 @@ async def send_request(messages: str, language: str = '', high_mode: bool = Fals
             "effort": "high" if high_mode else "low",
         },
         tools=[],
-        store=True
     )
 
     raw = response.output[int(high_mode)].content[0].text

@@ -78,7 +78,6 @@ async def sta_callback(callback_query: CallbackQuery, state: FSMContext):
 
 @router.message(and_f(F.user_shared, StateFilter(Export_State.select_user)))
 async def on_chat_shared(message: Message, state: FSMContext):
-    return
     data = await state.get_data()
     m: int = data.get('message_id')
     try:
@@ -99,7 +98,7 @@ async def on_chat_shared(message: Message, state: FSMContext):
             await state.update_data({'message_id': msg.message_id})
             return
 
-        messages = await load_chat_with_user(user.id, persona.id, session)
+        messages = await load_chat_with_user(user.id, persona.id, session, count=200)
         result = await perform_export(messages)
 
         print(result)
