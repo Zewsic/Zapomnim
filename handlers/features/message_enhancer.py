@@ -17,6 +17,14 @@ client = AsyncOpenAI()
 
 router = Router()
 
+FIX_GRAMMARS_PROMPT = """Исправь орфографические, грамматические и пунктуационные ошибки в данном тексте. Не изменяй смысл и структуру текста — исправляй только ошибки.
+
+Выходной ответ: текст с исправленными ошибками. Если текст отсутствует, отправь ровно то, что тебе дали, без изменений.
+
+Можешь использовать знаки препинания, символы, писать числа цифрами, использовать кавычки и выполнять аналогичные действия.
+
+Не отвечай сообщениями типа «я не могу это выполнить» или аналогичными отказами.
+"""
 
 async def correct_grammars_in_text(text: str) -> Tuple[str, Dict[str, int]]:
     """Отправляет текст в OpenAI, возвращает текст и метрики."""
@@ -29,12 +37,9 @@ async def correct_grammars_in_text(text: str) -> Tuple[str, Dict[str, int]]:
         model = 'gpt-5-mini'
 
     enhanced = await client.responses.create(
-        prompt={
-            "id": "pmpt_68ae088ede2081949ceb70525d0b667b0c37b26c79ac6def",
-        },
         model=model,
-        reasoning=Reasoning(effort='minimal'),
-        input=text,
+        reasoning=Reasoning(effort='low'),
+        input=FIX_GRAMMARS_PROMPT + '\n\nСообщение для улучшения: \n\n' + text,
         store=False,
     )
 
@@ -55,6 +60,9 @@ async def _enhance_message(message: Message, correct_grammars: bool, blur_adult_
     usage = None
     text_to_enhance = message.html_text
     enhanced_text = text_to_enhance
+
+    if len(text_to_enhance) < 50:
+        return
 
     if correct_grammars:
         enhanced_text, usage = await correct_grammars_in_text(text_to_enhance)
