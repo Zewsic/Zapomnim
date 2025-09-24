@@ -21,7 +21,7 @@ from database.models import SavedMessage, User, Metric, Persona
 from handlers.menu import send_main_menu
 from keyboards import continue_keyboard
 from keyboards.static_chat_analyzer import STA_keyboard
-from utils.messages import RestoredMessage, load_chat_with_user
+from utils.messages import RestoredMessage, load_chat_with_user, stringify_messages
 from utils.userdata import get_persona, get_user
 
 client = AsyncOpenAI()
@@ -178,27 +178,6 @@ async def send_request(messages: str, language: str = '', high_mode: bool = Fals
     }
 
 
-async def make_request(messages: list[RestoredMessage], user: User, high_mode: bool):
-    lines = []
-
-    for message in messages:
-        if message.content_type != 'text':
-            lines.append(f"> {message.persona.full_name}: [{message.content_type}]")
-        else:
-            lines.append(f"> {message.persona.full_name}:")
-
-        if message.text is not None:
-            lines.append(f"{message.text}")
-
-        lines.append('')
-        lines.append('')
-
-    logger.info(lines)
-
-    resp = await send_request('\n'.join(lines), _("LANG_NAME"), high_mode=high_mode)
-    return resp
-
-
 async def process_analysis(persona: Persona, user: User, session: AsyncSession):
     if not user.has_subscription:
         return None
@@ -233,12 +212,10 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
     else:
         return None
 
-    messages = await load_chat_with_user(user.id, persona.id, session, count=700 if high_mode else 300)
-    logger.info(f'Found {len(messages)} messages')
-    if len(messages) < 10:
+    context = await stringify_messages(user.id, persona.id, session, count=700 if high_mode else 300, min_messages=-1)
+    if not context:
         return -1
-
-    data, usage = await make_request(messages, user, high_mode)
+    data, usage = await send_request(context, _("LANG_NAME"), high_mode=high_mode)
 
     response = _("STA_RESPONSE_TEMPLATE").format(
         receiver_first_name=persona.first_name,

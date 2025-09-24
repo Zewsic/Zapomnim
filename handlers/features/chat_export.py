@@ -15,7 +15,7 @@ from handlers.menu import send_main_menu
 from keyboards import continue_keyboard
 from keyboards.chat_export import export_chat_share_keyboard
 from utils import get_user
-from utils.messages import load_chat_with_user, RestoredMessage
+from utils.messages import load_chat_with_user, RestoredMessage, stringify_messages
 from utils.userdata import get_persona
 
 logger = logging.getLogger('Zapomnim/ChatExport')
@@ -98,8 +98,15 @@ async def on_chat_shared(message: Message, state: FSMContext):
             await state.update_data({'message_id': msg.message_id})
             return
 
-        messages = await load_chat_with_user(user.id, persona.id, session, count=200)
-        result = await perform_export(messages)
+        result = await stringify_messages(user.id, persona.id, session, count=200)
+        if not result:
+            msg = await message.answer(
+                text=_("STA_INVALID_CHAT_ERROR"),
+                reply_markup=export_chat_share_keyboard(),
+            )
+
+            await state.update_data({'message_id': msg.message_id})
+            return
 
         print(result)
 

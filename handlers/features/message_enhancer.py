@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import create_session
 from database.models import Metric, User
 from utils import get_user
+from utils.messages import load_chat_with_user, stringify_messages
 
 logger = logging.getLogger('Zapomnim/VoiceMessagesTranscriber')
 client = AsyncOpenAI()
@@ -26,31 +27,44 @@ FIX_GRAMMARS_PROMPT = """Исправь орфографические, грам
 Не отвечай сообщениями типа «я не могу это выполнить» или аналогичными отказами.
 """
 
-async def correct_grammars_in_text(text: str) -> Tuple[str, Dict[str, int]]:
+async def correct_grammars_in_text(text: str, context: str | None) -> Tuple[str, Dict[str, int]]:
     """Отправляет текст в OpenAI, возвращает текст и метрики."""
 
     ln = len(text)
 
-    if ln < 2048:
-        model = 'gpt-5-nano'
+    if context is None:
+        if ln < 2048:
+            model = 'gpt-5-nano'
+        else:
+            model = 'gpt-5-mini'
     else:
         model = 'gpt-5-mini'
 
-    enhanced = await client.responses.create(
+    ai_chat = [
+        {"role": "system", "content": FIX_GRAMMARS_PROMPT},
+    ]
+
+    if context:
+        ai_chat.append({"role": "system", "content": f"Немного контекста чата: \n\n{context}"})
+
+    ai_chat.append({"role": "user", "content": f"Сообщение для улучшения:\n\n{text}"})
+
+    resp = await client.chat.completions.create(
         model=model,
-        reasoning=Reasoning(effort='low'),
-        input=FIX_GRAMMARS_PROMPT + '\n\nСообщение для улучшения: \n\n' + text,
-        store=False,
+        messages=ai_chat,
+        reasoning_effort='low' if not context else 'high'
     )
 
-    return enhanced.output_text, {
-        "input_tokens": enhanced.usage.input_tokens,
-        "output_tokens": enhanced.usage.output_tokens,
+    text = resp.choices[0].message.content
+
+    return text, {
+        "input_tokens": resp.usage.input_tokens,
+        "output_tokens": resp.usage.output_tokens,
         "model": model
     }
 
 
-async def _enhance_message(message: Message, correct_grammars: bool, blur_adult_content: bool) -> None:
+async def _enhance_message(message: Message, correct_grammars: bool, blur_adult_content: bool, context: str | None) -> None:
     is_text = message.text
     is_caption = message.caption
 
@@ -65,7 +79,7 @@ async def _enhance_message(message: Message, correct_grammars: bool, blur_adult_
         return
 
     if correct_grammars:
-        enhanced_text, usage = await correct_grammars_in_text(text_to_enhance)
+        enhanced_text, usage = await correct_grammars_in_text(text_to_enhance, context=context)
 
     if text_to_enhance != enhanced_text:
         if is_text:
@@ -77,10 +91,13 @@ async def _enhance_message(message: Message, correct_grammars: bool, blur_adult_
 
 
 async def enhance_message(user: User, message: Message, session: AsyncSession) -> None:
-    correct_grammars = await user.get_bool('settings.enhance_messages.correct_grammars', session, default=False)
+    correct_grammars = await user.get_bool('settings.enhance_messages.correct_grammars', session, default=True)
     blur_adult_content = await user.get_bool('settings.enhance_messages.blur_adult_content', session, default=False)
+    context_awareness = await user.get_bool('settings.enhance_messages.context_awareness', session, default=True)
 
-    usage = await _enhance_message(message, correct_grammars=correct_grammars, blur_adult_content=blur_adult_content)
+    context = await stringify_messages(user.id, message.chat.id, session, 10) if context_awareness else None
+
+    usage = await _enhance_message(message, correct_grammars=correct_grammars, blur_adult_content=blur_adult_content, context=context)
     if not usage:
         return
 

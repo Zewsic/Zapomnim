@@ -283,6 +283,12 @@ async def transcribe_voice_messages_settings(callback: CallbackQuery) -> None:  
                 default=True
             ),
             SettingsOption(
+                option_id="context_awareness",
+                name=_("CONTEXT_AWARENESS"),
+                description=_("TRANSCRIBE_VOICE_MESSAGES_SETTINGS_CONTEXT_AWARENESS_DESCRIPTION"),
+                default=True
+            ),
+            SettingsOption(
                 option_id="watermark",
                 name=_("TRANSCRIBE_VOICE_MESSAGES_SETTINGS_WATERMARK_NAME"),
                 description=_("TRANSCRIBE_VOICE_MESSAGES_SETTINGS_WATERMARK_DESCRIPTION"),
@@ -325,7 +331,7 @@ async def enhance_messages_settings(callback: CallbackQuery) -> None:  # noqa: D
                 option_id="correct_grammars",
                 name=_("ENABLE_GRAMMAR_CORRECTION_BUTTON"),
                 description=_("ENABLE_GRAMMAR_CORRECTION_DESCRIPTION"),
-                default=False
+                default=True
             ),
             # SettingsOption(
             #     option_id="blur_adult_content",
@@ -333,6 +339,12 @@ async def enhance_messages_settings(callback: CallbackQuery) -> None:  # noqa: D
             #     description=_("ENABLE_BLUR_ADULT_CONTENT_DESCRIPTION"),
             #     default=False
             # ),
+            SettingsOption(
+                option_id="context_awareness",
+                name=_("CONTEXT_AWARENESS"),
+                description=_("GRAMMAR_CORRECTION_CONTEXT_AWARENESS_DESCRIPTION"),
+                default=True
+            ),
         ]
 
         title = _("ENHANCE_MESSAGES_SETTINGS_BUTTON")

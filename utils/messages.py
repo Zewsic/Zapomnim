@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import Iterable, Optional, List
 
 from aiogram.types import Message
-from sqlalchemy import select, update
+from sqlalchemy import select, update, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.models import User, SavedMessage, Persona, Metric
@@ -263,14 +263,23 @@ async def load_chat_with_user(
     """Восстанавливает последние версии сообщений по id."""
     result: List[RestoredMessage] = []
 
-    req = (
-        select(SavedMessage.message_id)
+    subq = (
+        select(
+            SavedMessage.message_id,
+            SavedMessage.created_at,
+            func.row_number().over(
+                partition_by=SavedMessage.message_id,
+                order_by=SavedMessage.created_at.desc()
+            ).label("rnk")
+        )
         .where(
             SavedMessage.connected_user_id == connected_user_id,
             SavedMessage.chat_id == chat_id,
         )
-        .order_by(SavedMessage.created_at.desc())
+        .subquery()
     )
+
+    req = select(subq.c.message_id).where(subq.c.rnk == 1)
 
     if count:
         req = req.limit(count)
@@ -313,3 +322,23 @@ async def load_encrypted_user_messages(
     )).scalars().all()
 
     return list(r)
+
+
+async def stringify_messages(user_id: int, chat_id: int, session, count: int, min_messages: int = 0) -> str:
+    messages = await load_chat_with_user(user_id, chat_id, session, count=count)
+    if len(messages) < min_messages:
+        return None
+    lines = []
+    for message in messages:
+        if message.content_type != 'text':
+            lines.append(f"> {message.persona.full_name}: [{message.content_type}]")
+        else:
+            lines.append(f"> {message.persona.full_name}:")
+
+        if message.text is not None:
+            lines.append(f"{message.text}")
+
+        lines.append('')
+        lines.append('')
+
+    return '\n'.join(lines)
