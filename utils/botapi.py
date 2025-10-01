@@ -2,12 +2,12 @@ from typing import Final
 
 import aiofiles
 from aiogram import Bot
-from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
-from aiogram.types import User, File
+from aiogram.enums import ParseMode
+from aiogram.types import File, User
 
-from config import TELEGRAM_SERVER, WEBHOOK_HOST, TELEGRAM_SERVER_DATA
+from config import TELEGRAM_SERVER, TELEGRAM_SERVER_DATA, WEBHOOK_HOST
 
 WEBHOOK_URL: Final[str] = f"http://{WEBHOOK_HOST}/webhook/%s"
 
@@ -52,8 +52,8 @@ class TelegramMirrorUtils:
         del TelegramMirrorUtils.CONNECTED_BOTS[bot_id]
 
 
-class TelegramDataUtils():
-    BASE_TG_DATA = '/var/lib/telegram-bot-api/'
+class TelegramDataUtils:
+    BASE_TG_DATA = "/var/lib/telegram-bot-api/"
 
     @staticmethod
     def get_normal_file_path(file: File) -> str:
@@ -62,5 +62,5 @@ class TelegramDataUtils():
 
     @staticmethod
     async def get_file(file: File) -> bytes:
-        async with aiofiles.open(TelegramDataUtils.get_normal_file_path(file), 'rb') as f:
+        async with aiofiles.open(TelegramDataUtils.get_normal_file_path(file), "rb") as f:
             return await f.read()

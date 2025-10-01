@@ -1,27 +1,22 @@
 import asyncio
 import json
 import logging
-from io import BytesIO
 from pathlib import Path
-from typing import Tuple, Dict, Optional
 
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.filters import or_f
-from aiogram.types import Message, LinkPreviewOptions
-from aiogram.utils.markdown import hlink
+from aiogram.types import LinkPreviewOptions, Message
 from aiogram.utils.i18n import gettext as _
+from aiogram.utils.markdown import hlink
 from openai import AsyncOpenAI
-from openai.types.shared_params import Reasoning
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing_extensions import BinaryIO
 
-from database import create_session, RedisSession
+from database import create_session
 from database.models import Metric, User
 from utils import get_user
 from utils.botapi import TelegramDataUtils
-from utils.messages import load_chat_with_user, stringify_messages
 
-logger = logging.getLogger('Zapomnim/VoiceMessagesTranscriber')
+logger = logging.getLogger("Zapomnim/VoiceMessagesTranscriber")
 client = AsyncOpenAI()
 
 router = Router()
@@ -54,49 +49,37 @@ ENHANCE_TRANSCRIBE_PROMPT = """Задача: Исправь и отформат�
 def _clip_for_tg(text: str, limit: int = 1800) -> str:
     text = text.rstrip()
     if len(text) > limit:
-        return text[:limit] + ' ... '
+        return text[:limit] + " ... "
     return text
 
 
 async def _transcribe_only(path: Path) -> str:
     """Только распознаёт речь и возвращает сырую транскрипцию."""
-    with path.open('rb') as f:
+    with path.open("rb") as f:
         tr = await client.audio.transcriptions.create(
             model="gpt-4o-mini-transcribe",
-            file=f
+            file=f,
         )
     return tr.text
 
 
-async def _enhance_text(raw_text: str, context: str | None) -> Tuple[str, Dict[str, int]]:
+async def _enhance_text(raw_text: str, context: str | None) -> tuple[str, dict[str, int]]:
     """Улучшаем/саммаризуем уже полученный текст и возвращаем текст + метрики."""
     ln = len(raw_text)
 
-    if not context:
-        if ln < 512:
-            prompt = ENHANCE_TRANSCRIBE_PROMPT
-            model = 'gpt-5-nano'
-            effort = 'low'
-        elif ln < 2048:
-            prompt = MAKE_SUMMARY_PROMPT
-            model = 'gpt-5-nano'
-            effort = 'high'
-        else:
-            prompt = MAKE_SUMMARY_PROMPT
-            model = 'gpt-5-mini'
-            effort = 'medium'
+    # Оптимизация токенов: используем более дешевые модели и меньше reasoning effort
+    if ln < 512:
+        prompt = ENHANCE_TRANSCRIBE_PROMPT
+        model = "gpt-5-nano"
+        effort = "low"
+    elif ln < 1024:
+        prompt = MAKE_SUMMARY_PROMPT
+        model = "gpt-5-nano"
+        effort = "low"
     else:
-        if ln < 512:
-            prompt = ENHANCE_TRANSCRIBE_PROMPT
-        else:
-            prompt = MAKE_SUMMARY_PROMPT
-
-        if len(context) < 1000:
-            model = 'gpt-5-mini'
-            effort = 'medium'
-        else:
-            model = 'gpt-5-mini'
-            effort = 'high'
+        prompt = MAKE_SUMMARY_PROMPT
+        model = "gpt-5-mini"
+        effort = "low"
 
     ai_chat = [
         {"role": "system", "content": prompt},
@@ -110,7 +93,7 @@ async def _enhance_text(raw_text: str, context: str | None) -> Tuple[str, Dict[s
     resp = await client.chat.completions.create(
         model=model,
         messages=ai_chat,
-        reasoning_effort=effort
+        reasoning_effort=effort,
     )
 
     text = resp.choices[0].message.content
@@ -118,7 +101,7 @@ async def _enhance_text(raw_text: str, context: str | None) -> Tuple[str, Dict[s
     return text, {
         "input_tokens": resp.usage.input_tokens,
         "output_tokens": resp.usage.output_tokens,
-        "model": model
+        "model": model,
     }
 
 
@@ -141,13 +124,11 @@ async def ffmpeg_convert(src: Path, dst: Path) -> None:
 # --- main flow ------------------------------------------------------------
 
 async def _transcribe_voice_message(message: Message, enhanced: bool, watermark: str, context: str | None,
-                                    reply_mode: bool) -> Optional[
-    Dict[str, int]]:
-    """
-    Новый порядок:
-      1) показать «расшифровка…»
-      2) показать сырую расшифровку
-      3) если enhanced=True — заменить на улучшенную версию
+                                    reply_mode: bool) -> dict[str, int] | None:
+    """Новый порядок:
+    1) показать «расшифровка…»
+    2) показать сырую расшифровку
+    3) если enhanced=True — заменить на улучшенную версию
     """
     # 1) стартовое «расшифровка…»
     progress_text = _("VOICE_TRANSCRIBE_IN_PROCESS_TEXT").format(watermark=watermark)  # или своя строка
@@ -155,7 +136,7 @@ async def _transcribe_voice_message(message: Message, enhanced: bool, watermark:
         status_message = await message.answer(
             progress_text,
             reply_to_message_id=message.message_id,
-            link_preview_options=LinkPreviewOptions(is_disabled=True)
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
     else:
         try:
@@ -165,7 +146,7 @@ async def _transcribe_voice_message(message: Message, enhanced: bool, watermark:
             status_message = await message.answer(
                 progress_text,
                 reply_to_message_id=message.message_id,
-                link_preview_options=LinkPreviewOptions(is_disabled=True)
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
             )
 
     # -- загрузка файла TG
@@ -174,7 +155,7 @@ async def _transcribe_voice_message(message: Message, enhanced: bool, watermark:
     src = Path(TelegramDataUtils.get_normal_file_path(file_info))
     dst = Path(f"cache/voice_{to_transcribe.file_id}.m4a")
 
-    usage: Dict[str, int] = {}
+    usage: dict[str, int] = {}
 
     try:
         await ffmpeg_convert(src, dst)
@@ -186,35 +167,35 @@ async def _transcribe_voice_message(message: Message, enhanced: bool, watermark:
         # 3) если нужно — улучшаем и заменяем текст
         if enhanced:
             await status_message.edit_text(
-                f'🎤 <blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>',
-                link_preview_options=LinkPreviewOptions(is_disabled=True)
+                f"🎤 <blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>",
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
             )
             try:
                 improved_text, metrics = await _enhance_text(raw_text, context=context)
                 usage.update(metrics)
                 cleaned_improved = _clip_for_tg(improved_text)
                 await status_message.edit_text(
-                    f'<blockquote expandable><i>{cleaned_improved} {watermark}</i></blockquote>',
-                    link_preview_options=LinkPreviewOptions(is_disabled=True)
+                    f"<blockquote expandable><i>{cleaned_improved} {watermark}</i></blockquote>",
+                    link_preview_options=LinkPreviewOptions(is_disabled=True),
                 )
             except:
                 await status_message.edit_text(
-                    f'<blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>',
-                    link_preview_options=LinkPreviewOptions(is_disabled=True)
+                    f"<blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>",
+                    link_preview_options=LinkPreviewOptions(is_disabled=True),
                 )
         else:
             await status_message.edit_text(
-                f'<blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>',
-                link_preview_options=LinkPreviewOptions(is_disabled=True)
+                f"<blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>",
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
             )
 
-        usage['audio_duration'] = to_transcribe.duration
+        usage["audio_duration"] = to_transcribe.duration
 
     except Exception:
         logger.exception("Transcription error")
         await status_message.edit_text(
             _("VOICE_TRANSCRIBE_ERROR_TEXT").format(watermark=watermark),
-            link_preview_options=LinkPreviewOptions(is_disabled=True)
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
         return None
     finally:
@@ -228,18 +209,16 @@ async def _transcribe_voice_message(message: Message, enhanced: bool, watermark:
 
 
 async def transcribe_voice_messages(user: User, message: Message, session: AsyncSession, reply_mode: bool) -> None:
-    enabled = await user.get_bool('settings.transcribe_voice_messages.enabled', session, default=True)
-    enabled_video = await user.get_bool('settings.transcribe_voice_messages.enabled_video', session, default=True)
-    enhanced = await user.get_bool('settings.transcribe_voice_messages.enhanced', session, default=True)
-    use_watermark = await user.get_bool('settings.transcribe_voice_messages.watermark', session, default=True)
-    context_awareness = await user.get_bool('settings.transcribe_voice_messages.context_awareness', session,
-                                            default=True)
+    enabled = await user.get_bool("settings.transcribe_voice_messages.enabled", session, default=True)
+    enabled_video = await user.get_bool("settings.transcribe_voice_messages.enabled_video", session, default=True)
+    enhanced = await user.get_bool("settings.transcribe_voice_messages.enhanced", session, default=True)
+    use_watermark = await user.get_bool("settings.transcribe_voice_messages.watermark", session, default=True)
 
     if (message.voice and not enabled) or (message.video_note and not enabled_video):
         return
 
-    watermark = hlink("(?)", f"https://t.me/zapomnim_bot?start=ref{message.from_user.id}") if use_watermark else ''
-    context = await stringify_messages(user.id, message.chat.id, session, 10) if context_awareness else None
+    watermark = hlink("(?)", f"https://t.me/zapomnim_bot?start=ref{message.from_user.id}") if use_watermark else ""
+    context = None  # Context awareness убран как юзелесс
 
     usage = await _transcribe_voice_message(message=message, enhanced=enhanced, watermark=watermark,
                                             reply_mode=reply_mode, context=context)
@@ -252,8 +231,8 @@ async def transcribe_voice_messages(user: User, message: Message, session: Async
             connected_user_id=user.id if not user.privacy_mode else None,
             chat_id=message.chat.id if not user.privacy_mode else None,
             message_id=message.message_id if not user.privacy_mode else None,
-            name='metrics.transcribe_voice_message',
-            value=json.dumps(usage)
+            name="metrics.transcribe_voice_message",
+            value=json.dumps(usage),
         )
         session.add(metric)
         await session.commit()
@@ -265,21 +244,21 @@ async def process_process_input_voice_message(message: Message):
     usage = await _transcribe_voice_message(
         message,
         enhanced=True,
-        watermark=hlink("(?)", f"https://t.me/zapomnim_bot"),
+        watermark=hlink("(?)", "https://t.me/zapomnim_bot"),
         context=None,
         reply_mode=True,
     )
     if not usage:
         return
 
-    metric_name = 'metrics.input.transcribe_voice_message' if message.chat.id == message.from_user.id else 'metrics.chat.transcribe_voice_message'
+    metric_name = "metrics.input.transcribe_voice_message" if message.chat.id == message.from_user.id else "metrics.chat.transcribe_voice_message"
 
     async with create_session() as session:
         metric = Metric(
             chat_id=message.chat.id,
             message_id=message.message_id,
             name=metric_name,
-            value=json.dumps(usage)
+            value=json.dumps(usage),
         )
         session.add(metric)
         await session.commit()

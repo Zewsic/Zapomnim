@@ -1,19 +1,14 @@
 import json
-from typing import Optional
 
-from aiogram import Router, Bot
+from aiogram import Bot, Router
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.types import (
-    BufferedInputFile,
-    LinkPreviewOptions,
-    Message, InlineKeyboardMarkup
-)
+from aiogram.types import BufferedInputFile, InlineKeyboardMarkup, LinkPreviewOptions, Message
 from aiogram.utils.i18n import gettext as _
 
-from database import create_session, RedisSession
-from database.models import Persona, Metric
+from database import create_session
+from database.models import Metric, Persona
 from utils import get_user
-from utils.messages import restore_last_messages, save_message, ContentType, RestoredMessage
+from utils.messages import ContentType, RestoredMessage, restore_last_messages, save_message
 from utils.userdata import update_persona
 
 router = Router()
@@ -45,13 +40,12 @@ async def send_media(
         bot: Bot,
         user_id: int,
         content_type: ContentType,
-        content: Optional[str],
+        content: str | None,
         caption: str,
         keyboard: InlineKeyboardMarkup,
         silent_mode: bool = True,
 ):
-    """
-    Универсальная отправка медиа по content_type.
+    """Универсальная отправка медиа по content_type.
     """
     if content_type in MEDIA_TYPES and content:
         send_method_name = MEDIA_TYPES[content_type]
@@ -64,7 +58,7 @@ async def send_media(
             user_id,
             text=caption,
             link_preview_options=LinkPreviewOptions(is_disabled=True),
-            disable_notification=silent_mode
+            disable_notification=silent_mode,
         )
         await bot.send_sticker(user_id, sticker=content, reply_to_message_id=sent_msg.message_id, disable_notification=silent_mode)
         return
@@ -74,7 +68,7 @@ async def send_media(
             user_id,
             text=caption,
             link_preview_options=LinkPreviewOptions(is_disabled=True),
-            disable_notification=silent_mode
+            disable_notification=silent_mode,
         )
         await bot.send_video_note(user_id, video_note=content, reply_to_message_id=sent_msg.message_id, disable_notification=silent_mode)
         return
@@ -99,7 +93,7 @@ async def send_media(
         text=caption,
         link_preview_options=LinkPreviewOptions(is_disabled=True),
         reply_markup=keyboard,
-        disable_notification=silent_mode
+        disable_notification=silent_mode,
     )
 
 
@@ -112,15 +106,14 @@ async def send_edited_info(
         message_id: int,
         silent_mode: bool,
 ) -> None:
-    """
-    Отправляем в личку пользователю сообщение о том,
+    """Отправляем в личку пользователю сообщение о том,
     что он отредактировал в бизнес-чате.
     """
     content_type_str = _(f"EDITED_CONTENT_TYPE_{old_msg.content_type.value.upper()}")
     _date = old_msg.created_at.strftime("%d.%m.%Y %H:%M")
 
     base_msg = _(
-        "EDITED_MESSAGE_TEMPLATE"
+        "EDITED_MESSAGE_TEMPLATE",
     ).format(
         content_type=content_type_str,
         **{
@@ -131,8 +124,8 @@ async def send_edited_info(
                     (_("EDITED_MESSAGE_TEMPLATE_OLD_TEXT").format(
                         text=old_msg.text, date=_date) if old_msg.text else "") +
                     (_("EDITED_MESSAGE_TEMPLATE_NEW_TEXT").format(text=new_msg.text) if new_msg.text else "")
-            )
-        }
+            ),
+        },
     )
 
     await send_media(
@@ -142,14 +135,13 @@ async def send_edited_info(
         content=old_msg.content or "",
         caption=base_msg,
         keyboard=InlineKeyboardMarkup(inline_keyboard=[]),
-        silent_mode=silent_mode
+        silent_mode=silent_mode,
     )
 
 
 @router.edited_business_message()
 async def on_edit_messages(event: Message):
-    """
-    Хэндлер, который ловит отредактированные сообщения.
+    """Хэндлер, который ловит отредактированные сообщения.
     """
     bot: Bot = event.bot
 
@@ -176,7 +168,7 @@ async def on_edit_messages(event: Message):
             content=new_result[1],
             text=new_result[2],
             persona=old_msg.persona,
-            created_at=old_msg.created_at
+            created_at=old_msg.created_at,
         )
 
         chat = await update_persona(
@@ -184,30 +176,28 @@ async def on_edit_messages(event: Message):
             session=session,
             first_name=event.chat.first_name,
             last_name=event.chat.last_name,
-            username=event.chat.username
+            username=event.chat.username,
         )
 
-        if new_result[0] == 'voice' and new_msg.text and (new_msg.text.startswith('🎤') or old_msg.text.startswith('🎤')):
+        if new_result[0] == "voice" and new_msg.text and (new_msg.text.startswith("🎤") or old_msg.text.startswith("🎤")):
             return
 
         if user.id != new_msg.persona.id:
-            if not await user.get_bool('settings.edited_messages.enabled', session, default=True):
+            if not await user.get_bool("settings.edited_messages.enabled", session, default=True):
                 return
-        else:
-            if not await user.get_bool('settings.edited_messages.enabled_for_outgoing', session, default=True):
-                return
+        elif not await user.get_bool("settings.edited_messages.enabled_for_outgoing", session, default=True):
+            return
 
         if new_msg.content_type == ContentType.TEXT:
-            if not await user.get_bool('settings.edited_messages.save_text', session, default=True):
+            if not await user.get_bool("settings.edited_messages.save_text", session, default=True):
                 return
         elif new_msg.content_type in list(MEDIA_TYPES.keys()) + [ContentType.VIDEO_NOTE, ContentType.STICKER]:
-            if not await user.get_bool('settings.edited_messages.save_media', session, default=True):
+            if not await user.get_bool("settings.edited_messages.save_media", session, default=True):
                 return
-        else:
-            if not await user.get_bool('settings.edited_messages.save_other', session, default=False):
-                return
+        elif not await user.get_bool("settings.edited_messages.save_other", session, default=False):
+            return
 
-        silent_mode = await user.get_bool('settings.edited_messages.silent_mode', session, default=True)
+        silent_mode = await user.get_bool("settings.edited_messages.silent_mode", session, default=True)
 
         try:
             await send_edited_info(
@@ -217,10 +207,10 @@ async def on_edit_messages(event: Message):
                 old_msg=old_msg,
                 new_msg=new_msg,
                 message_id=event.message_id,
-                silent_mode=silent_mode
+                silent_mode=silent_mode,
             )
         except TelegramBadRequest as e:
-            if 'VOICE_MESSAGES_FORBIDDEN' in e.message:
+            if "VOICE_MESSAGES_FORBIDDEN" in e.message:
                 await event.bot.send_message(user.id, _("VOICE_MESSAGES_FORBIDDEN"))
             else:
                 raise e
@@ -229,7 +219,7 @@ async def on_edit_messages(event: Message):
             connected_user_id=user.id if not user.privacy_mode else None,
             chat_id=chat.id if not user.privacy_mode else None,
             message_id=event.message_id if not user.privacy_mode else None,
-            name='metrics.save_edited_messages',
+            name="metrics.save_edited_messages",
         )
         session.add(metric)
         await session.commit()

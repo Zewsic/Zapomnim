@@ -1,12 +1,11 @@
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import RedisSession
-from database.models import User, Persona
-from utils import _UNSET, save_to_redis, load_from_redis
+from database.models import Persona, User
+from utils import _UNSET, load_from_redis, save_to_redis
 
 
 async def update_user(
@@ -14,17 +13,17 @@ async def update_user(
         session: AsyncSession,
         *,
         first_name: str = _UNSET,
-        last_name: Optional[str] = _UNSET,
-        username: Optional[str] = _UNSET,
+        last_name: str | None = _UNSET,
+        username: str | None = _UNSET,
         is_banned: bool = _UNSET,
-        business_connection_id: Optional[str] = _UNSET,
+        business_connection_id: str | None = _UNSET,
         subscription_until: datetime = _UNSET,
         is_enabled: bool = _UNSET,
         language: str = _UNSET,
         privacy_mode: bool = _UNSET,
         referral_id: int = _UNSET,
         referrals_income: int = _UNSET,
-        privacy_agreed: Optional[datetime] = _UNSET,
+        privacy_agreed: datetime | None = _UNSET,
 
 ) -> User:
     user = User(id=id)
@@ -65,8 +64,8 @@ async def get_user(
         session: AsyncSession,
         *,
         id: int = _UNSET,
-        business_connection_id: Optional[str] = _UNSET,
-) -> Optional[User]:
+        business_connection_id: str | None = _UNSET,
+) -> User | None:
     if id is _UNSET:
         if business_connection_id is not _UNSET:
             from_redis = await RedisSession.get(f"business_connection_to_user_id:{business_connection_id}")
@@ -90,8 +89,8 @@ async def update_persona(
         session: AsyncSession,
         *,
         first_name: str = _UNSET,
-        last_name: Optional[str] = _UNSET,
-        username: Optional[str] = _UNSET,
+        last_name: str | None = _UNSET,
+        username: str | None = _UNSET,
         language: str = _UNSET,
 ) -> Persona:
     persona = Persona(id=id)
@@ -113,7 +112,7 @@ async def update_persona(
 async def get_persona(
         session: AsyncSession,
         id: int = _UNSET,
-) -> Optional[Persona]:
+) -> Persona | None:
     persona = await load_from_redis(Persona, f"{id}")
     if persona is None:
         persona = await session.get(Persona, id)

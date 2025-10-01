@@ -15,17 +15,16 @@ information. All calculations still happen server‑side in one trip to the data
 
 import json
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Set
+from typing import Any
 
-from fastapi import Depends, HTTPException, APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import func, select, desc, case
+from sqlalchemy import desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import create_session
 from database.models import Metric, SavedMessage, User
 from utils.security import make_promocode
-
 
 app = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -39,7 +38,7 @@ async def get_db() -> AsyncSession:  # pragma: no cover
 # Pricing helpers
 # ---------------------------------------------------------------------------
 
-MODEL_PRICING: Dict[str, Dict[str, float]] = {
+MODEL_PRICING: dict[str, dict[str, float]] = {
     "o4-mini": {"input": 1.1 / 1_000_000, "output": 4.4 / 1_000_000},
     "gpt-4.1-nano": {"input": 0.1 / 1_000_000, "output": 0.4 / 1_000_000},
     "gpt-4.1-mini": {"input": 0.4 / 1_000_000, "output": 1.6 / 1_000_000},
@@ -65,7 +64,7 @@ def _normalize_model(model: str | None) -> str:
     return "gpt-4.1-nano"
 
 
-def _parse_metric_value(value: str | None) -> Dict[str, Any] | None:
+def _parse_metric_value(value: str | None) -> dict[str, Any] | None:
     if not value:
         return None
     try:
@@ -77,7 +76,7 @@ def _parse_metric_value(value: str | None) -> Dict[str, Any] | None:
     return data
 
 
-def _calc_cost(data: Dict[str, Any]) -> float:
+def _calc_cost(data: dict[str, Any]) -> float:
     model = _normalize_model(data.get("model", "gpt-4.1-nano"))
     prices = MODEL_PRICING.get(model, MODEL_PRICING["gpt-4.1-nano"])
 
@@ -124,9 +123,8 @@ class StatsResponse(BaseModel):
 
 
 @app.get("/stats", response_model=StatsResponse)
-async def get_statistics(db: AsyncSession = Depends(get_db)) -> StatsResponse:  # noqa: D401
+async def get_statistics(db: AsyncSession = Depends(get_db)) -> StatsResponse:
     """Aggregate high‑level statistics for the dashboard."""
-
     now = datetime.utcnow()
     day_ago = now - timedelta(days=1)
     week_ago = now - timedelta(days=7)
@@ -156,17 +154,17 @@ async def get_statistics(db: AsyncSession = Depends(get_db)) -> StatsResponse:  
     total_messages = (await db.execute(select(func.count(SavedMessage.id)))).scalar_one()
     day_messages = (
         await db.execute(
-            select(func.count(SavedMessage.id)).where(SavedMessage.created_at >= day_ago)
+            select(func.count(SavedMessage.id)).where(SavedMessage.created_at >= day_ago),
         )
     ).scalar_one()
     week_messages = (
         await db.execute(
-            select(func.count(SavedMessage.id)).where(SavedMessage.created_at >= week_ago)
+            select(func.count(SavedMessage.id)).where(SavedMessage.created_at >= week_ago),
         )
     ).scalar_one()
     month_messages = (
         await db.execute(
-            select(func.count(SavedMessage.id)).where(SavedMessage.created_at >= month_ago)
+            select(func.count(SavedMessage.id)).where(SavedMessage.created_at >= month_ago),
         )
     ).scalar_one()
 
@@ -234,13 +232,12 @@ class UserInfo(BaseModel):
     subscription_until: datetime | None
     total_messages: int
     total_cost_usd: float
-    metrics: Dict[str, UserMetricInfo]
+    metrics: dict[str, UserMetricInfo]
 
 
-@app.get("/users", response_model=List[UserInfo])
-async def get_users(db: AsyncSession = Depends(get_db)) -> List[UserInfo]:  # noqa: D401
+@app.get("/users", response_model=list[UserInfo])
+async def get_users(db: AsyncSession = Depends(get_db)) -> list[UserInfo]:
     """Full per‑user usage overview."""
-
     users = (await db.execute(select(User))).scalars().all()
 
     # Pre‑fetch message counts & last‑activity stamps in bulk to avoid N+1.
@@ -264,8 +261,8 @@ async def get_users(db: AsyncSession = Depends(get_db)) -> List[UserInfo]:  # no
     ).all()
 
     # Build nested dict uid -> metric‑name -> UserMetricInfo
-    metric_map: Dict[int, Dict[str, UserMetricInfo]] = {}
-    total_spend_map: Dict[int, float] = {}
+    metric_map: dict[int, dict[str, UserMetricInfo]] = {}
+    total_spend_map: dict[int, float] = {}
 
     for uid, name, value in metric_rows:
         per_user = metric_map.setdefault(uid, {})
@@ -281,7 +278,7 @@ async def get_users(db: AsyncSession = Depends(get_db)) -> List[UserInfo]:  # no
             total_spend_map[uid] = total_spend_map.get(uid, 0.0) + cost
 
     # Compose final payload
-    result: List[UserInfo] = []
+    result: list[UserInfo] = []
     for u in users:
         msg_cnt, last_msg = msg_info.get(u.id, (0, None))
         metrics = metric_map.get(u.id, {})
@@ -297,7 +294,7 @@ async def get_users(db: AsyncSession = Depends(get_db)) -> List[UserInfo]:  # no
                 total_messages=msg_cnt,
                 total_cost_usd=round(total_spend_map.get(u.id, 0.0), 4),
                 metrics=metrics,
-            )
+            ),
         )
     return result
 
@@ -323,8 +320,8 @@ class MetricInfo(BaseModel):
     last_entry: datetime | None = None
 
 
-@app.get("/metrics", response_model=Dict[str, MetricInfo])
-async def get_metrics(db: AsyncSession = Depends(get_db)) -> Dict[str, MetricInfo]:  # noqa: D401
+@app.get("/metrics", response_model=dict[str, MetricInfo])
+async def get_metrics(db: AsyncSession = Depends(get_db)) -> dict[str, MetricInfo]:
     now = datetime.utcnow()
     day_ago = now - timedelta(days=1)
     month_ago = now - timedelta(days=30)
@@ -336,11 +333,11 @@ async def get_metrics(db: AsyncSession = Depends(get_db)) -> Dict[str, MetricInf
                 Metric.value,
                 Metric.created_at,
                 Metric.connected_user_id,
-            )
+            ),
         )
     ).all()
 
-    temp: Dict[str, Dict[str, Any]] = {}
+    temp: dict[str, dict[str, Any]] = {}
     for name, value, created, uid in rows:
         obj = temp.setdefault(
             name,
@@ -379,11 +376,11 @@ async def get_metrics(db: AsyncSession = Depends(get_db)) -> Dict[str, MetricInf
         if created >= day_ago:
             update("day")
 
-    result: Dict[str, MetricInfo] = {}
+    result: dict[str, MetricInfo] = {}
     for name, obj in temp.items():
         for scope in ("day", "month", "total"):
             info: MetricTimeInfo = obj[scope]
-            users_set: Set[int] = obj.pop(f"users_{scope}")
+            users_set: set[int] = obj.pop(f"users_{scope}")
             info.users = len(users_set)
         result[name] = MetricInfo(
             day=obj["day"],
@@ -416,15 +413,14 @@ class TopCostUsers(BaseModel):
 
 
 class TopResponse(BaseModel):
-    messages: List[TopUsers]
-    metrics: List[TopUsers]
-    cost: List[TopCostUsers]
+    messages: list[TopUsers]
+    metrics: list[TopUsers]
+    cost: list[TopCostUsers]
 
 
 @app.get("/top", response_model=TopResponse)
-async def get_top(db: AsyncSession = Depends(get_db)) -> TopResponse:  # noqa: D401
+async def get_top(db: AsyncSession = Depends(get_db)) -> TopResponse:
     """Return three leaderboards: by message count, by metric count, and by spend."""
-
     # ------------------------------------------------------------------
     # Messages & metrics: simple SQL aggregates
     # ------------------------------------------------------------------
@@ -440,7 +436,7 @@ async def get_top(db: AsyncSession = Depends(get_db)) -> TopResponse:  # noqa: D
             .join(SavedMessage, SavedMessage.connected_user_id == User.id)
             .group_by(User.id)
             .order_by(desc("c"))
-            .limit(10)
+            .limit(10),
         )
     ).all()
 
@@ -456,7 +452,7 @@ async def get_top(db: AsyncSession = Depends(get_db)) -> TopResponse:  # noqa: D
             .join(Metric, Metric.connected_user_id == User.id)
             .group_by(User.id)
             .order_by(desc("c"))
-            .limit(10)
+            .limit(10),
         )
     ).all()
 
@@ -466,7 +462,7 @@ async def get_top(db: AsyncSession = Depends(get_db)) -> TopResponse:  # noqa: D
     spend_rows = (
         await db.execute(select(Metric.connected_user_id, Metric.value))
     ).all()
-    spend_map: Dict[int, float] = {}
+    spend_map: dict[int, float] = {}
     for uid, value in spend_rows:
         parsed = _parse_metric_value(value)
         if not parsed:
@@ -484,7 +480,7 @@ async def get_top(db: AsyncSession = Depends(get_db)) -> TopResponse:  # noqa: D
     else:
         user_map = {}
 
-    cost_payload: List[TopCostUsers] = []
+    cost_payload: list[TopCostUsers] = []
     for uid, cost in top_spenders:
         u = user_map.get(uid)
         if not u:
@@ -496,7 +492,7 @@ async def get_top(db: AsyncSession = Depends(get_db)) -> TopResponse:  # noqa: D
                 last_name=u.last_name,
                 username=u.username,
                 cost_usd=round(cost, 4),
-            )
+            ),
         )
 
     return TopResponse(
@@ -516,7 +512,7 @@ class PromoResponse(BaseModel):
 
 
 @app.post("/promocode/{days}", response_model=PromoResponse)
-async def create_promocode(days: int) -> PromoResponse:  # noqa: D401
+async def create_promocode(days: int) -> PromoResponse:
     if days <= 0:
         raise HTTPException(status_code=400, detail="Invalid days")
     code = "https://t.me/zapomnim_bot?start=promo" + make_promocode(days)

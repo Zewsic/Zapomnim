@@ -1,17 +1,14 @@
+from collections.abc import Iterable
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
-from datetime import datetime, timedelta
-from typing import Iterable, Optional, List
 
 from aiogram.types import Message
-from sqlalchemy import select, update, func
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.models import User, SavedMessage, Persona, Metric
-from utils.security import (
-    generate_privacy_key, generate_encryption_data,
-    encrypt_message, decrypt_message
-)
+from database.models import Metric, Persona, SavedMessage, User
+from utils.security import decrypt_message, encrypt_message, generate_encryption_data, generate_privacy_key
 from utils.userdata import get_persona
 
 
@@ -64,9 +61,9 @@ MODEL_DUMP_ATTRS = (
 @dataclass
 class RestoredMessage:
     content_type: ContentType
-    content: Optional[str]
-    text: Optional[str]
-    persona: Optional[Persona]
+    content: str | None
+    text: str | None
+    persona: Persona | None
     created_at: datetime
     privacy_key: str = None
 
@@ -74,15 +71,15 @@ class RestoredMessage:
 async def save_message(
         connected_user: User,
         message: Message,
-        session: AsyncSession
-) -> Optional[tuple[ContentType, Optional[str], Optional[str]]]:
+        session: AsyncSession,
+) -> tuple[ContentType, str | None, str | None] | None:
     """Сохраняет сообщение пользователя с учетом типа контента и приватности."""
     chat_id = message.chat.id
     user_id = message.from_user.id
 
     text = message.text or message.caption
     content = None
-    content_type: Optional[ContentType] = ContentType.TEXT if message.text else None
+    content_type: ContentType | None = ContentType.TEXT if message.text else None
 
     if not content_type and message.photo:
         content_type = ContentType.PHOTO
@@ -117,7 +114,7 @@ async def save_message(
         content_type=content_type,
         content=content,
         is_privacy_mode=connected_user.privacy_mode,
-        session=session
+        session=session,
     )
     return content_type, content, text
 
@@ -127,11 +124,11 @@ async def _save_message(
         chat_id: int,
         message_id: int,
         from_id: int,
-        text: Optional[str],
+        text: str | None,
         content_type: ContentType,
-        content: Optional[str],
+        content: str | None,
         is_privacy_mode: bool,
-        session: AsyncSession
+        session: AsyncSession,
 ) -> None:
     """Внутренняя функция для сохранения сообщения в базу."""
     privacy_key = generate_privacy_key(connected_user_id, chat_id, message_id)
@@ -162,9 +159,9 @@ async def load_message_history(
         chat_id: int,
         message_ids: Iterable[int],
         session: AsyncSession,
-) -> List[RestoredMessage]:
+) -> list[RestoredMessage]:
     """Восстанавливает последние версии сообщений по id."""
-    result: List[RestoredMessage] = []
+    result: list[RestoredMessage] = []
     for message_id in sorted(message_ids):
         messages = await _load_messages(connected_user_id, chat_id, message_id, session)
         if messages:
@@ -177,9 +174,9 @@ async def restore_last_messages(
         chat_id: int,
         message_ids: Iterable[int],
         session: AsyncSession,
-) -> List[RestoredMessage]:
+) -> list[RestoredMessage]:
     """Восстанавливает последние версии сообщений по id."""
-    result: List[RestoredMessage] = []
+    result: list[RestoredMessage] = []
     for message_id in sorted(message_ids):
         messages = await _load_messages(connected_user_id, chat_id, message_id, session)
         if messages:
@@ -192,18 +189,18 @@ async def _load_messages(
         chat_id: int,
         message_id: int,
         session: AsyncSession,
-) -> List[RestoredMessage]:
+) -> list[RestoredMessage]:
     """Загружает и расшифровывает сообщения с привязкой к ключу приватности."""
     privacy_key = generate_privacy_key(connected_user_id, chat_id, message_id)
     encryption_data = generate_encryption_data(connected_user_id, chat_id, message_id)
 
-    result: List[RestoredMessage] = []
+    result: list[RestoredMessage] = []
     r = await session.execute(
         select(SavedMessage)
         .where(SavedMessage.privacy_key == privacy_key)
-        .order_by(SavedMessage.created_at)
+        .order_by(SavedMessage.created_at),
     )
-    _messages: List[SavedMessage] = r.scalars()
+    _messages: list[SavedMessage] = r.scalars()
     for _message in _messages:
         if not _message:
             continue
@@ -219,7 +216,7 @@ async def _load_messages(
                 persona=persona,
                 created_at=_message.created_at,
                 privacy_key=privacy_key,
-            )
+            ),
         )
     return result
 
@@ -231,7 +228,7 @@ async def make_all_messages_private(
     await session.execute(
         update(SavedMessage)
         .where(SavedMessage.connected_user_id == connected_user_id)
-        .values(connected_user_id=None, chat_id=None, message_id=None)
+        .values(connected_user_id=None, chat_id=None, message_id=None),
     )
 
     await session.commit()
@@ -243,13 +240,13 @@ async def anonymize_metrics(user_id: int, session: AsyncSession):
         .where(
             Metric.connected_user_id == user_id,
             Metric.name.in_([
-                'metrics.save_deleted_messages',
-                'metrics.save_edited_messages',
-                'metrics.save_protected_messages',
-                'metrics.transcribe_voice_message'
+                "metrics.save_deleted_messages",
+                "metrics.save_edited_messages",
+                "metrics.save_protected_messages",
+                "metrics.transcribe_voice_message",
             ]),
         )
-        .values(connected_user_id=None, chat_id=None, message_id=None)
+        .values(connected_user_id=None, chat_id=None, message_id=None),
     )
 
 
@@ -258,10 +255,10 @@ async def load_chat_with_user(
         chat_id: int,
         session: AsyncSession,
         *,
-        count: int = None
-) -> List[RestoredMessage]:
+        count: int = None,
+) -> list[RestoredMessage]:
     """Восстанавливает последние версии сообщений по id."""
-    result: List[RestoredMessage] = []
+    result: list[RestoredMessage] = []
 
     subq = (
         select(
@@ -269,8 +266,8 @@ async def load_chat_with_user(
             SavedMessage.created_at,
             func.row_number().over(
                 partition_by=SavedMessage.message_id,
-                order_by=SavedMessage.created_at.desc()
-            ).label("rnk")
+                order_by=SavedMessage.created_at.desc(),
+            ).label("rnk"),
         )
         .where(
             SavedMessage.connected_user_id == connected_user_id,
@@ -300,11 +297,11 @@ async def load_encrypted_user_messages(
         connected_user_id: int,
         session: AsyncSession,
         *,
-        chat_id: Optional[int] = None,
-        cutoff: Optional[datetime] = None,
-) -> List[SavedMessage]:
+        chat_id: int | None = None,
+        cutoff: datetime | None = None,
+) -> list[SavedMessage]:
     filters = [
-        SavedMessage.connected_user_id == connected_user_id
+        SavedMessage.connected_user_id == connected_user_id,
     ]
 
     if chat_id:
@@ -316,9 +313,9 @@ async def load_encrypted_user_messages(
     r = (await session.execute(
         select(SavedMessage)
         .where(
-            *filters
+            *filters,
         )
-        .order_by(SavedMessage.created_at.desc())
+        .order_by(SavedMessage.created_at.desc()),
     )).scalars().all()
 
     return list(r)
@@ -330,7 +327,7 @@ async def stringify_messages(user_id: int, chat_id: int, session, count: int, mi
         return None
     lines = []
     for message in messages:
-        if message.content_type != 'text':
+        if message.content_type != "text":
             lines.append(f"> {message.persona.full_name}: [{message.content_type}]")
         else:
             lines.append(f"> {message.persona.full_name}:")
@@ -338,7 +335,7 @@ async def stringify_messages(user_id: int, chat_id: int, session, count: int, mi
         if message.text is not None:
             lines.append(f"{message.text}")
 
-        lines.append('')
-        lines.append('')
+        lines.append("")
+        lines.append("")
 
-    return '\n'.join(lines)
+    return "\n".join(lines)

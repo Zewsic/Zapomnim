@@ -7,7 +7,7 @@ from aiogram.utils.i18n import gettext as _
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import create_session
-from database.models import Persona, User, Metric
+from database.models import Metric, Persona, User
 from utils import get_user
 from utils.messages import ContentType, RestoredMessage, restore_last_messages
 from utils.userdata import get_persona
@@ -51,7 +51,7 @@ async def send_media(
             chat_id,
             text=caption,
             link_preview_options=LinkPreviewOptions(is_disabled=True),
-            disable_notification=silent_mode
+            disable_notification=silent_mode,
         )
         return
 
@@ -66,7 +66,7 @@ async def send_media(
             chat_id,
             text=caption,
             link_preview_options=LinkPreviewOptions(is_disabled=True),
-            disable_notification=silent_mode
+            disable_notification=silent_mode,
         )
         await bot.send_sticker(chat_id, sticker=content, reply_to_message_id=sent_msg.message_id, disable_notification=silent_mode)
         return
@@ -76,7 +76,7 @@ async def send_media(
             chat_id,
             text=caption,
             link_preview_options=LinkPreviewOptions(is_disabled=True),
-            disable_notification=silent_mode
+            disable_notification=silent_mode,
         )
         await bot.send_video_note(chat_id, video_note=content, reply_to_message_id=sent_msg.message_id, disable_notification=silent_mode)
         return
@@ -92,7 +92,7 @@ async def send_media(
             chat_id,
             BufferedInputFile(dump_bytes, filename="dump.json"),
             caption=caption,
-            disable_notification=silent_mode
+            disable_notification=silent_mode,
         )
         return
 
@@ -100,7 +100,7 @@ async def send_media(
         chat_id,
         text=caption,
         link_preview_options=LinkPreviewOptions(is_disabled=True),
-        disable_notification=silent_mode
+        disable_notification=silent_mode,
     )
 
 
@@ -113,10 +113,9 @@ async def send_deleted_info(
         message_ids: list[int],
 ) -> None:
     """Рассылает в личку пользователю (user_id) информацию об удалённых сообщениях."""
+    silent_mode = await user.get_bool("settings.deleted_messages.silent_mode", session, default=True)
 
-    silent_mode = await user.get_bool('settings.deleted_messages.silent_mode', session, default=True)
-
-    for msg_data, msg_id in zip(restored_messages, message_ids):
+    for msg_data, msg_id in zip(restored_messages, message_ids, strict=False):
         if user.id != msg_data.persona.id:
             if not await user.get_bool("settings.deleted_messages.enabled", session, default=True):
                 continue
@@ -154,14 +153,14 @@ async def send_deleted_info(
             content_type=msg_data.content_type,
             content=msg_data.content,
             caption=base_text,
-            silent_mode=silent_mode
+            silent_mode=silent_mode,
         )
 
         metric = Metric(
             connected_user_id=user.id if not user.privacy_mode else None,
             chat_id=chat.id if not user.privacy_mode else None,
             message_id=msg_id if not user.privacy_mode else None,
-            name='metrics.save_deleted_messages',
+            name="metrics.save_deleted_messages",
         )
         session.add(metric)
     await session.commit()
@@ -195,7 +194,7 @@ async def on_delete_messages(event: BusinessMessagesDeleted):
                 chat=chat,
                 restored_messages=restored,
                 session=session,
-                message_ids=event.message_ids
+                message_ids=event.message_ids,
             )
         except TelegramBadRequest as e:
             if "VOICE_MESSAGES_FORBIDDEN" in e.message:

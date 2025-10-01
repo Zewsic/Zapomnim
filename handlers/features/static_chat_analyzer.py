@@ -3,7 +3,7 @@
 import asyncio
 import json
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 from aiogram import Bot, F, Router
 from aiogram.filters import StateFilter, and_f
@@ -80,11 +80,15 @@ class DialogueData(BaseModel):
     dialogue_topics: list[DialogueTopic]
 
 
-async def send_request(messages: str, language: str = "", high_mode: bool = False) -> tuple[
-    DialogueData, dict[str, int | str]
+async def send_request(
+    messages: str,
+    language: str = "",
+    high_mode: bool = False,
+) -> tuple[
+    DialogueData,
+    dict[str, int | str],
 ]:
     """Call the OpenAI Responses API and return structured dialogue data."""
-
     model = "gpt-5-mini"
     response = await client.responses.create(
         model=model,
@@ -110,17 +114,17 @@ async def send_request(messages: str, language: str = "", high_mode: bool = Fals
                             "* Outcome (state the result or conclusion reached by the participants on each topic; if no outcome is clear, indicate this)\n\n"
                             f"Response Language: {language}"
                         ),
-                    }
-                ]
+                    },
+                ],
             },
             {
                 "role": "user",
                 "content": [
                     {
                         "type": "input_text",
-                        "text": messages
-                    }
-                ]
+                        "text": messages,
+                    },
+                ],
             },
         ],
         text={
@@ -131,7 +135,7 @@ async def send_request(messages: str, language: str = "", high_mode: bool = Fals
                     "type": "object",
                     "required": [
                         "participants",
-                        "dialogue_topics"
+                        "dialogue_topics",
                     ],
                     "properties": {
                         "participants": {
@@ -144,40 +148,40 @@ async def send_request(messages: str, language: str = "", high_mode: bool = Fals
                                     "psychological_profile",
                                     "mood",
                                     "manipulative_tendencies",
-                                    "frequent_words"
+                                    "frequent_words",
                                 ],
                                 "properties": {
                                     "mood": {
                                         "type": "string",
-                                        "description": "Current mood of the participant."
+                                        "description": "Current mood of the participant.",
                                     },
                                     "name": {
                                         "type": "string",
-                                        "description": "Name of the participant."
+                                        "description": "Name of the participant.",
                                     },
                                     "character": {
                                         "type": "string",
-                                        "description": "Traits or characteristics of the participant."
+                                        "description": "Traits or characteristics of the participant.",
                                     },
                                     "frequent_words": {
                                         "type": "array",
                                         "items": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
-                                        "description": "Words frequently used by the participant."
+                                        "description": "Words frequently used by the participant.",
                                     },
                                     "psychological_profile": {
                                         "type": "string",
-                                        "description": "Psychological profile of the participant."
+                                        "description": "Psychological profile of the participant.",
                                     },
                                     "manipulative_tendencies": {
                                         "type": "string",
-                                        "description": "Tendency of the participant to manipulate."
-                                    }
+                                        "description": "Tendency of the participant to manipulate.",
+                                    },
                                 },
-                                "additionalProperties": False
+                                "additionalProperties": False,
                             },
-                            "description": "List of participants in the dialogue. (2 OBJECTS)"
+                            "description": "List of participants in the dialogue. (2 OBJECTS)",
                         },
                         "dialogue_topics": {
                             "type": "array",
@@ -186,34 +190,34 @@ async def send_request(messages: str, language: str = "", high_mode: bool = Fals
                                 "required": [
                                     "title",
                                     "description",
-                                    "outcome"
+                                    "outcome",
                                 ],
                                 "properties": {
                                     "title": {
                                         "type": "string",
-                                        "description": "Title of the topic."
+                                        "description": "Title of the topic.",
                                     },
                                     "outcome": {
                                         "type": "string",
-                                        "description": "Expected outcome of the topic."
+                                        "description": "Expected outcome of the topic.",
                                     },
                                     "description": {
                                         "type": "string",
-                                        "description": "Description of the topic."
-                                    }
+                                        "description": "Description of the topic.",
+                                    },
                                 },
-                                "additionalProperties": False
+                                "additionalProperties": False,
                             },
-                            "description": "Topics of the dialogue."
-                        }
+                            "description": "Topics of the dialogue.",
+                        },
                     },
-                    "additionalProperties": False
+                    "additionalProperties": False,
                 },
-                "strict": True
-            }
+                "strict": True,
+            },
         },
         reasoning={
-            "effort": "high" if high_mode else "low",
+            "effort": "high" if high_mode else "medium",
         },
         tools=[],
     )
@@ -244,8 +248,7 @@ async def send_request(messages: str, language: str = "", high_mode: bool = Fals
 
 
 async def process_analysis(persona: Persona, user: User, session: AsyncSession):
-    """
-    Process the static chat analysis for the given persona and user.
+    """Process the static chat analysis for the given persona and user.
 
     Args:
     - persona (Persona): The persona to analyze.
@@ -254,30 +257,40 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
 
     Returns:
     - str: The analysis result or an error message.
-    """
 
+    """
     if not user.has_subscription:
         return None
 
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
 
-    high_usage = (await session.execute(
-        select(Metric)
-        .where(
-            Metric.connected_user_id == user.id,
-            Metric.name == 'system.static_chat_analyzer.high',
-            Metric.created_at >= thirty_days_ago
+    high_usage = (
+        (
+            await session.execute(
+                select(Metric).where(
+                    Metric.connected_user_id == user.id,
+                    Metric.name == "system.static_chat_analyzer.high",
+                    Metric.created_at >= thirty_days_ago,
+                ),
+            )
         )
-    )).scalars().all()
+        .scalars()
+        .all()
+    )
 
-    low_usage = (await session.execute(
-        select(Metric)
-        .where(
-            Metric.connected_user_id == user.id,
-            Metric.name == 'system.static_chat_analyzer.low',
-            Metric.created_at >= thirty_days_ago
+    low_usage = (
+        (
+            await session.execute(
+                select(Metric).where(
+                    Metric.connected_user_id == user.id,
+                    Metric.name == "system.static_chat_analyzer.low",
+                    Metric.created_at >= thirty_days_ago,
+                ),
+            )
         )
-    )).scalars().all()
+        .scalars()
+        .all()
+    )
 
     logger.info("Found %s high and %s low usages for 30 days", len(high_usage), len(low_usage))
 
@@ -288,7 +301,13 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
     else:
         return None
 
-    context = await stringify_messages(user.id, persona.id, session, count=HIGH_MODE_MESSAGES if high_mode else LOW_MODE_MESSAGES, min_messages=-1)
+    context = await stringify_messages(
+        user.id,
+        persona.id,
+        session,
+        count=HIGH_MODE_MESSAGES if high_mode else LOW_MODE_MESSAGES,
+        min_messages=-1,
+    )
     if not context:
         return CONTEXT_MISSING
     try:
@@ -311,7 +330,7 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
                     frequent_words=", ".join(part.frequent_words),
                 )
                 for part in data.participants
-            ]
+            ],
         ),
         topics="\n".join(
             [
@@ -322,7 +341,7 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
                     result=topic.outcome,
                 )
                 for num, topic in enumerate(data.dialogue_topics)
-            ]
+            ],
         ),
     )
 
@@ -339,16 +358,15 @@ async def process_analysis(persona: Persona, user: User, session: AsyncSession):
 
 
 async def send_STA(bot: Bot, chat_id: int, user: User, state: FSMContext):
-    """
-    Send the static chat analysis to the user.
+    """Send the static chat analysis to the user.
 
     Args:
     - bot (Bot): The bot instance.
     - chat_id (int): The chat ID.
     - user (User): The user who initiated the analysis.
     - state (FSMContext): The finite state machine context.
-    """
 
+    """
     if not user.is_working:
         await bot.send_message(
             chat_id,
@@ -372,7 +390,7 @@ async def send_STA(bot: Bot, chat_id: int, user: User, state: FSMContext):
         reply_markup=STA_keyboard(),
     )
 
-    await state.update_data({'message_id': m.message_id})
+    await state.update_data({"message_id": m.message_id})
 
 
 @router.callback_query(F.data == "analyze")
@@ -450,10 +468,12 @@ async def on_chat_shared(message: Message, state: FSMContext):
         await message.answer(result)
 
 
-@router.message(and_f(
-    StateFilter(STA_State.select_user),
-    F.text.startswith("👈")
-))
+@router.message(
+    and_f(
+        StateFilter(STA_State.select_user),
+        F.text.startswith("👈"),
+    ),
+)
 async def on_back(message: Message, state: FSMContext):
     data = await state.get_data()
     m = data.get("message_id")

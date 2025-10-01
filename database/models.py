@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from sqlalchemy import func, ForeignKey, BIGINT, Integer
+from sqlalchemy import BIGINT, ForeignKey, Integer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -8,7 +8,7 @@ from database import Base, RedisSession
 
 
 class UserData(Base):
-    user_id: Mapped[int] = mapped_column(BIGINT, ForeignKey('users.id'))
+    user_id: Mapped[int] = mapped_column(BIGINT, ForeignKey("users.id"))
     key: Mapped[str]
     value: Mapped[str]
 
@@ -26,7 +26,7 @@ class User(Base):
     business_connection_id: Mapped[str | None] = mapped_column(default=None)
     subscriber_until: Mapped[datetime | None] = mapped_column(default=None)
 
-    referral_id: Mapped[int | None] = mapped_column(BIGINT, ForeignKey('users.id'), default=None)
+    referral_id: Mapped[int | None] = mapped_column(BIGINT, ForeignKey("users.id"), default=None)
     referrals_income: Mapped[int] = mapped_column(Integer, default=0)
 
     privacy_agreed: Mapped[datetime | None]
@@ -102,8 +102,8 @@ class Persona(Base):
 
     @property
     def full_name(self) -> str:
-        return (f"{self.first_name}" + (f" {self.last_name}" if self.last_name else "")).replace('<', '').replace('>',
-                                                                                                                  '')
+        return (f"{self.first_name}" + (f" {self.last_name}" if self.last_name else "")).replace("<", "").replace(">",
+                                                                                                                  "")
 
     @property
     def hname(self):

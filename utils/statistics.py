@@ -1,23 +1,22 @@
 # statistics_utils.py
 
-from datetime import datetime, timedelta
-from typing import List, Tuple, Optional
-
 import io
+from datetime import datetime, timedelta
+
 import matplotlib
-matplotlib.use('Agg')  # Чтобы не требовался X-server
+
+matplotlib.use("Agg")  # Чтобы не требовался X-server
 import matplotlib.pyplot as plt
 import numpy as np
 
 from database.models import SavedMessage
 
 
-def filter_messages_by_options(messages: List[SavedMessage], options: dict) -> List[SavedMessage]:
-    """
-    Фильтрует список сообщений в соответствии с опциями:
-      - Период (period)
-      - Тип (type_filter) = all / incoming / outgoing
-      - Собеседник (interlocutor_id)
+def filter_messages_by_options(messages: list[SavedMessage], options: dict) -> list[SavedMessage]:
+    """Фильтрует список сообщений в соответствии с опциями:
+    - Период (period)
+    - Тип (type_filter) = all / incoming / outgoing
+    - Собеседник (interlocutor_id)
     """
     start_date, end_date = get_period_dates(options)
 
@@ -47,23 +46,22 @@ def filter_messages_by_options(messages: List[SavedMessage], options: dict) -> L
     return result
 
 
-def get_period_dates(options: dict) -> Tuple[Optional[datetime], Optional[datetime]]:
-    """
-    Возвращает кортеж (start_date, end_date) в зависимости от period:
-      - day, week, month, all, custom
+def get_period_dates(options: dict) -> tuple[datetime | None, datetime | None]:
+    """Возвращает кортеж (start_date, end_date) в зависимости от period:
+    - day, week, month, all, custom
     """
     now = datetime.utcnow()
     period = options.get("period", "week")
 
     if period == "day":
         return now - timedelta(days=1), now
-    elif period == "week":
+    if period == "week":
         return now - timedelta(days=7), now
-    elif period == "month":
+    if period == "month":
         return now - timedelta(days=30), now
-    elif period == "all":
+    if period == "all":
         return None, now
-    elif period == "custom":
+    if period == "custom":
         start_date = options.get("start_date")
         end_date = options.get("end_date")
         # Если пользователь не ввёл даты, fallback на all
@@ -75,16 +73,15 @@ def get_period_dates(options: dict) -> Tuple[Optional[datetime], Optional[dateti
     return now - timedelta(days=7), now
 
 
-def calculate_statistics(messages: List[SavedMessage]) -> dict:
-    """
-    Рассчитывает необходимые метрики:
-      1) total_messages
-      2) incoming_count / outgoing_count
-      3) average_length
-      4) топ-5 собеседников
-      5) busiest_hour / quietest_hour
-      6) average_response_time
-      и т.д.
+def calculate_statistics(messages: list[SavedMessage]) -> dict:
+    """Рассчитывает необходимые метрики:
+    1) total_messages
+    2) incoming_count / outgoing_count
+    3) average_length
+    4) топ-5 собеседников
+    5) busiest_hour / quietest_hour
+    6) average_response_time
+    и т.д.
     """
     stats = {
         "total_messages": 0,
@@ -138,13 +135,12 @@ def calculate_statistics(messages: List[SavedMessage]) -> dict:
         if not m.outgoing:
             # incoming
             last_incoming_time = m.created_at
-        else:
-            # outgoing
-            if last_incoming_time:
-                diff = (m.created_at - last_incoming_time).total_seconds()
-                if diff >= 0:
-                    response_times.append(diff)
-                last_incoming_time = None
+        # outgoing
+        elif last_incoming_time:
+            diff = (m.created_at - last_incoming_time).total_seconds()
+            if diff >= 0:
+                response_times.append(diff)
+            last_incoming_time = None
 
     avg_response_time = sum(response_times) / len(response_times) if response_times else None
 
@@ -163,8 +159,7 @@ def calculate_statistics(messages: List[SavedMessage]) -> dict:
 
 
 def render_activity_chart(stats: dict, options: dict) -> io.BytesIO:
-    """
-    Построение графика динамики сообщений (например, по часам или по дням).
+    """Построение графика динамики сообщений (например, по часам или по дням).
     В данном примере возьмём часы из stats["busiest_hour"], но обычно нужен
     массив количества сообщений по каждому дню или часу.
     """
@@ -204,8 +199,7 @@ def render_activity_chart(stats: dict, options: dict) -> io.BytesIO:
 
 
 def render_in_out_pie(stats: dict, options: dict) -> io.BytesIO:
-    """
-    Круговая диаграмма входящих/исходящих.
+    """Круговая диаграмма входящих/исходящих.
     """
     incoming = stats.get("incoming_count", 0)
     outgoing = stats.get("outgoing_count", 0)
@@ -220,7 +214,7 @@ def render_in_out_pie(stats: dict, options: dict) -> io.BytesIO:
         labels=labels,
         autopct="%1.1f%%",
         startangle=140,
-        colors=colors
+        colors=colors,
     )
     ax.set_title("Incoming vs Outgoing")
 
@@ -232,8 +226,7 @@ def render_in_out_pie(stats: dict, options: dict) -> io.BytesIO:
 
 
 def render_top_interlocutors_bar(stats: dict, options: dict) -> io.BytesIO:
-    """
-    Барчарт топ-5 собеседников
+    """Барчарт топ-5 собеседников
     """
     top_5 = stats.get("top_interlocutors", [])
     if not top_5:
@@ -259,8 +252,7 @@ def render_top_interlocutors_bar(stats: dict, options: dict) -> io.BytesIO:
 
 
 def render_heatmap(stats: dict, options: dict) -> io.BytesIO:
-    """
-    Тепловая карта по часам и дням недели (0..6 x 0..23).
+    """Тепловая карта по часам и дням недели (0..6 x 0..23).
     Для этого нам тоже нужно хранить распределение сообщений в stats.
     Здесь покажем пример, как можно отрисовать.
     """

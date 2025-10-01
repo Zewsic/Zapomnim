@@ -1,28 +1,36 @@
-import asyncio
 import logging
 import traceback
 from contextlib import asynccontextmanager
 from typing import Final
 
 import uvicorn
-from aiogram.exceptions import TelegramBadRequest
-from aiogram.fsm.storage.redis import RedisStorage
-from fastapi import FastAPI, Request, HTTPException
 from aiogram import Bot, Dispatcher, types
-from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
-from aiogram.utils.i18n import I18n
+from aiogram.enums import ParseMode
+from aiogram.exceptions import TelegramBadRequest
+from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.types import MenuButtonCommands
+from aiogram.utils.i18n import I18n
+from fastapi import FastAPI, HTTPException, Request
 
-from config import WEBHOOK_HOST, BOT_TOKEN, TELEGRAM_SERVER
-from database import RedisSession, create_tables
+from config import BOT_TOKEN, TELEGRAM_SERVER, WEBHOOK_HOST
+from database import RedisSession
 from handlers import (
-    initial_setup_router, settings_router, process_message_router,
-    delete_messages_router, edit_messages_router, data_management_router, subscription_router,
-    menu_router, statistics_router, STA_router, chat_export_router, voice_transcribe_router
+    STA_router,
+    chat_export_router,
+    data_management_router,
+    delete_messages_router,
+    edit_messages_router,
+    initial_setup_router,
+    menu_router,
+    process_message_router,
+    settings_router,
+    statistics_router,
+    subscription_router,
+    voice_transcribe_router,
 )
-from utils import PatchedI18nMiddleware, set_bot_commands, admin_api_router
+from utils import PatchedI18nMiddleware, admin_api_router, set_bot_commands
 from utils.anti_ddos import DistributedThrottleMiddleware, ThrottleConfig
 
 BOT_TOKEN: Final[str] = BOT_TOKEN
@@ -32,18 +40,18 @@ WEBHOOK_URL: Final[str] = f"http://{WEBHOOK_HOST}/webhook/main"
 main_bot = Bot(
     token=BOT_TOKEN,
     default=DefaultBotProperties(parse_mode=ParseMode.HTML),
-    session=AiohttpSession(api=TELEGRAM_SERVER)
+    session=AiohttpSession(api=TELEGRAM_SERVER),
 )
 
 i18n = I18n(
     path="locales",
     default_locale="en",
-    domain="zapomnim"
+    domain="zapomnim",
 )
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 logger = logging.getLogger("app")
 
@@ -54,8 +62,8 @@ async def lifespan(app: FastAPI):
         WEBHOOK_URL,
         allowed_updates=[
             "message", "callback_query", "business_connection", "business_message",
-            "deleted_business_messages", "edited_business_message", "pre_checkout_query"
-        ]
+            "deleted_business_messages", "edited_business_message", "pre_checkout_query",
+        ],
     )
     await set_bot_commands(main_bot)
     await main_bot.set_chat_menu_button(menu_button=MenuButtonCommands())
@@ -81,7 +89,7 @@ dp.include_routers(
     menu_router,
     STA_router,
     chat_export_router,
-    voice_transcribe_router
+    voice_transcribe_router,
 )
 
 dp.message.middleware(
@@ -89,16 +97,16 @@ dp.message.middleware(
         RedisSession,
         ThrottleConfig(capacity=2, window_seconds=3),
         ban_message="Не спамь!",
-    )
+    ),
 )
 
 PatchedI18nMiddleware(i18n).setup(dp)
 app.include_router(admin_api_router)
 
 
-@app.post('/webhook/{bot_id}')
+@app.post("/webhook/{bot_id}")
 async def telegram_main_webhook(bot_id: str, req: Request):
-    if bot_id != 'main':
+    if bot_id != "main":
         raise HTTPException(status_code=404, detail="Unknown bot id")
     try:
         payload = await req.json()

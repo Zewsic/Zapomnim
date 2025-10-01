@@ -1,12 +1,12 @@
 import time
 import uuid
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
-from typing import Any, Awaitable, Callable, Dict, Optional
+from typing import Any
 
 import redis.asyncio as aioredis
 from aiogram import BaseMiddleware
-from aiogram.types import TelegramObject, Message, CallbackQuery
-from redis.asyncio import Redis
+from aiogram.types import CallbackQuery, Message, TelegramObject
 
 # =========================
 #  Lua Token‑Bucket Script
@@ -79,6 +79,7 @@ class DistributedThrottleMiddleware(BaseMiddleware):
         лимитируется.
     ban_message : str | None
         Текст, отправляемый при блокировке. None → ничего не отправлять.
+
     """
 
     def __init__(
@@ -86,7 +87,7 @@ class DistributedThrottleMiddleware(BaseMiddleware):
         redis: aioredis.Redis,
         config: ThrottleConfig | None = None,
         *,
-        key_factory: Callable[[TelegramObject], Optional[str]] | None = None,
+        key_factory: Callable[[TelegramObject], str | None] | None = None,
         ban_message: str | None = "Слишком часто — отдыхайте ⛔",
     ) -> None:
         self.redis = redis
@@ -99,9 +100,9 @@ class DistributedThrottleMiddleware(BaseMiddleware):
     # ------------------------------------------------------------
     async def __call__(
         self,
-        handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
+        handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[Any]],
         event: TelegramObject,
-        data: Dict[str, Any],
+        data: dict[str, Any],
     ) -> Any:
         key = self.key_factory(event)
         if key is None:
@@ -111,7 +112,7 @@ class DistributedThrottleMiddleware(BaseMiddleware):
         ban_key = f"ban:{key}"
         if await self.redis.exists(ban_key):
             await self._notify_ban(event)
-            return  # прерываем цепочку
+            return None  # прерываем цепочку
 
         rate_key = f"sw:{key}"
         now_ms = int(time.time() * 1000)
@@ -152,7 +153,7 @@ class DistributedThrottleMiddleware(BaseMiddleware):
                 pass
 
     @staticmethod
-    def _default_key(event: TelegramObject) -> Optional[str]:
+    def _default_key(event: TelegramObject) -> str | None:
         if isinstance(event, Message):
             return str(event.from_user.id)
         if isinstance(event, CallbackQuery):

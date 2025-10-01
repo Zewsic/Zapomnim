@@ -1,31 +1,29 @@
 import logging
-from typing import List
 
 from aiogram import Bot, F, Router
-from aiogram.filters import and_f, StateFilter
+from aiogram.filters import StateFilter, and_f
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message, BufferedInputFile
+from aiogram.types import BufferedInputFile, CallbackQuery, Message
 from aiogram.utils.i18n import gettext as _
 
 from config import Export_State
 from database import create_session
-from database.models import SavedMessage
 from database.models import User
 from handlers.menu import send_main_menu
 from keyboards import continue_keyboard
 from keyboards.chat_export import export_chat_share_keyboard
 from utils import get_user
-from utils.messages import load_chat_with_user, RestoredMessage, stringify_messages
+from utils.messages import RestoredMessage, stringify_messages
 from utils.userdata import get_persona
 
-logger = logging.getLogger('Zapomnim/ChatExport')
+logger = logging.getLogger("Zapomnim/ChatExport")
 router = Router()
 
 
-async def perform_export(messages: List['RestoredMessage']):
+async def perform_export(messages: list["RestoredMessage"]):
     lines = []
     for message in messages:
-        if message.content_type != 'text':
+        if message.content_type != "text":
             lines.append(f"> {message.persona.full_name}: [{message.content_type}]")
         else:
             lines.append(f"> {message.persona.full_name}:")
@@ -33,9 +31,9 @@ async def perform_export(messages: List['RestoredMessage']):
         if message.text is not None:
             lines.append(f"{message.text}")
 
-        lines.append('')
-        lines.append('')
-    return '\n'.join(lines)
+        lines.append("")
+        lines.append("")
+    return "\n".join(lines)
 
 
 async def send_export_menu(bot: Bot, chat_id: int, user: User, state: FSMContext):
@@ -43,14 +41,14 @@ async def send_export_menu(bot: Bot, chat_id: int, user: User, state: FSMContext
         await bot.send_message(
             chat_id,
             text=_("SUBSCRIPTION_REQUIRED_ERROR"),
-            reply_markup=continue_keyboard('profile'),
+            reply_markup=continue_keyboard("profile"),
         )
         return
     if user.privacy_mode:
         await bot.send_message(
             chat_id,
             text=_("UNAVAILABLE_IN_PRIVACY_MODE"),
-            reply_markup=continue_keyboard('menu'),
+            reply_markup=continue_keyboard("menu"),
         )
         return
 
@@ -62,10 +60,10 @@ async def send_export_menu(bot: Bot, chat_id: int, user: User, state: FSMContext
         reply_markup=export_chat_share_keyboard(),
     )
 
-    await state.update_data({'message_id': m.message_id})
+    await state.update_data({"message_id": m.message_id})
 
 
-@router.callback_query(F.data == 'export')
+@router.callback_query(F.data == "export")
 async def sta_callback(callback_query: CallbackQuery, state: FSMContext):
     async with create_session() as session:
         user = await get_user(session, id=callback_query.from_user.id)
@@ -79,7 +77,7 @@ async def sta_callback(callback_query: CallbackQuery, state: FSMContext):
 @router.message(and_f(F.user_shared, StateFilter(Export_State.select_user)))
 async def on_chat_shared(message: Message, state: FSMContext):
     data = await state.get_data()
-    m: int = data.get('message_id')
+    m: int = data.get("message_id")
     try:
         await message.bot.delete_message(chat_id=message.chat.id, message_id=m)
     except:
@@ -95,7 +93,7 @@ async def on_chat_shared(message: Message, state: FSMContext):
                 reply_markup=export_chat_share_keyboard(),
             )
 
-            await state.update_data({'message_id': msg.message_id})
+            await state.update_data({"message_id": msg.message_id})
             return
 
         result = await stringify_messages(user.id, persona.id, session, count=200)
@@ -105,24 +103,24 @@ async def on_chat_shared(message: Message, state: FSMContext):
                 reply_markup=export_chat_share_keyboard(),
             )
 
-            await state.update_data({'message_id': msg.message_id})
+            await state.update_data({"message_id": msg.message_id})
             return
 
         print(result)
 
         await message.bot.send_document(
             chat_id=message.chat.id,
-            document=BufferedInputFile(result.encode('utf-8'), filename=f'{persona.id}_exported.txt'),
+            document=BufferedInputFile(result.encode("utf-8"), filename=f"{persona.id}_exported.txt"),
         )
 
 
 @router.message(and_f(
     StateFilter(Export_State.select_user),
-    F.text.startswith('👈')
+    F.text.startswith("👈"),
 ))
 async def on_back(message: Message, state: FSMContext):
     data = await state.get_data()
-    m = data.get('message_id')
+    m = data.get("message_id")
     await message.bot.delete_message(chat_id=message.chat.id, message_id=m)
 
     async with create_session() as session:

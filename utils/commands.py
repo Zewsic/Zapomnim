@@ -1,23 +1,22 @@
 from aiogram import Bot
-from aiogram.types import BotCommand, BotCommandScopeDefault, BotCommandScope, BotCommandScopeAllPrivateChats, \
-    BotCommandScopeAllGroupChats
+from aiogram.types import BotCommand, BotCommandScopeAllGroupChats, BotCommandScopeAllPrivateChats
 
 
 async def set_bot_commands(bot: Bot):
     await bot.set_my_commands(commands=[
-        BotCommand(command='start', description='Open bot main menu'),
-        BotCommand(command='analyze', description='Analyze chat with AI'),
-        BotCommand(command='profile', description='Open user profile'),
-        BotCommand(command='settings', description='Open bot settings'),
+        BotCommand(command="start", description="Open bot main menu"),
+        BotCommand(command="analyze", description="Analyze chat with AI"),
+        BotCommand(command="profile", description="Open user profile"),
+        BotCommand(command="settings", description="Open bot settings"),
         # BotCommand(command='legal', description='Show Legal Documents'),
-    ], language_code='en', scope=BotCommandScopeAllPrivateChats())
-    await bot.set_my_commands(commands=[], language_code='en', scope=BotCommandScopeAllGroupChats())
+    ], language_code="en", scope=BotCommandScopeAllPrivateChats())
+    await bot.set_my_commands(commands=[], language_code="en", scope=BotCommandScopeAllGroupChats())
 
     await bot.set_my_commands(commands=[
-        BotCommand(command='start', description='Открыть главное меню'),
-        BotCommand(command='analyze', description='Проанализировать чат'),
-        BotCommand(command='profile', description='Открыть профиль пользователя'),
-        BotCommand(command='settings', description='Открыть настройки'),
+        BotCommand(command="start", description="Открыть главное меню"),
+        BotCommand(command="analyze", description="Проанализировать чат"),
+        BotCommand(command="profile", description="Открыть профиль пользователя"),
+        BotCommand(command="settings", description="Открыть настройки"),
         # BotCommand(command='legal', description='Показать юридические документы'),
-    ], language_code='ru', scope=BotCommandScopeAllPrivateChats())
-    await bot.set_my_commands(commands=[], language_code='ru', scope=BotCommandScopeAllGroupChats())
+    ], language_code="ru", scope=BotCommandScopeAllPrivateChats())
+    await bot.set_my_commands(commands=[], language_code="ru", scope=BotCommandScopeAllGroupChats())

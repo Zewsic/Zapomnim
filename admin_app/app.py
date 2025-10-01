@@ -10,9 +10,10 @@ st.set_page_config(
     layout="wide",
 )
 
-import requests
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
+import requests
 
 """
 Streamlit admin dashboard for the FastAPI backend defined in admin.py.
@@ -118,7 +119,7 @@ with tab_overview:
         st.caption(
             f"Среднее за месяц на пользователя: {sm['avg_per_user_month']:.2f}"
             if sm["avg_per_user_month"]
-            else "—"
+            else "—",
         )
 
         # Cost ------------------------------------------------------------------
@@ -130,7 +131,7 @@ with tab_overview:
         cols[2].metric("За месяц", f"{cost['month']:.4f}", border=True)
 
         st.caption(
-            "Последнее обновление: " + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+            "Последнее обновление: " + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
         )
     else:
         st.info("Нет данных для отображения. Проверьте настройки в сайдбаре.")
@@ -181,7 +182,7 @@ with tab_metrics:
                         "output_tokens": row["output_tokens"],
                         "audio_duration": row["audio_duration"],
                         "cost_usd": row["cost_usd"],
-                    }
+                    },
                 )
         df_metrics = pd.DataFrame(flat)
         st.dataframe(df_metrics, use_container_width=True, height=600)

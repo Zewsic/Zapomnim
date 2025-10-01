@@ -2,22 +2,21 @@ import logging
 import os
 import re
 from datetime import datetime
+from os import environ
 
 import redis.asyncio as aioredis
 from dotenv import load_dotenv
 from sqlalchemy import BIGINT, func
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs, AsyncSession
-from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, declared_attr
+from sqlalchemy.ext.asyncio import AsyncAttrs, AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
-from os import environ
-
-load_dotenv('.env')
+load_dotenv(".env")
 
 
-logger = logging.getLogger('Zapomnim/Database')
+logger = logging.getLogger("Zapomnim/Database")
 engine = create_async_engine(
-    os.getenv('DATABASE_CONNECTION_STRING'),
-    echo=environ.get('BUILD_TYPE') == 'test',
+    os.getenv("DATABASE_CONNECTION_STRING"),
+    echo=environ.get("BUILD_TYPE") == "test",
     pool_pre_ping=True,
     pool_size=50,  # сколько держать постоянно
     max_overflow=100,  # сколько «долить» при всплесках
@@ -26,7 +25,7 @@ engine = create_async_engine(
 )
 create_session = async_sessionmaker(
     bind=engine,
-    expire_on_commit=False
+    expire_on_commit=False,
 )
 RedisSession = aioredis.Redis(host=os.getenv("REDIS_HOST"))
 
@@ -40,8 +39,8 @@ class Base(AsyncAttrs, DeclarativeBase):
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
-        s1 = re.sub(r'(.)([A-Z][a-z]+)', r'\1_\2', cls.__name__)
-        db_name = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', s1).lower() + 's'
+        s1 = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", cls.__name__)
+        db_name = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s1).lower() + "s"
         return db_name
 
 

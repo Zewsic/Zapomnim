@@ -1,9 +1,9 @@
-from keyboards.initial_setup import start_keyboard, continue_keyboard, language_keyboard
+from keyboards.initial_setup import continue_keyboard, language_keyboard, start_keyboard
 from keyboards.menu import main_menu_keyboard
 
 __all__ = [
-    "start_keyboard",
     "continue_keyboard",
     "language_keyboard",
     "main_menu_keyboard",
+    "start_keyboard",
 ]

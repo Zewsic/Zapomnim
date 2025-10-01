@@ -1,7 +1,7 @@
 # Тип для любой модели, унаследованной от Base
 import json
 from datetime import datetime
-from typing import TypeVar, Type, Optional
+from typing import TypeVar
 
 from sqlalchemy import inspect
 
@@ -19,13 +19,13 @@ class CustomEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-async def save_to_redis(obj: Base, key_prefix: str = "default") -> 'Base':
-    """
-    Сохраняет SQLAlchemy ORM объект в Redis в формате JSON.
+async def save_to_redis(obj: Base, key_prefix: str = "default") -> "Base":
+    """Сохраняет SQLAlchemy ORM объект в Redis в формате JSON.
 
     Args:
         obj: SQLAlchemy ORM объект, унаследованный от Base
         key_prefix: Префикс ключа в Redis (например, 'message' для 'message:123')
+
     """
     if not isinstance(obj, Base):
         raise ValueError("Объект должен быть унаследован от Base")
@@ -42,9 +42,8 @@ async def save_to_redis(obj: Base, key_prefix: str = "default") -> 'Base':
     return obj
 
 
-async def load_from_redis(model: Type[T], key_value: str, key_prefix: str = "default") -> Optional[T]:
-    """
-    Загружает SQLAlchemy ORM объект из Redis по ключу.
+async def load_from_redis(model: type[T], key_value: str, key_prefix: str = "default") -> T | None:
+    """Загружает SQLAlchemy ORM объект из Redis по ключу.
 
     Args:
         model: Класс SQLAlchemy модели
@@ -53,6 +52,7 @@ async def load_from_redis(model: Type[T], key_value: str, key_prefix: str = "def
 
     Returns:
         Объект модели или None, если данные не найдены
+
     """
     if not issubclass(model, Base):
         raise ValueError("Модель должна быть унаследована от Base")
@@ -67,7 +67,7 @@ async def load_from_redis(model: Type[T], key_value: str, key_prefix: str = "def
 
     data = json.loads(json_data)
     for column in inspect(model).columns:
-        if str(column.type) in ('DATETIME', 'TIMESTAMP'):
+        if str(column.type) in ("DATETIME", "TIMESTAMP"):
             name = column.name
             if name in data and isinstance(data[name], str):
                 try:

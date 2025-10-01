@@ -28,8 +28,7 @@ async def settings_widget(
         description: str,
         toggle: str | None = None,
 ) -> tuple[str, InlineKeyboardMarkup]:
-    """
-    Формирует текст и клавиатуру с настройками.
+    """Формирует текст и клавиатуру с настройками.
 
     :param user: Объект пользователя (User из вашей базы)
     :param session: Асинхронная сессия БД
@@ -47,13 +46,13 @@ async def settings_widget(
                 current_value = await user.get_bool(
                     f"settings.{settings_id}.{opt.option_id}",
                     session,
-                    default=opt.default
+                    default=opt.default,
                 )
                 new_value = not current_value
                 await user.set_bool(
                     f"settings.{settings_id}.{opt.option_id}",
                     new_value,
-                    session
+                    session,
                 )
                 break
 
@@ -66,10 +65,10 @@ async def settings_widget(
         is_enabled = await user.get_bool(
             f"settings.{settings_id}.{opt.option_id}",
             session,
-            default=opt.default
+            default=opt.default,
         )
         text_lines.append(
-            f"<b>{idx}. {opt.name}</b>:\n{hblockquote(opt.description)}\n"
+            f"<b>{idx}. {opt.name}</b>:\n{hblockquote(opt.description)}\n",
         )
 
     text = "\n".join(text_lines).strip()
@@ -79,7 +78,7 @@ async def settings_widget(
         is_enabled = await user.get_bool(
             f"settings.{settings_id}.{opt.option_id}",
             session,
-            default=opt.default
+            default=opt.default,
         )
         label = ("✅ " if is_enabled else "") + opt.name
         callback_data = f"{message_callback}:toggle:{opt.option_id}"

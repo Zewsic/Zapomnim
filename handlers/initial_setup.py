@@ -1,12 +1,11 @@
 import asyncio
 from datetime import datetime, timedelta
 
-from aiogram import Router, F
-from aiogram.filters import CommandStart, StateFilter, and_f, or_f, Command, CommandObject
+from aiogram import F, Router
+from aiogram.filters import Command, CommandObject, CommandStart, StateFilter, and_f, or_f
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, FSInputFile, CallbackQuery, BusinessConnection
+from aiogram.types import BusinessConnection, CallbackQuery, FSInputFile, Message
 from aiogram.utils.i18n import gettext as _
-from pyparsing import with_class
 from sqlalchemy import select
 
 from config import StartState
@@ -16,15 +15,15 @@ from handlers.features.chat_export import send_export_menu
 from handlers.features.static_chat_analyzer import send_STA
 from handlers.menu import send_main_menu, send_profile
 from handlers.settings import send_settings
-from keyboards import start_keyboard, continue_keyboard, language_keyboard
+from keyboards import continue_keyboard, language_keyboard, start_keyboard
 from keyboards.initial_setup import bot_mode_keyboard, privacy_policy_keyboard
-from utils import update_user, get_user, _UNSET, PatchedI18nMiddleware
+from utils import _UNSET, PatchedI18nMiddleware, get_user, update_user
 from utils.security import check_promocode
 
 router = Router()
 
 
-@router.message(Command('export'))
+@router.message(Command("export"))
 async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
     async with create_session() as session:
         user = await get_user(session, id=message.from_user.id)
@@ -33,7 +32,7 @@ async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI
 
         await send_export_menu(message.bot, message.chat.id, user, state)
 
-@router.message(Command('profile'))
+@router.message(Command("profile"))
 async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
     async with create_session() as session:
         user = await get_user(session, id=message.from_user.id)
@@ -43,7 +42,7 @@ async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI
         await send_profile(message.bot, message.chat.id, user)
 
 
-@router.message(Command('analyze'))
+@router.message(Command("analyze"))
 async def analyze(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
     async with create_session() as session:
         user = await get_user(session, id=message.from_user.id)
@@ -53,7 +52,7 @@ async def analyze(message: Message, state: FSMContext, i18n_middleware: PatchedI
         await send_STA(message.bot, message.chat.id, user, state)
 
 
-@router.message(Command('settings'))
+@router.message(Command("settings"))
 async def settings(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
     async with create_session() as session:
         user = await get_user(session, id=message.from_user.id)
@@ -66,11 +65,11 @@ async def settings(message: Message, state: FSMContext, i18n_middleware: Patched
 @router.message(
     or_f(
         and_f(
-            F.text.in_(('🇷🇺', '🇬🇧')),
-            StateFilter(StartState.setup_language)
+            F.text.in_(("🇷🇺", "🇬🇧")),
+            StateFilter(StartState.setup_language),
         ),
-        CommandStart()
-    )
+        CommandStart(),
+    ),
 )
 async def start_command(
         message: Message,
@@ -84,49 +83,49 @@ async def start_command(
     referral_id = None
     promo = None
     if command is not None and command.args:
-        if command.args.startswith('ref'):
+        if command.args.startswith("ref"):
             referral_id = int(command.args[3:])
-        if command.args.startswith('promo'):
+        if command.args.startswith("promo"):
             _promo = check_promocode(command.args[5:])
             if _promo:
                 promo = (command.args[5:], _promo)
             else:
-                await state.update_data({'activate_promo_error': 'INVALID_PROMO'})
+                await state.update_data({"activate_promo_error": "INVALID_PROMO"})
 
     selected_language = _UNSET
-    if message.text == '🇷🇺':
-        selected_language = 'ru'
-    elif message.text == '🇬🇧':
-        selected_language = 'en'
+    if message.text == "🇷🇺":
+        selected_language = "ru"
+    elif message.text == "🇬🇧":
+        selected_language = "en"
 
     if selected_language is not _UNSET:
         i18n_middleware.i18n.current_locale = selected_language
         await message.delete()
-        if 'lang_message_id' in data:
-            await message.bot.delete_message(message.chat.id, data['lang_message_id'])
+        if "lang_message_id" in data:
+            await message.bot.delete_message(message.chat.id, data["lang_message_id"])
 
     async with create_session() as session:
         if promo:
             is_promo_activated = (await session.execute(
                 select(Metric)
                 .where(
-                    Metric.name == 'system.promocode.activated',
-                    Metric.value.contains(promo[0])
-                )
+                    Metric.name == "system.promocode.activated",
+                    Metric.value.contains(promo[0]),
+                ),
             )).scalar_one_or_none()
 
             if not is_promo_activated:
-                await state.update_data({'activate_promo': promo})
+                await state.update_data({"activate_promo": promo})
 
                 metric = Metric(
                     connected_user_id=message.from_user.id,
-                    name='system.promocode.activated',
-                    value=promo[0]
+                    name="system.promocode.activated",
+                    value=promo[0],
                 )
                 session.add(metric)
                 await session.commit()
             else:
-                await state.update_data({'activate_promo_error': 'ALREADY_ACTIVATED'})
+                await state.update_data({"activate_promo_error": "ALREADY_ACTIVATED"})
 
         user = await update_user(
             id=message.from_user.id, session=session,
@@ -134,20 +133,20 @@ async def start_command(
             last_name=message.from_user.last_name,
             username=message.from_user.username,
             language=selected_language,
-            referral_id=referral_id
+            referral_id=referral_id,
         )
         await session.commit()
 
-    emoji = await message.answer('👋')
+    emoji = await message.answer("👋")
     await asyncio.sleep(0.7)
 
     if not user.language_code:
         lang_message = await message.answer(
             "<b>Choose a language / Выберите язык.</b>",
-            reply_markup=language_keyboard()
+            reply_markup=language_keyboard(),
         )
         await emoji.delete()
-        await state.update_data({'lang_message_id': lang_message.message_id})
+        await state.update_data({"lang_message_id": lang_message.message_id})
         await state.set_state(StartState.setup_language)
         return
 
@@ -155,14 +154,14 @@ async def start_command(
         await message.answer_photo(
             photo=FSInputFile(_("START_IMAGE")),
             caption=_("START_TEXT"),
-            reply_markup=start_keyboard()
+            reply_markup=start_keyboard(),
         )
     else:
         await send_main_menu(message.bot, message.chat.id, user, state)
     await emoji.delete()
 
 
-@router.callback_query(F.data.startswith('start'))
+@router.callback_query(F.data.startswith("start"))
 async def start_callback(query: CallbackQuery, state: FSMContext):
     if not query.from_user.is_premium:
         await query.answer(_("ONLY_FOR_TELEGRAM_PREMIUM"), show_alert=True)
@@ -171,7 +170,7 @@ async def start_callback(query: CallbackQuery, state: FSMContext):
     async with create_session() as session:
         user = await get_user(session, id=query.from_user.id)
         if user.privacy_agreed is None:
-            if 'agree_privacy' in query.data:
+            if "agree_privacy" in query.data:
                 await update_user(id=query.from_user.id, session=session, privacy_agreed=datetime.now())
             else:
                 await query.message.delete()
@@ -180,7 +179,7 @@ async def start_callback(query: CallbackQuery, state: FSMContext):
         else:
             await state.set_state(StartState.connect_business_bot)
             await query.message.edit_reply_markup(reply_markup=None)
-            emoji = await query.message.answer('🚀')
+            emoji = await query.message.answer("🚀")
 
             await asyncio.sleep(1)
             await emoji.delete()
@@ -188,10 +187,10 @@ async def start_callback(query: CallbackQuery, state: FSMContext):
 
     instruction_message = await query.message.answer_photo(
         photo=FSInputFile(_("CONNECT_BUSINESS_BOT_IMAGE")),
-        caption=_("CONNECT_BUSINESS_BOT_TEXT")
+        caption=_("CONNECT_BUSINESS_BOT_TEXT"),
     )
     await state.update_data({
-        'instruction_message': instruction_message,
+        "instruction_message": instruction_message,
     })
 
 
@@ -199,7 +198,7 @@ async def start_callback(query: CallbackQuery, state: FSMContext):
 async def on_new_connection(event: BusinessConnection, state: FSMContext):
     await state.set_state(StartState.business_connection_done)
     data = await state.get_data()
-    instruction_message: Message = data.get('instruction_message')
+    instruction_message: Message = data.get("instruction_message")
 
     async with create_session() as session:
         user = await get_user(session, id=event.user.id)
@@ -235,24 +234,24 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
                 await event.bot.send_message(
                     chat_id=user.id,
                     text=_("FREE_SUBSCRIPTION_ENABLED_TEXT"),
-                    reply_markup=continue_keyboard("initial_setup_select_mode")
+                    reply_markup=continue_keyboard("initial_setup_select_mode"),
                 )
                 return
 
             await event.bot.send_message(
                 chat_id=user.id,
                 text=_("CONNECT_BUSINESS_BOT_SUCCESS_TEXT"),
-                reply_markup=continue_keyboard("menu")
+                reply_markup=continue_keyboard("menu"),
             )
         return
     await event.bot.send_message(
         chat_id=user.id,
         text=_("BUSINESS_BOT_DISCONNECTED_TEXT"),
-        reply_markup=continue_keyboard("start")
+        reply_markup=continue_keyboard("start"),
     )
 
 
-@router.callback_query(F.data.startswith('initial_setup_select_mode'))
+@router.callback_query(F.data.startswith("initial_setup_select_mode"))
 async def initial_setup_select_mode_callback(query: CallbackQuery, state: FSMContext):
     async with create_session() as session:
         user = await get_user(session, id=query.from_user.id)
@@ -262,24 +261,24 @@ async def initial_setup_select_mode_callback(query: CallbackQuery, state: FSMCon
         parts = query.data.split(":")
         action = parts[1] if len(parts) > 1 else None
 
-        if action == 'standard':
+        if action == "standard":
             await update_user(id=user.id, session=session, privacy_mode=False)
             await send_main_menu(query.bot, query.message.chat.id, user, state)
             await query.message.delete()
-        elif action == 'privacy':
+        elif action == "privacy":
             await update_user(id=user.id, session=session, privacy_mode=True)
             await send_main_menu(query.bot, query.message.chat.id, user, state)
             await query.message.delete()
         else:
             await query.message.edit_text(
                 text=_("SELECT_BOT_TYPE").format(
-                    selected_mode=_("BOT_MODE_PRIVACY" if user.privacy_mode else "BOT_MODE_STANDARD")
+                    selected_mode=_("BOT_MODE_PRIVACY" if user.privacy_mode else "BOT_MODE_STANDARD"),
                 ),
                 reply_markup=bot_mode_keyboard())
 
         await session.commit()
 
 
-@router.callback_query(F.data.startswith('nothing'))
+@router.callback_query(F.data.startswith("nothing"))
 async def nothing(query: CallbackQuery, state: FSMContext):
     await query.answer()

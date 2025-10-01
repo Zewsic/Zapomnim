@@ -1,13 +1,13 @@
 from os import environ
 
 from aiogram.client.telegram import TelegramAPIServer
-from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.state import State, StatesGroup
 
 BOT_TOKEN = environ.get("BOT_TOKEN")
-WEBHOOK_HOST = environ.get('WEBHOOK_HOST')
+WEBHOOK_HOST = environ.get("WEBHOOK_HOST")
 
-TELEGRAM_SERVER = TelegramAPIServer.from_base(environ.get('TELEGRAM_SERVER'), is_local=True)
-TELEGRAM_SERVER_DATA = environ.get('TELEGRAM_SERVER_DATA')
+TELEGRAM_SERVER = TelegramAPIServer.from_base(environ.get("TELEGRAM_SERVER"), is_local=True)
+TELEGRAM_SERVER_DATA = environ.get("TELEGRAM_SERVER_DATA")
 
 SUBSCRIPTION_PLANS = [
     {"days": 7, "price": 100},
