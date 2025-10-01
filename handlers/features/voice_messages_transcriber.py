@@ -46,6 +46,7 @@ ENHANCE_TRANSCRIBE_PROMPT = """Задача: Исправь и отформат�
 
 # --- helpers ---------------------------------------------------------------
 
+
 def _clip_for_tg(text: str, limit: int = 1800) -> str:
     text = text.rstrip()
     if len(text) > limit:
@@ -98,6 +99,10 @@ async def _enhance_text(raw_text: str, context: str | None) -> tuple[str, dict[s
 
     text = resp.choices[0].message.content
 
+    # Если OpenAI вернул None или пустой текст, возвращаем исходный
+    if not text or not text.strip():
+        text = raw_text
+
     return text, {
         "input_tokens": resp.usage.input_tokens,
         "output_tokens": resp.usage.output_tokens,
@@ -107,10 +112,15 @@ async def _enhance_text(raw_text: str, context: str | None) -> tuple[str, dict[s
 
 # --- ffmpeg ---------------------------------------------------------------
 
+
 async def ffmpeg_convert(src: Path, dst: Path) -> None:
     """Конвертирует аудио в m4a асинхронно."""
     proc = await asyncio.create_subprocess_exec(
-        "ffmpeg", "-y", "-i", str(src), str(dst),
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(src),
+        str(dst),
         stdout=asyncio.subprocess.DEVNULL,
         stderr=asyncio.subprocess.PIPE,
     )
@@ -123,9 +133,12 @@ async def ffmpeg_convert(src: Path, dst: Path) -> None:
 
 # --- main flow ------------------------------------------------------------
 
-async def _transcribe_voice_message(message: Message, enhanced: bool, watermark: str, context: str | None,
-                                    reply_mode: bool) -> dict[str, int] | None:
-    """Новый порядок:
+
+async def _transcribe_voice_message(
+    message: Message, enhanced: bool, watermark: str, context: str | None, reply_mode: bool,
+) -> dict[str, int] | None:
+    """Новый порядок.
+    
     1) показать «расшифровка…»
     2) показать сырую расшифровку
     3) если enhanced=True — заменить на улучшенную версию
@@ -167,18 +180,30 @@ async def _transcribe_voice_message(message: Message, enhanced: bool, watermark:
         # 3) если нужно — улучшаем и заменяем текст
         if enhanced:
             await status_message.edit_text(
-                f"🎤 <blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>",
+                f"🎤 Enhancing... <blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>",
                 link_preview_options=LinkPreviewOptions(is_disabled=True),
             )
             try:
                 improved_text, metrics = await _enhance_text(raw_text, context=context)
                 usage.update(metrics)
                 cleaned_improved = _clip_for_tg(improved_text)
-                await status_message.edit_text(
-                    f"<blockquote expandable><i>{cleaned_improved} {watermark}</i></blockquote>",
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
-            except:
+
+                # Проверяем, что улучшенный текст отличается от исходного
+                if cleaned_improved.strip() and cleaned_improved != cleaned_raw:
+                    await status_message.edit_text(
+                        f"<blockquote expandable><i>{cleaned_improved} {watermark}</i></blockquote>",
+                        link_preview_options=LinkPreviewOptions(is_disabled=True),
+                    )
+                    logger.info("Enhanced text updated successfully")
+                else:
+                    # Если улучшенный текст не отличается, показываем исходный
+                    await status_message.edit_text(
+                        f"<blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>",
+                        link_preview_options=LinkPreviewOptions(is_disabled=True),
+                    )
+                    logger.warning("Enhanced text is empty or same as original, showing raw text")
+            except Exception:
+                logger.exception("Enhancement failed")
                 await status_message.edit_text(
                     f"<blockquote expandable><i>{cleaned_raw} {watermark}</i></blockquote>",
                     link_preview_options=LinkPreviewOptions(is_disabled=True),
@@ -220,8 +245,7 @@ async def transcribe_voice_messages(user: User, message: Message, session: Async
     watermark = hlink("(?)", f"https://t.me/zapomnim_bot?start=ref{message.from_user.id}") if use_watermark else ""
     context = None  # Context awareness убран как юзелесс
 
-    usage = await _transcribe_voice_message(message=message, enhanced=enhanced, watermark=watermark,
-                                            reply_mode=reply_mode, context=context)
+    usage = await _transcribe_voice_message(message=message, enhanced=enhanced, watermark=watermark, reply_mode=reply_mode, context=context)
     if not usage:
         return
 
@@ -251,7 +275,9 @@ async def process_process_input_voice_message(message: Message):
     if not usage:
         return
 
-    metric_name = "metrics.input.transcribe_voice_message" if message.chat.id == message.from_user.id else "metrics.chat.transcribe_voice_message"
+    metric_name = (
+        "metrics.input.transcribe_voice_message" if message.chat.id == message.from_user.id else "metrics.chat.transcribe_voice_message"
+    )
 
     async with create_session() as session:
         metric = Metric(
