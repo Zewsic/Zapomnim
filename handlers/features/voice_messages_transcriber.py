@@ -104,8 +104,8 @@ async def _enhance_text(raw_text: str, context: str | None) -> tuple[str, dict[s
         text = raw_text
 
     return text, {
-        "input_tokens": resp.usage.input_tokens,
-        "output_tokens": resp.usage.output_tokens,
+        "input_tokens": resp.usage.prompt_tokens,
+        "output_tokens": resp.usage.completion_tokens,
         "model": model,
     }
 
