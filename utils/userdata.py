@@ -5,7 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import RedisSession
 from database.models import Persona, User
-from utils import _UNSET, load_from_redis, save_to_redis
+from utils.database import load_from_redis, save_to_redis
+from utils.models import _UNSET
 
 
 async def update_user(

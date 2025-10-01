@@ -1,21 +1,19 @@
-from __future__ import annotations
-
-"""Improved admin module
-~~~~~~~~~~~~~~~~~~~~~~~~
+"""Improved admin module.
 
 Adds richer statistics for the dashboard:
-• **/admin/stats** — now returns new‑user counts, weekly stats, and cost figures.
-• **/admin/users** — per‑user totals for messages, spend, and last activity.
-• **/admin/metrics** — unchanged but minor typing tweaks.
-• **/admin/top** — now also surfaces the top spenders.
+- /admin/stats - now returns new-user counts, weekly stats, and cost figures.
+- /admin/users - per-user totals for messages, spend, and last activity.
+- /admin/metrics - unchanged but minor typing tweaks.
+- /admin/top - now also surfaces the top spenders.
 
 The existing API response keys are preserved, so nothing breaks; callers just get bonus
-information. All calculations still happen server‑side in one trip to the database.
+information. All calculations still happen server-side in one trip to the database.
 """
+from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
@@ -29,7 +27,8 @@ from utils.security import make_promocode
 app = APIRouter(prefix="/admin", tags=["admin"])
 
 
-async def get_db() -> AsyncSession:  # pragma: no cover
+async def get_db():
+    """Get database session."""
     async with create_session() as session:
         yield session
 
@@ -419,7 +418,7 @@ class TopResponse(BaseModel):
 
 
 @app.get("/top", response_model=TopResponse)
-async def get_top(db: AsyncSession = Depends(get_db)) -> TopResponse:
+async def get_top(db: Annotated[AsyncSession, Depends(get_db)]) -> TopResponse:
     """Return three leaderboards: by message count, by metric count, and by spend."""
     # ------------------------------------------------------------------
     # Messages & metrics: simple SQL aggregates
