@@ -6,7 +6,7 @@ from aiogram.utils.i18n import SimpleI18nMiddleware
 from aiogram.utils.i18n.core import I18n
 
 from database import create_session
-from utils import get_user
+from utils.userdata import get_user
 
 
 class PatchedI18nMiddleware(SimpleI18nMiddleware):
