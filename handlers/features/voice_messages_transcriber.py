@@ -58,7 +58,7 @@ async def _transcribe_only(path: Path) -> str:
     """Только распознаёт речь и возвращает сырую транскрипцию."""
     with path.open("rb") as f:
         tr = await client.audio.transcriptions.create(
-            model="gpt-4o-mini-transcribe",
+            model="gpt-4o-transcribe",
             file=f,
         )
     return tr.text
@@ -135,10 +135,14 @@ async def ffmpeg_convert(src: Path, dst: Path) -> None:
 
 
 async def _transcribe_voice_message(
-    message: Message, enhanced: bool, watermark: str, context: str | None, reply_mode: bool,
+    message: Message,
+    enhanced: bool,
+    watermark: str,
+    context: str | None,
+    reply_mode: bool,
 ) -> dict[str, int] | None:
     """Новый порядок.
-    
+
     1) показать «расшифровка…»
     2) показать сырую расшифровку
     3) если enhanced=True — заменить на улучшенную версию
