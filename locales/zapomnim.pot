@@ -750,6 +750,12 @@ msgstr ""
 msgid "ENABLE_GRAMMAR_CORRECTION_DESCRIPTION"
 msgstr ""
 
+msgid "ENABLE_AI_ANTISPAM_BUTTON"
+msgstr ""
+
+msgid "ENABLE_AI_ANTISPAM_DESCRIPTION"
+msgstr ""
+
 msgid "ENABLE_BLUR_ADULT_CONTENT_BUTTON"
 msgstr ""
 
