@@ -92,6 +92,13 @@ def _calc_cost(data: dict[str, Any]) -> float:
 # Pydantic models — statistics endpoints
 # ---------------------------------------------------------------------------
 
+class StarsRating(BaseModel):
+    """Stars rating from TL starsRating."""
+    level: int
+    current_level_stars: int
+    stars: int
+    next_level_stars: int | None = None
+
 class SavedMessagesStats(BaseModel):
     total: int
     day: int
@@ -232,6 +239,7 @@ class UserInfo(BaseModel):
     total_messages: int
     total_cost_usd: float
     metrics: dict[str, UserMetricInfo]
+    stars_rating: StarsRating | None = None
 
 
 @app.get("/users", response_model=list[UserInfo])
@@ -281,6 +289,17 @@ async def get_users(db: AsyncSession = Depends(get_db)) -> list[UserInfo]:
     for u in users:
         msg_cnt, last_msg = msg_info.get(u.id, (0, None))
         metrics = metric_map.get(u.id, {})
+        
+        # Build stars_rating if available
+        stars_rating = None
+        if u.stars_level is not None:
+            stars_rating = StarsRating(
+                level=u.stars_level,
+                current_level_stars=u.stars_current_level_stars or 0,
+                stars=u.stars_total_stars or 0,
+                next_level_stars=u.stars_next_level_stars,
+            )
+        
         result.append(
             UserInfo(
                 id=u.id,
@@ -293,6 +312,7 @@ async def get_users(db: AsyncSession = Depends(get_db)) -> list[UserInfo]:
                 total_messages=msg_cnt,
                 total_cost_usd=round(total_spend_map.get(u.id, 0.0), 4),
                 metrics=metrics,
+                stars_rating=stars_rating,
             ),
         )
     return result
