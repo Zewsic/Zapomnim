@@ -31,6 +31,12 @@ class User(Base):
 
     privacy_agreed: Mapped[datetime | None]
 
+    # Stars Rating fields from TL UserFull
+    stars_level: Mapped[int | None] = mapped_column(Integer, default=None)
+    stars_current_level_stars: Mapped[int | None] = mapped_column(BIGINT, default=None)
+    stars_total_stars: Mapped[int | None] = mapped_column(BIGINT, default=None)
+    stars_next_level_stars: Mapped[int | None] = mapped_column(BIGINT, default=None)
+
     payment_id: Mapped[str | None]
     autopayment: Mapped[int | None]
 

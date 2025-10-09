@@ -25,6 +25,10 @@ async def update_user(
         referral_id: int = _UNSET,
         referrals_income: int = _UNSET,
         privacy_agreed: datetime | None = _UNSET,
+        stars_level: int | None = _UNSET,
+        stars_current_level_stars: int | None = _UNSET,
+        stars_total_stars: int | None = _UNSET,
+        stars_next_level_stars: int | None = _UNSET,
 
 ) -> User:
     user = User(id=id)
@@ -54,6 +58,14 @@ async def update_user(
             user.referral_id = referral_id
     if privacy_agreed is not _UNSET:
         user.privacy_agreed = privacy_agreed
+    if stars_level is not _UNSET:
+        user.stars_level = stars_level
+    if stars_current_level_stars is not _UNSET:
+        user.stars_current_level_stars = stars_current_level_stars
+    if stars_total_stars is not _UNSET:
+        user.stars_total_stars = stars_total_stars
+    if stars_next_level_stars is not _UNSET:
+        user.stars_next_level_stars = stars_next_level_stars
 
     user = await session.merge(user)
     await save_to_redis(user)
