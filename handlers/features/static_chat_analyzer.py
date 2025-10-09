@@ -241,8 +241,8 @@ async def send_request(
         raise ValueError(error_message)
 
     return DialogueData.model_validate_json(raw_text), {
-        "input_tokens": response.usage.input_tokens,
-        "output_tokens": response.usage.output_tokens,
+        "input_tokens": response.usage.prompt_tokens,
+        "output_tokens": response.usage.completion_tokens,
         "model": model,
     }
 

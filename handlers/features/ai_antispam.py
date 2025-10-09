@@ -58,8 +58,8 @@ async def check_spam_with_ai(messages: List[str]) -> tuple[bool, dict[str, int]]
     is_spam = "SPAM" in result.upper()
     
     return is_spam, {
-        "input_tokens": resp.usage.input_tokens,
-        "output_tokens": resp.usage.output_tokens,
+        "input_tokens": resp.usage.prompt_tokens,
+        "output_tokens": resp.usage.completion_tokens,
         "model": "gpt-5-nano",
         "result": result
     }
