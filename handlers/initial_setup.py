@@ -16,8 +16,9 @@ from handlers.features.static_chat_analyzer import send_STA
 from handlers.menu import send_main_menu, send_profile
 from handlers.settings import send_settings
 from keyboards import continue_keyboard, language_keyboard, start_keyboard
-from keyboards.initial_setup import bot_mode_keyboard, privacy_policy_keyboard
+from keyboards.initial_setup import bot_mode_keyboard, privacy_policy_keyboard, subscribe_and_verify_keyboard
 from utils import _UNSET, PatchedI18nMiddleware, get_user, update_user
+from utils.botapi import is_user_member_of_required_channel
 from utils.security import check_promocode
 
 router = Router()
@@ -222,6 +223,15 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
             await instruction_message.delete()
 
         if not _had_been_enabled:
+            # Gate free month by channel membership
+            is_member, channel_url = await is_user_member_of_required_channel(event.bot, user.id)
+            if not is_member:
+                await event.bot.send_message(
+                    chat_id=user.id,
+                    text=_("SUBSCRIBE_TO_GET_FREE_MONTH"),
+                    reply_markup=subscribe_and_verify_keyboard(channel_url),
+                )
+                return
 
             if user.subscriber_until is None:
                 await update_user(
@@ -249,6 +259,35 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
         text=_("BUSINESS_BOT_DISCONNECTED_TEXT"),
         reply_markup=continue_keyboard("start"),
     )
+
+
+@router.callback_query(F.data == "verify_channel")
+async def verify_channel_callback(query: CallbackQuery, state: FSMContext):
+    async with create_session() as session:
+        user = await get_user(session, id=query.from_user.id)
+        if not user:
+            return
+
+        is_member, channel_url = await is_user_member_of_required_channel(query.bot, user.id)
+        if not is_member:
+            await query.answer(_("SUBSCRIPTION_NOT_VERIFIED"), show_alert=True)
+            await query.message.edit_reply_markup(reply_markup=subscribe_and_verify_keyboard(channel_url))
+            return
+
+        if user.subscriber_until is None:
+            await update_user(
+                id=user.id,
+                session=session,
+                subscription_until=datetime.now() + timedelta(days=30),
+            )
+            await session.commit()
+            await query.message.edit_text(
+                text=_("FREE_SUBSCRIPTION_ENABLED_TEXT"),
+                reply_markup=continue_keyboard("initial_setup_select_mode"),
+            )
+            return
+
+        await query.answer(_("ALREADY_HAS_SUBSCRIPTION"), show_alert=True)
 
 
 @router.callback_query(F.data.startswith("initial_setup_select_mode"))

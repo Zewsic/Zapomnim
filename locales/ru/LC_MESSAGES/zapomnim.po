@@ -584,6 +584,21 @@ msgstr "Доступ ко всем функциям бота на {days} дне�
 msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
 msgstr "✅ Бесплатный пробный период на 1 месяц был успешно активирован!"
 
+msgid "SUBSCRIBE_TO_GET_FREE_MONTH"
+msgstr "🎁 Подпишись на наш канал и получи <b>1 месяц</b> доступа бесплатно. После подписки нажми «Проверить»."
+
+msgid "SUBSCRIBE_BUTTON"
+msgstr "📣 Подписаться на канал"
+
+msgid "VERIFY_SUBSCRIPTION_BUTTON"
+msgstr "✅ Проверить подписку"
+
+msgid "SUBSCRIPTION_NOT_VERIFIED"
+msgstr "⛔️ Подписка на канал не обнаружена. Убедись, что ты подписался, и попробуй снова."
+
+msgid "ALREADY_HAS_SUBSCRIPTION"
+msgstr "ℹ️ У тебя уже активирована подписка."
+
 msgid "VOICE_MESSAGES_FORBIDDEN"
 msgstr ""
 "⛔️ <b>Бот не может отправлять вам голосовые сообщения</b>.\n"

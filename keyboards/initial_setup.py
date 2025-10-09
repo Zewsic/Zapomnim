@@ -37,3 +37,10 @@ def privacy_policy_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=_("AGREE"), callback_data="start:agree_privacy")],
     ])
+
+
+def subscribe_and_verify_keyboard(channel_url: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=_("SUBSCRIBE_BUTTON"), url=channel_url)],
+        [InlineKeyboardButton(text=_("VERIFY_SUBSCRIPTION_BUTTON"), callback_data="verify_channel")],
+    ])
