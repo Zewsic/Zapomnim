@@ -54,8 +54,8 @@ async def correct_grammars_in_text(text: str, context: str | None) -> tuple[str,
     text = resp.choices[0].message.content
 
     return text, {
-        "input_tokens": resp.usage.input_tokens,
-        "output_tokens": resp.usage.output_tokens,
+        "input_tokens": resp.usage.prompt_tokens,
+        "output_tokens": resp.usage.completion_tokens,
         "model": model,
     }
 
