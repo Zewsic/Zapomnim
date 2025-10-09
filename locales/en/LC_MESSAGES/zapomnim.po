@@ -939,6 +939,14 @@ msgstr "Grammar Correction"
 msgid "ENABLE_GRAMMAR_CORRECTION_DESCRIPTION"
 msgstr "Corrects spelling, grammar, and punctuation errors in outgoing messages."
 
+msgid "ENABLE_AI_ANTISPAM_BUTTON"
+msgstr "🤖 AI Anti-Spam"
+
+msgid "ENABLE_AI_ANTISPAM_DESCRIPTION"
+msgstr ""
+"Automatically detects and removes spam messages using artificial intelligence. "
+"Triggers when receiving more than 4 messages in 10 seconds."
+
 msgid "ENABLE_BLUR_ADULT_CONTENT_BUTTON"
 msgstr "Blur Adult Content"
 

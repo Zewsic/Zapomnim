@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from database import create_session
+from handlers.features.ai_antispam import process_antispam_check
 from handlers.features.message_enhancer import enhance_message
 from handlers.features.save_protected_content import process_protected_message
 from handlers.features.voice_messages_transcriber import transcribe_voice_messages
@@ -47,4 +48,15 @@ async def new_message(message: Message, state: FSMContext):
                 asyncio.create_task(transcribe_voice_messages(user, message, session, content_type == "video_note"))
             else:
                 asyncio.create_task(enhance_message(user, message, session))
+        
+        # Проверка на спам для всех сообщений (не только исходящих)
+        if not message.forward_from:
+            # Создаем отдельную сессию для асинхронной задачи
+            async def run_antispam_check():
+                async with create_session() as antispam_session:
+                    antispam_user = await get_user(session=antispam_session, id=message.from_user.id)
+                    if antispam_user:
+                        await process_antispam_check(antispam_user, message, antispam_session)
+            
+            asyncio.create_task(run_antispam_check())
 

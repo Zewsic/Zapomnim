@@ -327,6 +327,12 @@ async def enhance_messages_settings(callback: CallbackQuery) -> None:  # noqa: D
                 description=_("ENABLE_GRAMMAR_CORRECTION_DESCRIPTION"),
                 default=True,
             ),
+            SettingsOption(
+                option_id="ai_antispam",
+                name=_("ENABLE_AI_ANTISPAM_BUTTON"),
+                description=_("ENABLE_AI_ANTISPAM_DESCRIPTION"),
+                default=False,
+            ),
             # SettingsOption(
             #     option_id="blur_adult_content",
             #     name=_("ENABLE_BLUR_ADULT_CONTENT_BUTTON"),
