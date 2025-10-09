@@ -9,6 +9,9 @@ WEBHOOK_HOST = environ.get("WEBHOOK_HOST")
 TELEGRAM_SERVER = TelegramAPIServer.from_base(environ.get("TELEGRAM_SERVER"), is_local=True)
 TELEGRAM_SERVER_DATA = environ.get("TELEGRAM_SERVER_DATA")
 
+# ID канала для обязательной подписки перед получением бесплатного месяца
+REQUIRED_CHANNEL_ID = environ.get("REQUIRED_CHANNEL_ID", "-1002404960939")
+
 SUBSCRIPTION_PLANS = [
     {"days": 7, "price": 100},
     {"days": 30, "price": 150},

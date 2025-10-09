@@ -581,6 +581,23 @@ msgstr "Доступ на {days} дней"
 msgid "SUBSCRIPTION_DESC"
 msgstr "Доступ ко всем функциям бота на {days} дней"
 
+msgid "SUBSCRIPTION_REQUIRED_TEXT"
+msgstr ""
+"🎁 <b>Получите месяц подписки бесплатно!</b>\n"
+"\n"
+"Подпишитесь на наш канал и получите 30 дней полного доступа ко всем функциям бота!\n"
+"\n"
+"👇 Нажмите на кнопку ниже, подпишитесь на канал и нажмите \"Проверить подписку\""
+
+msgid "SUBSCRIBE_TO_CHANNEL_BUTTON"
+msgstr "📢 Подписаться на канал"
+
+msgid "CHECK_SUBSCRIPTION_BUTTON"
+msgstr "✅ Проверить подписку"
+
+msgid "NOT_SUBSCRIBED_ALERT"
+msgstr "❌ Вы ещё не подписаны на канал! Пожалуйста, подпишитесь и попробуйте снова."
+
 msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
 msgstr "✅ Бесплатный пробный период на 1 месяц был успешно активирован!"
 

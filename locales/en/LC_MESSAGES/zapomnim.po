@@ -603,6 +603,23 @@ msgstr ""
 "Enable it in a <a href=\"tg://settings/privacy\">privacy settings.</a>"
 
 
+msgid "SUBSCRIPTION_REQUIRED_TEXT"
+msgstr ""
+"🎁 <b>Get a free month of subscription!</b>\n"
+"\n"
+"Subscribe to our channel and get 30 days of full access to all bot features!\n"
+"\n"
+"👇 Click the button below, subscribe to the channel and click \"Check subscription\""
+
+msgid "SUBSCRIBE_TO_CHANNEL_BUTTON"
+msgstr "📢 Subscribe to channel"
+
+msgid "CHECK_SUBSCRIPTION_BUTTON"
+msgstr "✅ Check subscription"
+
+msgid "NOT_SUBSCRIBED_ALERT"
+msgstr "❌ You are not subscribed to the channel yet! Please subscribe and try again."
+
 msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
 msgstr "✅ Your 1-month free trial has been successfully activated!"
 
