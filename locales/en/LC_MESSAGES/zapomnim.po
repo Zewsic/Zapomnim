@@ -606,6 +606,21 @@ msgstr ""
 msgid "FREE_SUBSCRIPTION_ENABLED_TEXT"
 msgstr "✅ Your 1-month free trial has been successfully activated!"
 
+msgid "SUBSCRIBE_TO_GET_FREE_MONTH"
+msgstr "🎁 Subscribe to our channel and get <b>1 month</b> free. After subscribing, press ‘Verify’."
+
+msgid "SUBSCRIBE_BUTTON"
+msgstr "📣 Subscribe to Channel"
+
+msgid "VERIFY_SUBSCRIPTION_BUTTON"
+msgstr "✅ Verify Subscription"
+
+msgid "SUBSCRIPTION_NOT_VERIFIED"
+msgstr "⛔️ Channel subscription was not detected. Please make sure you subscribed and try again."
+
+msgid "ALREADY_HAS_SUBSCRIPTION"
+msgstr "ℹ️ You already have an active subscription."
+
 msgid "SUBSCRIPTION_SUCCESS"
 msgstr "✅ Subscription active until {date}"
 

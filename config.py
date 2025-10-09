@@ -9,6 +9,11 @@ WEBHOOK_HOST = environ.get("WEBHOOK_HOST")
 TELEGRAM_SERVER = TelegramAPIServer.from_base(environ.get("TELEGRAM_SERVER"), is_local=True)
 TELEGRAM_SERVER_DATA = environ.get("TELEGRAM_SERVER_DATA")
 
+# Channel that the user must be subscribed to in order to receive a free month
+# Accepts values like "@channel_username" or "-1001234567890". If not set, code will
+# try to infer from the localized CHANNEL_LINK string.
+SUBSCRIPTION_REQUIRED_CHANNEL = environ.get("SUBSCRIPTION_REQUIRED_CHANNEL")
+
 SUBSCRIPTION_PLANS = [
     {"days": 7, "price": 100},
     {"days": 30, "price": 150},
