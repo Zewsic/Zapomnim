@@ -16,11 +16,21 @@ from handlers.features.static_chat_analyzer import send_STA
 from handlers.menu import send_main_menu, send_profile
 from handlers.settings import send_settings
 from keyboards import continue_keyboard, language_keyboard, start_keyboard
-from keyboards.initial_setup import bot_mode_keyboard, privacy_policy_keyboard
+from keyboards.initial_setup import bot_mode_keyboard, channel_subscription_keyboard, privacy_policy_keyboard
 from utils import _UNSET, PatchedI18nMiddleware, get_user, update_user
 from utils.security import check_promocode
+from config import REQUIRED_CHANNEL_ID
 
 router = Router()
+
+
+async def check_user_subscription(bot, user_id: int, channel_id: str) -> bool:
+    """Проверка подписки пользователя на канал"""
+    try:
+        member = await bot.get_chat_member(chat_id=channel_id, user_id=user_id)
+        return member.status in ["member", "administrator", "creator"]
+    except Exception:
+        return False
 
 
 @router.message(Command("export"))
@@ -224,6 +234,19 @@ async def on_new_connection(event: BusinessConnection, state: FSMContext):
         if not _had_been_enabled:
 
             if user.subscriber_until is None:
+                # Проверяем подписку на канал перед выдачей бесплатного месяца
+                is_subscribed = await check_user_subscription(event.bot, user.id, REQUIRED_CHANNEL_ID)
+                
+                if not is_subscribed:
+                    # Пользователь не подписан - просим подписаться
+                    await event.bot.send_message(
+                        chat_id=user.id,
+                        text=_("SUBSCRIPTION_REQUIRED_TEXT"),
+                        reply_markup=channel_subscription_keyboard(REQUIRED_CHANNEL_ID),
+                    )
+                    return
+                
+                # Пользователь подписан - выдаём бесплатный месяц
                 await update_user(
                     id=user.id,
                     session=session,
@@ -277,6 +300,34 @@ async def initial_setup_select_mode_callback(query: CallbackQuery, state: FSMCon
                 reply_markup=bot_mode_keyboard())
 
         await session.commit()
+
+
+@router.callback_query(F.data.startswith("check_channel_subscription"))
+async def check_subscription_callback(query: CallbackQuery, state: FSMContext):
+    """Обработчик проверки подписки на канал"""
+    async with create_session() as session:
+        user = await get_user(session, id=query.from_user.id)
+        
+        is_subscribed = await check_user_subscription(query.bot, user.id, REQUIRED_CHANNEL_ID)
+        
+        if not is_subscribed:
+            # Всё ещё не подписан
+            await query.answer(_("NOT_SUBSCRIBED_ALERT"), show_alert=True)
+            return
+        
+        # Подписан! Выдаём бесплатный месяц
+        await update_user(
+            id=user.id,
+            session=session,
+            subscription_until=datetime.now() + timedelta(days=30),
+        )
+        await session.commit()
+        
+        await query.message.delete()
+        await query.message.answer(
+            text=_("FREE_SUBSCRIPTION_ENABLED_TEXT"),
+            reply_markup=continue_keyboard("initial_setup_select_mode"),
+        )
 
 
 @router.callback_query(F.data.startswith("nothing"))
