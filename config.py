@@ -34,9 +34,6 @@ class PaymentState(StatesGroup):
     select_params = State()
     pay_with_stars = State()
 
-class STA_State(StatesGroup):
-    select_user = State()
-
 class Export_State(StatesGroup):
     select_user = State()
 

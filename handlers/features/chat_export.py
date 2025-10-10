@@ -56,7 +56,7 @@ async def send_export_menu(bot: Bot, chat_id: int, user: User, state: FSMContext
 
     m = await bot.send_message(
         chat_id,
-        text=_("STA_START_TEXT"),
+        text=_("EXPORT_START_TEXT"),
         reply_markup=export_chat_share_keyboard(),
     )
 
@@ -89,7 +89,7 @@ async def on_chat_shared(message: Message, state: FSMContext):
         persona = await get_persona(session, message.user_shared.user_id)
         if persona is None:
             msg = await message.answer(
-                text=_("STA_INVALID_CHAT_ERROR"),
+                text=_("EXPORT_INVALID_CHAT_ERROR"),
                 reply_markup=export_chat_share_keyboard(),
             )
 
@@ -99,7 +99,7 @@ async def on_chat_shared(message: Message, state: FSMContext):
         result = await stringify_messages(user.id, persona.id, session, count=200)
         if not result:
             msg = await message.answer(
-                text=_("STA_INVALID_CHAT_ERROR"),
+                text=_("EXPORT_INVALID_CHAT_ERROR"),
                 reply_markup=export_chat_share_keyboard(),
             )
 

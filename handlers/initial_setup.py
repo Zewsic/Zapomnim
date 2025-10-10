@@ -12,7 +12,6 @@ from config import StartState
 from database import create_session
 from database.models import Metric
 from handlers.features.chat_export import send_export_menu
-from handlers.features.static_chat_analyzer import send_STA
 from handlers.menu import send_main_menu, send_profile
 from handlers.settings import send_settings
 from keyboards import continue_keyboard, language_keyboard, start_keyboard
@@ -40,16 +39,6 @@ async def profile(message: Message, state: FSMContext, i18n_middleware: PatchedI
             return await start_command(message, state, i18n_middleware)
 
         await send_profile(message.bot, message.chat.id, user)
-
-
-@router.message(Command("analyze"))
-async def analyze(message: Message, state: FSMContext, i18n_middleware: PatchedI18nMiddleware):
-    async with create_session() as session:
-        user = await get_user(session, id=message.from_user.id)
-        if not user or not user.is_enabled:
-            return await start_command(message, state, i18n_middleware)
-
-        await send_STA(message.bot, message.chat.id, user, state)
 
 
 @router.message(Command("settings"))

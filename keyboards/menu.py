@@ -13,7 +13,6 @@ def main_menu_keyboard(user: User) -> InlineKeyboardMarkup:
     if not user.privacy_mode:
         keyboard.extend([
             [InlineKeyboardButton(text=_("STATISTICS_BUTTON"), callback_data="statistics")],
-            [InlineKeyboardButton(text=_("STA_BUTTON"), callback_data="analyze")],
         ])
 
     keyboard.extend([
