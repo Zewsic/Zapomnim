@@ -17,7 +17,6 @@ from fastapi import FastAPI, HTTPException, Request
 from config import BOT_TOKEN, TELEGRAM_SERVER, WEBHOOK_HOST
 from database import RedisSession
 from handlers import (
-    STA_router,
     chat_export_router,
     data_management_router,
     delete_messages_router,
@@ -87,7 +86,6 @@ dp.include_routers(
     subscription_router,
     statistics_router,
     menu_router,
-    STA_router,
     chat_export_router,
     voice_transcribe_router,
 )
