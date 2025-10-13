@@ -254,6 +254,12 @@ async def protected_messages_settings(callback: CallbackQuery) -> None:  # noqa:
 
 @router.callback_query(lambda c: c.data.startswith("transcribe_voice_messages_settings"))
 async def transcribe_voice_messages_settings(callback: CallbackQuery) -> None:  # noqa: D103
+    # Проверяем глобальный флаг отключения расшифровки
+    from config import DISABLE_MESSAGE_DECRYPTION
+    if DISABLE_MESSAGE_DECRYPTION:
+        await callback.answer(_("FEATURE_DISABLED"), show_alert=True)
+        return
+        
     async with create_session() as session:
         user = await get_user(session, id=callback.from_user.id)
         if user.privacy_mode:

@@ -3,6 +3,7 @@ from aiogram.types import CallbackQuery
 from aiogram.utils.i18n import gettext as _
 from sqlalchemy import delete, func, select
 
+from config import DISABLE_MESSAGE_DECRYPTION
 from database import create_session
 from database.models import Metric, SavedMessage
 from keyboards import continue_keyboard
@@ -36,7 +37,7 @@ async def _get_metrics(user_id: int, session):
         "deleted_messages_count": await _get_metric(user_id, "metrics.save_deleted_messages", session),
         "edited_messages_count": await _get_metric(user_id, "metrics.save_edited_messages", session),
         "protected_messages_count": await _get_metric(user_id, "metrics.save_protected_messages", session),
-        "transcribed_voice_count": await _get_metric(user_id, "metrics.transcribe_voice_message", session),
+        "transcribed_voice_count": 0 if DISABLE_MESSAGE_DECRYPTION else await _get_metric(user_id, "metrics.transcribe_voice_message", session),
     }
 
 

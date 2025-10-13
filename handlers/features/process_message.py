@@ -4,6 +4,7 @@ from aiogram import Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+from config import DISABLE_MESSAGE_DECRYPTION
 from database import create_session
 from handlers.features.ai_antispam import process_antispam_check
 from handlers.features.message_enhancer import enhance_message
@@ -44,7 +45,7 @@ async def new_message(message: Message, state: FSMContext):
             await process_protected_message(user, message.reply_to_message, session)
 
         if not user.privacy_mode and not message.forward_from and message.from_user.id == user.id:
-            if content_type in ("voice", "video_note"):
+            if content_type in ("voice", "video_note") and not DISABLE_MESSAGE_DECRYPTION:
                 asyncio.create_task(transcribe_voice_messages(user, message, session, content_type == "video_note"))
             else:
                 asyncio.create_task(enhance_message(user, message, session))

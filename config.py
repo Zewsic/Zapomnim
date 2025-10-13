@@ -9,6 +9,9 @@ WEBHOOK_HOST = environ.get("WEBHOOK_HOST")
 TELEGRAM_SERVER = TelegramAPIServer.from_base(environ.get("TELEGRAM_SERVER"), is_local=True)
 TELEGRAM_SERVER_DATA = environ.get("TELEGRAM_SERVER_DATA")
 
+# Флаг для отключения всех функций расшифровки голосовых и видео сообщений
+DISABLE_MESSAGE_DECRYPTION = environ.get("DISABLE_MESSAGE_DECRYPTION", "False").lower() in ("true", "1", "yes")
+
 SUBSCRIPTION_PLANS = [
     {"days": 7, "price": 100},
     {"days": 30, "price": 150},

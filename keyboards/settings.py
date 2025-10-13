@@ -1,9 +1,11 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.i18n import gettext as _
 
+from config import DISABLE_MESSAGE_DECRYPTION
+
 
 def messages_settings_keyboard():
-    return InlineKeyboardMarkup(inline_keyboard=[
+    keyboard = [
         [
             InlineKeyboardButton(text=_("DELETED_MESSAGES_SETTINGS_BUTTON"), callback_data="deleted_messages_settings"),
         ],
@@ -13,9 +15,15 @@ def messages_settings_keyboard():
         [
             InlineKeyboardButton(text=_("PROTECTED_MESSAGES_SETTINGS_BUTTON"), callback_data="protected_messages_settings"),
         ],
-        [
+    ]
+    
+    # Добавляем кнопку расшифровки только если функция не отключена глобально
+    if not DISABLE_MESSAGE_DECRYPTION:
+        keyboard.append([
             InlineKeyboardButton(text=_("TRANSCRIBE_VOICE_MESSAGES_SETTINGS_BUTTON"), callback_data="transcribe_voice_messages_settings"),
-        ],
+        ])
+    
+    keyboard.extend([
         [
             InlineKeyboardButton(text=_("ENHANCE_MESSAGES_SETTINGS_BUTTON"),
                                  callback_data="enhance_messages_settings"),
@@ -24,6 +32,8 @@ def messages_settings_keyboard():
             InlineKeyboardButton(text=_("BACK_BUTTON"), callback_data="settings"),
         ],
     ])
+    
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 
 def settings_keyboard():

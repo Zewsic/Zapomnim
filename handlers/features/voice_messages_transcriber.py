@@ -11,6 +11,7 @@ from aiogram.utils.markdown import hlink
 from openai import AsyncOpenAI
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config import DISABLE_MESSAGE_DECRYPTION
 from database import create_session
 from database.models import Metric, User
 from utils import get_user
@@ -238,6 +239,10 @@ async def _transcribe_voice_message(
 
 
 async def transcribe_voice_messages(user: User, message: Message, session: AsyncSession, reply_mode: bool) -> None:
+    # Проверяем глобальный флаг отключения расшифровки
+    if DISABLE_MESSAGE_DECRYPTION:
+        return
+        
     enabled = await user.get_bool("settings.transcribe_voice_messages.enabled", session, default=True)
     enabled_video = await user.get_bool("settings.transcribe_voice_messages.enabled_video", session, default=True)
     enhanced = await user.get_bool("settings.transcribe_voice_messages.enhanced", session, default=True)
@@ -268,6 +273,10 @@ async def transcribe_voice_messages(user: User, message: Message, session: Async
 
 @router.message(or_f(F.voice, F.video_note))
 async def process_process_input_voice_message(message: Message):
+    # Проверяем глобальный флаг отключения расшифровки
+    if DISABLE_MESSAGE_DECRYPTION:
+        return
+        
     # В публичном/дефолтном хендлере тоже показываем 3 стадии
     usage = await _transcribe_voice_message(
         message,
