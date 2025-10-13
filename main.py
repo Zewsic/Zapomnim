@@ -14,7 +14,7 @@ from aiogram.types import MenuButtonCommands
 from aiogram.utils.i18n import I18n
 from fastapi import FastAPI, HTTPException, Request
 
-from config import BOT_TOKEN, TELEGRAM_SERVER, WEBHOOK_HOST
+from config import BOT_TOKEN, DISABLE_MESSAGE_DECRYPTION, TELEGRAM_SERVER, WEBHOOK_HOST
 from database import RedisSession
 from handlers import (
     chat_export_router,
@@ -76,7 +76,7 @@ app = FastAPI(lifespan=lifespan)
 
 dp = Dispatcher(storage=RedisStorage(redis=RedisSession))
 
-dp.include_routers(
+routers_to_include = [
     initial_setup_router,
     process_message_router,
     settings_router,
@@ -87,8 +87,13 @@ dp.include_routers(
     statistics_router,
     menu_router,
     chat_export_router,
-    voice_transcribe_router,
-)
+]
+
+# Добавляем роутер расшифровки только если функция не отключена глобально
+if not DISABLE_MESSAGE_DECRYPTION:
+    routers_to_include.append(voice_transcribe_router)
+
+dp.include_routers(*routers_to_include)
 
 dp.message.middleware(
     DistributedThrottleMiddleware(
